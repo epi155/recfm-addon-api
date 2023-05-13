@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FieldNum extends FloatingField /*implements IndentAble*/ {
     private boolean numericAccess;
+    private NormalizeNumMode normalize;
 
     @Override
     public AlignMode getAlign() {

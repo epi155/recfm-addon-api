@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 public class FieldAbc extends FloatingField /*implements IndentAble*/ {
     private char padChar = ' ';
     private CheckChar check;
+    private NormalizeAbcMode normalize;
 
     @Override
     public AlignMode getAlign() {

@@ -8,6 +8,5 @@ import java.io.File;
 import java.io.PrintWriter;
 
 public interface CodeProvider {
-    File fileOf(String cwd, String name);
-    void createClass(PrintWriter pw, String wrtPackage, ClassDefine struct, GenerateArgs ga, Defaults defaults);
+    void createClass(File sourceRootDirectory, String wrtPackage, ClassDefine struct, GenerateArgs ga, Defaults defaults);
 }

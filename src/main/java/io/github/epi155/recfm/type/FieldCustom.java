@@ -15,6 +15,7 @@ public class FieldCustom extends FloatingField implements SelfCheck {
     private Character initChar;
     private CheckUser check;
     private AlignMode align;
+    private NormalizeAbcMode normalize;
     private String regex;
 
     @Override
