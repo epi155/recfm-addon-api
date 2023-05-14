@@ -3,6 +3,7 @@ package io.github.epi155.recfm.type;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 @Data
 @Slf4j
@@ -41,5 +42,17 @@ public class FieldDomain extends SettableField implements SelfCheck {
 
     private String fieldDescriptor() {
         return "Field " + getName() + "@" + getOffset() + "+" + getLength();
+    }
+
+    @Override
+    protected FieldDomain shiftCopy(int plus) {
+        val res = new FieldDomain();
+        res.items = this.items;
+        res.setName(getName());
+        res.setRedefines(isRedefines());
+        res.setAudit(isAudit());
+        res.setLength(getLength());
+        res.setOffset(getOffset() + plus);
+        return res;
     }
 }

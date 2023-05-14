@@ -6,12 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
-public class FieldOccurs extends FieldGroup {
+public class FieldOccursProxy extends FieldGroupProxy {
     private int times;
 
     @Override
@@ -32,10 +31,10 @@ public class FieldOccurs extends FieldGroup {
     }
 
     @Override
-    protected FieldOccurs shiftCopy(int plus) {
-        val res = new FieldOccurs();
+    protected FieldOccursProxy shiftCopy(int plus) {
+        val res = new FieldOccursProxy();
         res.times = this.times;
-        res.setFields(getFields().stream().map(fld -> fld.shiftCopy(plus)).collect(Collectors.toList()));
+        res.setProxy(getProxy());
         res.setName(getName());
         res.setRedefines(isRedefines());
         res.setAudit(isAudit());

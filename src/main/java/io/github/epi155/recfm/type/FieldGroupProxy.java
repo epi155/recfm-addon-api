@@ -5,15 +5,23 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
-public class FieldGroup extends NamedField implements ParentFields {
-    private List<NakedField> fields = new ArrayList<>();
+public class FieldGroupProxy extends NamedField implements ParentFields {
+    private ClassDefine proxy;
+
+    @Override
+    public List<NakedField> getFields() {
+        val fields = proxy.getFields();
+        int base = fields.get(0).getOffset();
+        val plus = getOffset() - base;
+        return fields.stream()
+            .map(fld -> fld.shiftCopy(plus)).collect(Collectors.toList());
+    }
 
     @Override
     public boolean noHole() {
@@ -26,9 +34,9 @@ public class FieldGroup extends NamedField implements ParentFields {
     }
 
     @Override
-    protected FieldGroup shiftCopy(int plus) {
-        val res = new FieldGroup();
-        res.fields = this.fields.stream().map(fld -> fld.shiftCopy(plus)).collect(Collectors.toList());
+    protected FieldGroupProxy shiftCopy(int plus) {
+        val res = new FieldGroupProxy();
+        res.proxy = this.proxy;
         res.setName(getName());
         res.setRedefines(isRedefines());
         res.setAudit(isAudit());

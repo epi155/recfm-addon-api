@@ -5,8 +5,8 @@ import io.github.epi155.recfm.type.Defaults;
 import io.github.epi155.recfm.util.GenerateArgs;
 
 import java.io.File;
-import java.io.PrintWriter;
 
 public interface CodeProvider {
+    void createInterface(File sourceRootDirectory, String wrtPackage, ClassDefine struct, GenerateArgs ga);
     void createClass(File sourceRootDirectory, String wrtPackage, ClassDefine struct, GenerateArgs ga, Defaults defaults);
 }

@@ -3,6 +3,7 @@ package io.github.epi155.recfm.type;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -36,5 +37,24 @@ public class FieldCustom extends FloatingField implements SelfCheck {
 
     private String fieldDescriptor() {
         return "Field " + getName() + "@" + getOffset() + "+" + getLength();
+    }
+
+    @Override
+    protected FieldCustom shiftCopy(int plus) {
+        val res = new FieldCustom();
+        res.padChar = this.padChar;
+        res.initChar = this.initChar;
+        res.check = this.check;
+        res.align = this.align;
+        res.normalize = this.normalize;
+        res.regex = this.regex;
+        res.setOnOverflow(getOnOverflow());
+        res.setOnUnderflow(getOnUnderflow());
+        res.setName(getName());
+        res.setRedefines(isRedefines());
+        res.setAudit(isAudit());
+        res.setLength(getLength());
+        res.setOffset(getOffset() + plus);
+        return res;
     }
 }

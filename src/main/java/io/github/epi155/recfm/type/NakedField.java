@@ -46,4 +46,5 @@ public abstract class NakedField {
             return "";
     }
 
+    protected abstract NakedField shiftCopy(int plus);
 }

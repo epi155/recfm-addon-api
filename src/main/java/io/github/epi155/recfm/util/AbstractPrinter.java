@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 
 import java.io.PrintWriter;
 
-@AllArgsConstructor
+@AllArgsConstructor @Deprecated
 public abstract class AbstractPrinter {
     private final PrintWriter pw;
 

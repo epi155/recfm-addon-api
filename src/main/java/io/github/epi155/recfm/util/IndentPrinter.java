@@ -6,6 +6,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.function.IntFunction;
 
+@Deprecated
 public class IndentPrinter extends AbstractPrinter {
     protected final IntFunction<String> pos;
     protected final Deque<String> indentStack = new LinkedList<>();
