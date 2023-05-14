@@ -34,7 +34,7 @@ public class FieldOccursProxy extends FieldGroupProxy {
     protected FieldOccursProxy shiftCopy(int plus) {
         val res = new FieldOccursProxy();
         res.times = this.times;
-        res.setProxy(getProxy());
+        res.setTypeDef(getTypeDef());
         res.setName(getName());
         res.setRedefines(isRedefines());
         res.setAudit(isAudit());

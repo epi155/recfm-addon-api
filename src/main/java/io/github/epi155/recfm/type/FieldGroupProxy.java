@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
 public class FieldGroupProxy extends NamedField implements ParentFields {
-    private ClassDefine proxy;
+    private ClassDefine typeDef;
 
     @Override
     public List<NakedField> getFields() {
-        val fields = proxy.getFields();
+        val fields = typeDef.getFields();
         int base = fields.get(0).getOffset();
         val plus = getOffset() - base;
         return fields.stream()
@@ -36,7 +36,7 @@ public class FieldGroupProxy extends NamedField implements ParentFields {
     @Override
     protected FieldGroupProxy shiftCopy(int plus) {
         val res = new FieldGroupProxy();
-        res.proxy = this.proxy;
+        res.typeDef = this.typeDef;
         res.setName(getName());
         res.setRedefines(isRedefines());
         res.setAudit(isAudit());
