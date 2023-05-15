@@ -7,6 +7,7 @@ public enum AlignMode {
      * Trunc/Pad suffix.
      * Align left -> pad right
      */
+    @Deprecated
     public final String code;
 
     AlignMode(String code) {
