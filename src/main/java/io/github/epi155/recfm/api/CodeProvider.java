@@ -7,6 +7,6 @@ import io.github.epi155.recfm.util.GenerateArgs;
 import java.io.File;
 
 public interface CodeProvider {
-    void createInterface(File sourceRootDirectory, String wrtPackage, ClassDefine struct, GenerateArgs ga);
-    void createClass(File sourceRootDirectory, String wrtPackage, ClassDefine struct, GenerateArgs ga, Defaults defaults);
+    void createInterface(String namespace, ClassDefine struct, GenerateArgs ga);
+    void createClass(String namespace, ClassDefine struct, GenerateArgs ga, Defaults defaults);
 }
