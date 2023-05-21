@@ -18,7 +18,7 @@ public class FieldOccurs extends FieldGroup {
     public void mark(boolean[] b, int bias) {
         for (int k = 0, shift = 0; k < times; k++, shift += getLength()) {
             int backShift = shift;
-            getFields().forEach(it -> it.mark(b, bias - backShift));
+            forEachField(it -> it.mark(b, bias - backShift));
         }
     }
 
@@ -27,7 +27,7 @@ public class FieldOccurs extends FieldGroup {
         if (isRedefines()) return;
         for (int k = 0, shift = 0; k < times; k++, shift += getLength()) {
             int backShift = shift;
-            getFields().forEach(it -> it.mark(b, bias - backShift));
+            forEachField(it -> it.mark(b, bias - backShift));
         }
     }
 

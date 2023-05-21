@@ -7,6 +7,7 @@ import org.slf4j.event.Level;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public interface ParentFields /*extends IndentAble*/ {
     org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ParentFields.class);
@@ -19,7 +20,7 @@ public interface ParentFields /*extends IndentAble*/ {
 
     default int evalPadWidth(int min) {
         NuclearInt wid = new NuclearInt(min);
-        getFields().forEach(it -> {
+        forEachField(it -> {
             if (it instanceof FloatingField) {
                 FloatingField fld = (FloatingField) it;
                 wid.maxOf(fld.getName().length());
@@ -31,7 +32,7 @@ public interface ParentFields /*extends IndentAble*/ {
     }
 
     default boolean noHole(int bias) {
-        log.info("  [##o..] Checking for hole in group {}: [{}..{}] ...", getName(), bias, bias + getLength() - 1);
+        log.info("  [###o..] Checking for hole in group {}: [{}..{}] ...", getName(), bias, bias + getLength() - 1);
         boolean[] b = new boolean[getLength()];
         forEachField(it -> it.mark(b, bias));
         List<Integer> hole = new ArrayList<>();
@@ -50,17 +51,17 @@ public interface ParentFields /*extends IndentAble*/ {
 
     default boolean noHoleChilds() {
         AtomicInteger nmFail = new AtomicInteger(0);
-        getFields().forEach(it -> {
+        forEachField(it -> {
             if (it instanceof ParentFields) {
                 ParentFields par = (ParentFields) it;
                 if (!par.noHole()) nmFail.incrementAndGet();
             }
         });
         if (nmFail.get() == 0) {
-            log.info("  [###..] No hole detected in {}.", getName());
+            log.info("  [####..] No hole detected in {}.", getName());
             return true;
         } else {
-            log.info("  [!!!..] Hole detected in sub-group.");
+            log.info("  [!!!!..] Hole detected in sub-group.");
             return false;
         }
     }
@@ -69,7 +70,7 @@ public interface ParentFields /*extends IndentAble*/ {
     }
 
     default boolean noOverlap(int bias) {
-        log.info("  [###o.] Checking for overlap in group {}: [{}..{}] ...", getName(), bias, bias + getLength() - 1);
+        log.info("  [####o.] Checking for overlap in group {}: [{}..{}] ...", getName(), bias, bias + getLength() - 1);
         @SuppressWarnings("unchecked") Set<String>[] b = new Set[getLength()];
         forEachField(it -> it.mark(b, bias));
         List<Pair<Integer, Set<String>>> over = new ArrayList<>();
@@ -88,37 +89,37 @@ public interface ParentFields /*extends IndentAble*/ {
 
     default boolean noOverlapChilds() {
         AtomicInteger nmFail = new AtomicInteger(0);
-        getFields().forEach(it -> {
+        forEachField(it -> {
             if (it instanceof ParentFields) {
                 ParentFields par = (ParentFields) it;
                 if (!par.noOverlap()) nmFail.incrementAndGet();
             }
         });
         if (nmFail.get() == 0) {
-            log.info("  [####.] No overlap detected in {}.", getName());
+            log.info("  [#####.] No overlap detected in {}.", getName());
             return true;
         } else {
-            log.info("  [!!!!.] Overlap detected in sub-group.");
+            log.info("  [!!!!!.] Overlap detected in sub-group.");
             return false;
         }
     }
 
     default boolean noDuplicateName(NameCollisionProbe probe) {
-        log.info("  [#o...] Checking for duplicate in group {} ...", getName());
+        log.info("  [##o...] Checking for duplicate in group {} ...", getName());
         Map<String, NamedField> map = new HashMap<>();
         AtomicInteger countDup = new AtomicInteger();
         forEachField(it -> scanNamedField(it, map, countDup, probe));
         if (countDup.get() == 0) {
-            getFields().forEach(it -> scanParentFieldsDup(it, countDup, probe));
+            forEachField(it -> scanParentFieldsDup(it, countDup, probe));
             if (countDup.get() == 0) {
-                log.info("  [##...] No duplicate fieldName detected in {}.", getName());
+                log.info("  [###...] No duplicate fieldName detected in {}.", getName());
                 return true;
             } else {
-                log.info("  [!!...] Duplicate fieldName detected in sub-group.");
+                log.info("  [!!!...] Duplicate fieldName detected in sub-group.");
                 return false;
             }
         } else {
-            log.info("  [!!...] {} duplicate fieldName detected.", countDup.get());
+            log.info("  [!!!...] {} duplicate fieldName detected.", countDup.get());
             return false;
         }
     }
@@ -131,20 +132,20 @@ public interface ParentFields /*extends IndentAble*/ {
     }
 
     default boolean noBadName() {
-        log.info("  [o....] Checking for bad name in group {} ...", getName());
+        log.info("  [o.....] Checking for bad name in group {} ...", getName());
         AtomicInteger countBad = new AtomicInteger();
         forEachField(it -> scanBadName(it, countBad));
         if (countBad.get() == 0) {
-            getFields().forEach(it -> scanParentFieldsBad(it, countBad));
+            forEachField(it -> scanParentFieldsBad(it, countBad));
             if (countBad.get() == 0) {
-                log.info("  [#....] No bad fieldName detected in {}.", getName());
+                log.info("  [#.....] No bad fieldName detected in {}.", getName());
                 return true;
             } else {
-                log.info("  [!....] Bad fieldName detected in sub-group.");
+                log.info("  [!.....] Bad fieldName detected in sub-group.");
                 return false;
             }
         } else {
-            log.info("  [!....] {} bad fieldName detected.", countBad.get());
+            log.info("  [!.....] {} bad fieldName detected.", countBad.get());
             return false;
         }
     }
@@ -211,5 +212,58 @@ public interface ParentFields /*extends IndentAble*/ {
 
     default boolean noHole() {
         return noHole(1);
+    }
+
+    default boolean checkLength() {
+        log.info("  [#o....] Checking cross-reference in group {} ...", getName());
+        List<FieldEmbedGroup> badEmbeds = getFields().stream()
+                .filter(FieldEmbedGroup.class::isInstance)
+                .map(it -> (FieldEmbedGroup)it)
+                .filter(it -> it.getLength() != it.getSource().getLength())
+                .collect(Collectors.toList());
+        List<FieldGroupTrait> badTypDef = getFields().stream()
+                .filter(FieldGroupTrait.class::isInstance)
+                .map(it -> (FieldGroupTrait)it)
+                .filter(it -> it.getLength() != it.getTypeDef().getLength())
+                .collect(Collectors.toList());
+        if (badEmbeds.isEmpty() && badTypDef.isEmpty()) {
+            return checkLengthChild();
+        } else {
+            if (! badEmbeds.isEmpty()) {
+                badEmbeds.forEach(it -> log.error("  [#X....] length error {}@{}, class: {}, interface: {}",
+                        it.getSource().getName(), it.getOffset(),
+                        it.getLength(), it.getSource().getLength()));
+            }
+            if (! badTypDef.isEmpty()) {
+                badTypDef.forEach(it -> log.error("  [#X....] length error {}@{}, class: {}, interface: {}",
+                        it.getName(), it.getOffset(),
+                        it.getLength(), it.getTypeDef().getLength()));
+            }
+            return false;
+        }
+    }
+
+    default boolean checkLengthChild() {
+        class CheckStatus {
+            private boolean success = true;
+
+            public void and(boolean status) {
+                success &= status;
+            }
+        }
+        CheckStatus status = new CheckStatus();
+        forEachField(it -> {
+            if (it instanceof ParentFields) {
+                ParentFields par = (ParentFields) it;
+                status.and(par.checkLength());
+            }
+        });
+        if (status.success) {
+            log.info("  [##....] No cross-reference error detected in {}.", getName());
+            return true;
+        } else {
+            log.info("  [!!....] Cross-reference error detected in sub-group.");
+            return false;
+        }
     }
 }
