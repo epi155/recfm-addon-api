@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.nio.CharBuffer;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Data
 @Slf4j
@@ -47,4 +48,8 @@ public abstract class NakedField {
     }
 
     protected abstract NakedField shiftCopy(int plus);
+    protected Stream<NakedField> expand() {
+        return Stream.of(this);
+    }
+
 }

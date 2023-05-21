@@ -6,6 +6,7 @@ import org.slf4j.event.Level;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public interface ParentFields /*extends IndentAble*/ {
     org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ParentFields.class);
@@ -32,7 +33,7 @@ public interface ParentFields /*extends IndentAble*/ {
     default boolean noHole(int bias) {
         log.info("  [##o..] Checking for hole in group {}: [{}..{}] ...", getName(), bias, bias + getLength() - 1);
         boolean[] b = new boolean[getLength()];
-        getFields().forEach(it -> it.mark(b, bias));
+        forEachField(it -> it.mark(b, bias));
         List<Integer> hole = new ArrayList<>();
         for (int k = 0; k < getLength(); k++) {
             if (!b[k]) hole.add(k);
@@ -63,11 +64,14 @@ public interface ParentFields /*extends IndentAble*/ {
             return false;
         }
     }
+    default void forEachField(Consumer<NakedField> action) {
+        getFields().stream().flatMap(NakedField::expand).forEach(action);
+    }
 
     default boolean noOverlap(int bias) {
         log.info("  [###o.] Checking for overlap in group {}: [{}..{}] ...", getName(), bias, bias + getLength() - 1);
         @SuppressWarnings("unchecked") Set<String>[] b = new Set[getLength()];
-        getFields().forEach(it -> it.mark(b, bias));
+        forEachField(it -> it.mark(b, bias));
         List<Pair<Integer, Set<String>>> over = new ArrayList<>();
         for (int k = 0; k < getLength(); k++) {
             if (b[k] != null && b[k].size() > 1) over.add(new ImmutablePair<>(k + bias, b[k]));
@@ -103,7 +107,7 @@ public interface ParentFields /*extends IndentAble*/ {
         log.info("  [#o...] Checking for duplicate in group {} ...", getName());
         Map<String, NamedField> map = new HashMap<>();
         AtomicInteger countDup = new AtomicInteger();
-        getFields().forEach(it -> scanNamedField(it, map, countDup, probe));
+        forEachField(it -> scanNamedField(it, map, countDup, probe));
         if (countDup.get() == 0) {
             getFields().forEach(it -> scanParentFieldsDup(it, countDup, probe));
             if (countDup.get() == 0) {
@@ -129,7 +133,7 @@ public interface ParentFields /*extends IndentAble*/ {
     default boolean noBadName() {
         log.info("  [o....] Checking for bad name in group {} ...", getName());
         AtomicInteger countBad = new AtomicInteger();
-        getFields().forEach(it -> scanBadName(it, countBad));
+        forEachField(it -> scanBadName(it, countBad));
         if (countBad.get() == 0) {
             getFields().forEach(it -> scanParentFieldsBad(it, countBad));
             if (countBad.get() == 0) {

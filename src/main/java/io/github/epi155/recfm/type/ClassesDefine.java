@@ -11,6 +11,6 @@ import java.util.List;
 public class ClassesDefine {
     private String packageName;
     private Defaults defaults = new Defaults();
-    private List<ClassDefine> interfaces = new ArrayList<>();
+    private List<TraitDefine> interfaces = new ArrayList<>();
     private List<ClassDefine> classes = new ArrayList<>();
 }

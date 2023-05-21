@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
-public class FieldOccursProxy extends FieldGroupProxy {
+public class FieldOccursTrait extends FieldGroupTrait {
     private int times;
 
     @Override
@@ -31,8 +31,8 @@ public class FieldOccursProxy extends FieldGroupProxy {
     }
 
     @Override
-    protected FieldOccursProxy shiftCopy(int plus) {
-        val res = new FieldOccursProxy();
+    protected FieldOccursTrait shiftCopy(int plus) {
+        val res = new FieldOccursTrait();
         res.times = this.times;
         res.setTypeDef(getTypeDef());
         res.setName(getName());

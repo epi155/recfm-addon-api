@@ -15,9 +15,9 @@ public class DumpFactory {
     private DumpFactory() {
     }
 
-    public static List<DumpInfo> getInstance(List<NakedField> fields) {
+    public static List<DumpInfo> getInstance(ParentFields parent) {
         List<Picture> lst = new ArrayList<>();
-        dumpFields(lst, "", fields, 0);
+        dumpFields(lst, "", parent, 0);
         List<DumpInfo> l2 = lst.stream().map(Picture::normalize).collect(Collectors.toList());
         OptionalInt w = l2.stream().mapToInt(it -> it.name.length()).max();
         if (w.isPresent()) {
@@ -31,41 +31,47 @@ public class DumpFactory {
             return new DumpInfo(rpad(it.name, w, '.'), it.offset, it.length);
     }
 
-    private static void dumpFields(List<Picture> lst, String px, List<NakedField> fields, int bias) {
-        for (NakedField field : fields) {
+    private static void dumpFields(List<Picture> lst, String px, ParentFields parent, int bias) {
+        parent.forEachField(field -> {
             if (field instanceof FieldConstant) {
                 lst.add(newPicture(CONSTANT, bias + field.getOffset(), field.getLength(), "V"));
             } else if (field instanceof NamedField) {
                 NamedField na = (NamedField) field;
-                if (na.isRedefines()) continue;
+                if (na.isRedefines()) return;
                 if (na instanceof SettableField) {
                     SettableField fs = (SettableField) na;
                     lst.add(newPicture(px + fs.getName(), bias + fs.getOffset(), fs.getLength(), fs.picture()));
                 } else if (na instanceof FieldOccurs) {
                     FieldOccurs fo = (FieldOccurs) na;
-                    lst.addAll(occursDump(px + fo.getName(), fo.getTimes(), fo.getLength(), fo.getFields(), bias));
+                    lst.addAll(occursDump(px + fo.getName(), fo.getTimes(), fo.getLength(), fo, bias));
                 } else if (na instanceof FieldGroup) {
                     FieldGroup fg = (FieldGroup) na;
-                    lst.addAll(groupDump(px + fg.getName(), fg.getFields(), bias));
+                    lst.addAll(groupDump(px + fg.getName(), fg, bias));
+                } else if (na instanceof FieldOccursTrait) {
+                    FieldOccursTrait fo = (FieldOccursTrait) na;
+                    lst.addAll(occursDump(px + fo.getName(), fo.getTimes(), fo.getLength(), fo, bias));
+                } else if (na instanceof FieldGroupTrait) {
+                    FieldGroupTrait fg = (FieldGroupTrait) na;
+                    lst.addAll(groupDump(px + fg.getName(), fg, bias));
                 }
             }
-        }
+        });
     }
-    private static Collection<? extends Picture> occursDump(String prefix, int times, int size, List<NakedField> fields, int initBias) {
+    private static Collection<? extends Picture> occursDump(String prefix, int times, int size, ParentFields parent, int initBias) {
         List<Picture> lst = new ArrayList<>();
 
         for (int k = 1, bias = initBias; k <= times; k++, bias += size) {
             String px = prefix + "[" + k + "].";
-            dumpFields(lst, px, fields, bias);
+            dumpFields(lst, px, parent, bias);
         }
         return lst;
     }
 
-    private static Collection<? extends Picture> groupDump(String prefix, List<NakedField> fields, int bias) {
+    private static Collection<? extends Picture> groupDump(String prefix, ParentFields parent, int bias) {
         List<Picture> lst = new ArrayList<>();
 
         String px = prefix + ".";
-        dumpFields(lst, px, fields, bias);
+        dumpFields(lst, px, parent, bias);
         return lst;
     }
 
