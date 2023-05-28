@@ -6,6 +6,7 @@ import lombok.Data;
 public class FieldDefault {
     private AbcDefault abc = new AbcDefault();
     private NumDefault num = new NumDefault();
+    private NuxDefault nux = new NuxDefault();
     private FilDefault fil = new FilDefault();
     private CusDefault cus = new CusDefault();
 
@@ -39,5 +40,12 @@ public class FieldDefault {
         private OverflowAction onOverflow = OverflowAction.Trunc;
         private UnderflowAction onUnderflow = UnderflowAction.Pad;
         private NormalizeNumMode normalize = NormalizeNumMode.None;
+    }
+    @Data
+    public static class NuxDefault {
+        private OverflowAction onOverflow = OverflowAction.Trunc;
+        private UnderflowAction onUnderflow = UnderflowAction.Pad;
+        private NormalizeNumMode normalize = NormalizeNumMode.None;
+        private InitializeNuxMode initialize = InitializeNuxMode.Spaces;
     }
 }

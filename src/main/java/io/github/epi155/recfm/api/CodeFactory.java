@@ -6,6 +6,7 @@ public interface CodeFactory {
 
     AbcModel newAbcModel();
     NumModel newNumModel();
+    NuxModel newNuxModel();
     CusModel newCusModel();
     DomModel newDomModel();
     FilModel newFilModel();
