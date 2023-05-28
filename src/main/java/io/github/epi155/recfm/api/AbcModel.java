@@ -11,4 +11,6 @@ public interface AbcModel extends FieldModel {
     void setPadChar(char padChar);
     void setCheck(CheckChar check);
     void setNormalize(NormalizeAbcMode normalize);
+    void setCheckGetter(Boolean checkGetter);
+    void setCheckSetter(Boolean checkSetter);
 }

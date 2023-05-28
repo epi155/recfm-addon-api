@@ -14,4 +14,6 @@ public interface CusModel extends FieldModel {
     void setAlign(AlignMode align);
     void setNormalize(NormalizeAbcMode normalize);
     void setRegex(String regex);
+    void setCheckGetter(Boolean checkGetter);
+    void setCheckSetter(Boolean checkSetter);
 }
