@@ -1,0 +1,1044 @@
+\documentclass[a4paper,10pt]{report}
+
+\usepackage[italian]{babel}     % sillabazione italiana
+\usepackage[body={17.8cm,24.7cm}]{geometry}
+\usepackage{makeidx}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{pifont}
+\usepackage{array}
+
+\usepackage{makeidx}
+\usepackage{tocloft}
+
+\usepackage{esourcecode}	% custom style
+
+\usepackage[pdftex]{graphicx}
+\usepackage[pdftex,
+%pdftitle={Graphics and Color with LaTeX},
+%pdfauthor={Patrick W Daly},
+%pdfsubject={Importing images and use of color in LaTeX},
+%pdfkeywords={LaTeX, graphics, color},
+pdfpagemode=UseOutlines,
+bookmarks,bookmarksopen,
+pdfstartview=FitH,
+colorlinks,linkcolor=blue,citecolor=blue,
+urlcolor=green,
+]
+{hyperref}
+
+
+\usepackage{tikz}
+%\usetikzlibrary{shapes,arrows}
+%\usetikzlibrary{arrows,shapes,snakes,automata,backgrounds,petri}
+\usetikzlibrary{arrows,shapes,decorations,automata,backgrounds,petri}
+
+\usepackage{bera}
+
+\title{RECFM}
+\author{E.~Pistolesi}
+
+\makeindex
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}	% default is 2
+
+\cftsetindents{section}{0.5in}{0.5in}
+\cftsetindents{subsection}{0.5in}{0.6in}
+\cftsetindents{subsubsection}{0.5in}{0.7in}
+%\cftsetindents{paragraph}{0.5in}{0.5in}
+\cftsetindents{table}{0.25in}{0.5in}
+\cftsetindents{listings}{0.25in}{0.5in}
+
+\renewcommand{\lstlistlistingname}{Elenco dei sorgenti}
+
+
+%--- begin - document ---------------------------------------------------------
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+...
+\end{abstract}
+
+
+%\input{cover.tex}
+
+%\clearpage
+
+\tableofcontents
+%\listoffigures
+\listoftables
+\lstlistoflistings
+
+\clearpage
+
+\chapter{Introduzione}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Spesso può capitare di avere a che fare con file (o aree di memoria)
+posizionali, in questi casi è necessario perdere un sacco di tempo per fare una
+classe dedicata a ogni tracciato con i setter e getter per leggere e scrivere
+i valori. 
+Questo gruppo di programmi si propone di minimizzare il tempo per creare queste
+classi.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Il programma è strutturato usando service provider interface
+
+
+\chapter{Service Interface}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+L'\,artifatto \verb!recfm-addon-api! mette a disposizione una serie di 
+interfacce, alcuni enum e java-bean per permettere al modulo client di definire
+i tracciati. 
+
+\section{CodeProvider}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Il punto di partenza è l'\,interfaccia \textsl{CodeProvider}
+
+\index{CodeProvider}
+\begin{lstlisting}[language=java, caption=interfaccia CodeProvider, 
+label=code:CodeProvider]
+public interface CodeProvider {
+     CodeFactory getInstance();
+}
+\end{lstlisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+questa interfaccia fornisce l'\,istanza dell'\,interfaccia \textsl{CodeFactory}
+
+\section{CodeFactory}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+L\,interfaccia \textsl{CodeFactory}
+
+\index{CodeFactory}
+\begin{lstlisting}[language=java, caption=interfaccia CodeFactory, 
+label=code:CodeFactory]
+public interface CodeFactory {
+    ClassModel newClassModel();
+    TraitModel newTraitModel();
+
+    AbcModel newAbcModel();
+    NumModel newNumModel();
+    NuxModel newNuxModel();
+    CusModel newCusModel();
+    DomModel newDomModel();
+    FilModel newFilModel();
+    ValModel newValModel();
+    GrpModel newGrpModel();
+    OccModel newOccModel();
+    EmbModel newEmbModel();
+    GrpTraitModel newGrpTraitModel();
+    OccTraitModel newOccTraitModel();
+}
+\end{lstlisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+fornisce i metodi per definire tutti gli elementi della struttura.
+
+\section{Classi / Interfacce}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Il primo metodo dell\,interfaccia \textsl{CodeFactory} fornisce la definizione 
+per una classe
+
+\index{ClassModel}
+\begin{lstlisting}[language=java, caption=interfaccia ClassModel, 
+label=code:ClassModel]
+public interface ClassModel {
+    void setName(String name);
+    void setLength(int length);
+    void setOnOverflow(LoadOverflowAction onOverflow);
+    void setOnUnderflow(LoadUnderflowAction onUnderflow);
+    void setFields(List<FieldModel> fields);
+
+    void create(String namespace, GenerateArgs ga, FieldDefault defaults);
+}
+\end{lstlisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\noindent e il secondo metodo dell\,interfaccia \textsl{CodeFactory} fornisce la 
+definizione per una interfaccia
+
+\index{TraitModel}
+\begin{lstlisting}[language=java, caption=interfaccia TraitModel, 
+label=code:TraitModel]
+public interface TraitModel {
+    void setName(String name);
+    void setLength(int length);
+    void setFields(List<FieldModel> fields);
+
+    void create(String namespace, GenerateArgs ga, FieldDefault defaults);
+}
+\end{lstlisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\noindent entrambe le definizioni richiedono il nome della struttura, la sua
+lunghezza, l'\,elenco dei campi che la compongono e mettono a disposizione
+un metodo per generare il codice sorgente.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione della classe richiede anche due parametri aggiuntivi per indicare
+come comportarsi se la dimensione dei dati forniti fosse superiore o inferiore a
+quella attesa.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Prima di vedere il dettaglio della definizione dei vari campi, vediamo il 
+contenuto degli altri due parametri richiesti per la generazione del codice
+sorgente.
+
+\subsection{Argomenti globali --- GenerateArgs}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Vediamo in cosa consiste la classe \textsl{GenerateArgs}
+
+\index{GenerateArgs}
+\begin{lstlisting}[language=java, caption=interfaccia GenerateArgs, 
+label=code:GenerateArgs]
+@Builder
+@RequiredArgsConstructor
+public class GenerateArgs {
+    @NonNull public final File sourceDirectory;
+    public final String group;
+    public final String artifact;
+    public final String version;
+    @Builder.Default
+    public final boolean doc = true;
+}
+\end{lstlisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+il primo parametro la directory sorgente radice dove generare i sorgenti,
+i tre parametri successivi identificano il programma (o plugin) che ha fornito
+la definizione del tracciato, questi parametri sono mostrati come commento
+all'\,inizio dei file generati, e l'\,ultimo indica se generare o meno un minimo
+di documentazione javadoc sui setter, getter e definizioni delle classi e 
+interfacce.
+
+\subsection{Default dei campi --- FieldDefault}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Vediamo in cosa consiste la classe \textsl{FieldDefault}
+
+\index{FieldDefault}
+\begin{lstlisting}[language=java, caption=interfaccia FieldDefault, 
+label=code:FieldDefault]
+@Data
+public class FieldDefault {
+    private AbcDefault abc = new AbcDefault();
+    private NumDefault num = new NumDefault();
+    private NuxDefault nux = new NuxDefault();
+    private FilDefault fil = new FilDefault();
+    private CusDefault cus = new CusDefault();
+}
+\end{lstlisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+in pratica permette di impostare dei valori di default di alcuni parametri per
+cinque tipologie di campi. Non avendo mostrato il dettaglio delle definizione
+delle varie tipologie di campo, non è opportuno introdurre in questo punto il
+contenuto delle classi dei default, saranno mostrate insieme al campo 
+corrispondente.
+
+\section{Definizione di campi}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella definizione della classe, e dell'\,interfaccia l'\,elenco dei campi è
+impostato come \verb!List<FieldModel>!, ma l'\,interfaccia \verb!FieldModel! è
+una scatola vuota, serve solo per collegare a essa tutte le definizioni dei
+campi. In generale tutti i campi hanno una posizione iniziale (offset) e una
+dimensione (length); molti campi sono referenziabili tramite un nome, 
+ma non tutti hanno necessariamente il nome; quando i campi hanno un nome
+possono essere primari o sovra-definire (override) campi primari, in fase di 
+inizializzazione dei campi di una classe vengono considerati solo le definizioni
+dei campi primari
+
+\subsection{Campo Alfanumerico}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{AbcModel}
+\begin{lstlisting}[language=java, caption=interfaccia AbcModel, 
+label=code:AbcModel]
+public interface AbcModel extends FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    void setName(String name);
+
+    void setOverride(boolean override);
+    void setAudit(boolean audit);
+
+    void setOnOverflow(OverflowAction onOverflow);
+    void setOnUnderflow(UnderflowAction onUnderflow);
+    void setCheck(CheckChar check);
+    void setNormalize(NormalizeAbcMode normalize);
+    void setCheckGetter(Boolean checkGetter);
+    void setCheckSetter(Boolean checkSetter);
+}
+\end{lstlisting}
+
+
+\index{AbcDefault}
+\begin{lstlisting}[language=java, caption=class AbcDefault, 
+label=code:AbcDefault]
+@Data
+public class AbcDefault {
+    private OverflowAction onOverflow = OverflowAction.Trunc;
+    private UnderflowAction onUnderflow = UnderflowAction.Pad;
+    private CheckChar check = CheckChar.Ascii;
+    private NormalizeAbcMode normalize = NormalizeAbcMode.None;
+    private boolean checkGetter = true;
+    private boolean checkSetter = true;
+}
+\end{lstlisting}
+
+
+\subsection{Campo Numerico}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{NumModel}
+\begin{lstlisting}[language=java, caption=interfaccia NumModel, 
+label=code:NumModel]
+public interface NumModel extends FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    void setName(String name);
+
+    void setOverride(boolean override);
+    void setAudit(boolean audit);
+
+    void setOnOverflow(OverflowAction onOverflow);
+    void setOnUnderflow(UnderflowAction onUnderflow);
+    void setNormalize(NormalizeNumMode normalize);
+    void setAccess(AccesMode mode);
+    void setWordWidth(WordWidth width);
+}
+\end{lstlisting}
+
+\index{NumDefault}
+\begin{lstlisting}[language=java, caption=class NumDefault, 
+label=code:NumDefault]
+@Data
+public class NumDefault {
+    private OverflowAction onOverflow = OverflowAction.Trunc;
+    private UnderflowAction onUnderflow = UnderflowAction.Pad;
+    private NormalizeNumMode normalize = NormalizeNumMode.None;
+    private AccesMode access = AccesMode.String;
+    private WordWidth wordWidth = WordWidth.W4;
+}
+\end{lstlisting}
+
+
+\subsection{Campo Custom (alfanumerico)}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{CusModel}
+\begin{lstlisting}[language=java, caption=interfaccia CusModel, 
+label=code:CusModel]
+public interface CusModel extends FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    void setAudit(boolean audit);
+    
+    void setOnOverflow(OverflowAction onOverflow);
+    void setOnUnderflow(UnderflowAction onUnderflow);
+    void setPadChar(Character padChar);
+    void setInitChar(Character character);
+    void setCheck(CheckUser check);
+    void setAlign(AlignMode align);
+    void setNormalize(NormalizeAbcMode normalize);
+    void setRegex(String regex);
+    void setCheckGetter(Boolean checkGetter);
+    void setCheckSetter(Boolean checkSetter);
+}
+\end{lstlisting}
+
+\index{CusDefault}
+\begin{lstlisting}[language=java, caption=class CusDefault, 
+label=code:CusDefault]
+@Data
+public class CusDefault {
+    private OverflowAction onOverflow = OverflowAction.Trunc;
+    private UnderflowAction onUnderflow = UnderflowAction.Pad;
+    private char pad = ' ';
+    private char init = ' ';
+    private CheckUser check = CheckUser.Ascii;
+    private AlignMode align = AlignMode.LFT;
+    private NormalizeAbcMode normalize = NormalizeAbcMode.None;
+    private boolean checkGetter = true;
+    private boolean checkSetter = true;
+}
+\end{lstlisting}
+
+\subsection{Campo Numerico nullabile}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{NuxModel}
+\begin{lstlisting}[language=java, caption=interfaccia NuxModel, 
+label=code:NuxModel]
+public interface NuxModel extends FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    void setAudit(boolean audit);
+    
+    void setOnOverflow(OverflowAction onOverflow);
+    void setOnUnderflow(UnderflowAction onUnderflow);
+    void setAccess(AccesMode mode);
+    void setWordWidth(WordWidth width);
+    void setNormalize(NormalizeNumMode normalize);
+    void setInitialize(InitializeNuxMode initialize);
+}
+\end{lstlisting}
+
+\index{NuxDefault}
+\begin{lstlisting}[language=java, caption=class NuxDefault, 
+label=code:NuxDefault]
+@Data
+public class NuxDefault {
+    private OverflowAction onOverflow = OverflowAction.Trunc;
+    private UnderflowAction onUnderflow = UnderflowAction.Pad;
+    private NormalizeNumMode normalize = NormalizeNumMode.None;
+    private InitializeNuxMode initialize = InitializeNuxMode.Spaces;
+    private WordWidth wordWidth = WordWidth.W4;
+    private AccesMode access = AccesMode.String;
+}
+\end{lstlisting}
+
+\subsection{Campo Dominio}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{DomModel}
+\begin{lstlisting}[language=java, caption=interfaccia DomModel, 
+label=code:DomModel]
+public interface DomModel extends FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    void setAudit(boolean audit);
+    
+    void setItems(String[] items);
+}
+\end{lstlisting}
+
+
+\subsection{Campo Filler}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{FilModel}
+\begin{lstlisting}[language=java, caption=interfaccia FilModel, 
+label=code:FilModel]
+public interface FilModel extends FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    
+    void setFillChar(Character fillChar);
+    void setCheck(CheckChar check);
+}
+\end{lstlisting}
+
+\index{FilDefault}
+\begin{lstlisting}[language=java, caption=class FilDefault, 
+label=code:FilDefault]
+@Data
+public class FilDefault {
+    private char fill = 0;
+    private CheckChar check = CheckChar.None;
+}
+\end{lstlisting}
+
+\subsection{Campo Valore costante}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{ValModel}
+\begin{lstlisting}[language=java, caption=interfaccia ValModel, 
+label=code:ValModel]
+public interface ValModel extends FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    
+    void setAudit(boolean audit);
+    
+    void setValue(String value);
+}
+\end{lstlisting}
+
+\subsection{Campo Gruppo di campi}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{GrpModel}
+\begin{lstlisting}[language=java, caption=interfaccia GrpModel, 
+label=code:GrpModel]
+public interface GrpModel extends FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    
+    void setFields(List<FieldModel> fields);
+}
+\end{lstlisting}
+
+\subsection{Campo Gruppo di campi ripetuto}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{OccModel}
+\begin{lstlisting}[language=java, caption=interfaccia OccModel, 
+label=code:OccModel]
+public interface OccModel extends  FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    
+    void setFields(List<FieldModel> fields);
+    void setTimes(int times);
+}
+\end{lstlisting}
+
+\subsection{Campi incorporati mediante interfaccia}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{EmbModel}
+\begin{lstlisting}[language=java, caption=interfaccia EmbModel, 
+label=code:EmbModel]
+public interface EmbModel extends FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    
+    void setSource(TraitModel source);
+}
+\end{lstlisting}
+
+\subsection{Campo Gruppo di campi definito mediante interfaccia}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{GrpTraitModel}
+\begin{lstlisting}[language=java, caption=interfaccia GrpTraitModel, 
+label=code:GrpTraitModel]
+public interface GrpTraitModel extends FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    
+    void setTypedef(TraitModel typedef);
+}
+\end{lstlisting}
+
+\subsection{Campo Gruppo di campi ripetuto definito mediante interfaccia}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\index{OccTraitModel}
+\begin{lstlisting}[language=java, caption=interfaccia OccTraitModel, 
+label=code:OccTraitModel]
+public interface OccTraitModel extends FieldModel {
+    void setOffset(int offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    
+    void setTypedef(TraitModel typedef);
+    void setTimes(int times);
+}
+\end{lstlisting}
+
+
+\chapter{Service Consumer}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+L'\,interfaccia fissa semplicemente quello che può fare.
+Il client cercherà nel classpath un provider che implementi l'\,interfaccia
+\textsl{CodeProvider} e col meccanismo del ServiceLoader ne recupera una istanza.
+
+\begin{lstlisting}[language=java, caption=recupero del CodeProvider, 
+label=code:getCodeProvider]
+        ServiceLoader<CodeProvider> loader = ServiceLoader.load(CodeProvider.class);
+        CodeProvider codeProvider = loader.iterator().next();
+\end{lstlisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Da questo recupera il \textsl{CodeFactory} e con questo può creare e valorizzare
+la definizione delle strutture.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Sono stati sviluppati due client, uno sotto forma di maven plugin 
+\verb!recfm-maven-plugin!, e l'\,altro sotto forma di gradle plugin 
+\verb!recfm-gradle-plugin!. Il codice in gran parte è identico, cambia solo il 
+meccanismo di innesco.
+
+\section{Maven plugin}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Il maven plugin \verb!recfm-maven-plugin! permette di creare più classi e 
+interfacce usando uno più file di configurazione in formato yaml.
+
+Il plugin si aspetta come parametri di configurazione
+\begin{lstlisting}[language=java, caption=parametri impostabili del maven plugin, 
+label=code:spring-conf]
+    @Parameter(defaultValue = "${project.build.directory}/generated-sources/recfm",
+        property = "maven.recfm.generateDirectory", required = true)
+    private File generateDirectory;
+
+    @Parameter(defaultValue = "true", property = "maven.recfm.doc", required = true)
+    private boolean doc;
+    
+    @Parameter(defaultValue = "${project.build.resources[0].directory}",
+        property = "maven.recfm.settingsDirectory", required = true)
+    private String settingsDirectory;
+    
+    @Parameter(required = true)
+    private String[] settings;
+
+    @Parameter(defaultValue = "true", property = "maven.recfm.addCompileSourceRoot")
+    private boolean addCompileSourceRoot = true;
+
+    @Parameter(defaultValue = "false", property = "maven.recfm.addTestCompileSourceRoot")
+    private boolean addTestCompileSourceRoot = false;
+    
+    @Parameter
+    private String codeProviderClassName;
+\end{lstlisting}
+
+\begin{itemize}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!generateDirectory}
+	Il campo \verb!generateDirectory! indica la directory root da utilizzare 
+	per la generazione dei sorgenti, viene usato per valorizzare il campo
+	\verb!sourceDirectory! della classe \verb!GenerateArgs!, come si vede dalla 
+	definizione, se il parametro è omesso viene utilizzata la directory 
+	\verb!target/generated-sources/recfm!, normalmente può essere lasciato il 
+	valore di default.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!doc}
+	Il campo \verb!doc! indica se generare o no la documentazione javadoc nei
+	sorgenti, viene usato per valorizzare il campo \verb!doc! della classe 
+	\verb!GenerateArgs!, come si vede dalla definizione, se il parametro è 
+	omesso viene usato il valore \verb!true!, normalmente può essere lasciato il 
+	valore di default.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!settingsDirectory}
+	Il campo \verb!settingsDirectory! indica la directory che contiene i file
+	di configurazione, se il parametro è omesso viene usato il valore 
+	\verb!src/main/resources!, normalmente può essere lasciato il valore di 
+	default.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!settings}
+	Il campo \verb!settings! indica l'elenco dei file di configurazione da
+	utilizzare per generare le classi/interfacce; il parametro deve essere 
+	fornito al plugin.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!addCompileSourceRoot}
+	Il campo \verb!addCompileSourceRoot! è un campo tecnico, indica a maven
+	che la directory dove sono stati generati i sorgenti deve essere inclusa tra
+	quelle utilizzate per la compilazione principale, se il parametro è omesso 
+	viene utilizzato il valore \verb!true!; il valore \verb!true! è opportuno 
+	quando viene usata una directory di generazione del codice diversa da 
+	\verb!src/main/java!, altrimenti è necessario usare plugin aggiuntivi per 
+	aggiungere il nuovo path a quello di compilazione di maven.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!addTestCompileSourceRoot}
+	Il campo \verb!addTestCompileSourceRoot! è analogo al campo precedente,
+	ma aggiunge la directory di generazione al path di compilazione dei test,
+	se omesso viene utilizzato il valore \verb!false!, tranne in casi 
+	particolari può essere lasciato il valore di default.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!codeProviderClassName}
+	Il campo \verb!codeProviderClassName! indica quale è la classe concreata
+	che implementa la \textsl{Service Interface}, se omesso viene utilizzata
+	la ``prima'' implementazione recuperata del \textsl{ServiceLoader}; se in
+	classpath è presente una sola implementazione, non è necessario valorizzare
+	il parametro.
+\end{itemize}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella classe \verb!GenerateArgs! (vedi \ref{code:GenerateArgs}) sono presenti 
+altri tre parametri, questi vengono recuperati automaticamente a runtime dal 
+plugin.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Vediamo un esempio di esecuzione del plugin:
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\begin{lstlisting}[language=XML, caption=esempio minimale di esecuzione del 
+plugin, label=code:spring-conf]
+<plugin>
+    <groupId>io.github.epi155</groupId>
+    <artifactId>recfm-maven-plugin</artifactId>
+    <version>0.7.0</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+            <configuration>
+                <settings>
+                    <setting>foo.yaml</setting>
+                    <setting>bar.yaml</setting>
+                </settings>
+            </configuration>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.epi155</groupId>
+            <artifactId>recfm-java-addon</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+    </dependencies>
+</plugin>
+\end{lstlisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+il plugin per essere eseguito deve avere come dipendenza una libreria che 
+fornisca l'\,implementazione dell'\,inter\-fac\-cia, altrimenti il 
+\verb!ServiceLoader! non trova nulla ed il plugin termina in errore.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Tutti gli altri parametri sono forniti nei file di configurazione.
+
+\subsection{Struttura del file di configurazione}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Per gestire la configurazione dei tracciati il plugin definisce la classe
+\textsl{MasterBook}
+
+\begin{lstlisting}[language=java, caption=classe di configurazione MasterBook, 
+label=code:MasterBook]
+@Data
+public class MasterBook {
+    private FieldDefault defaults = new FieldDefault();
+    private List<ClassPackage> packages = new ArrayList<>();
+}
+\end{lstlisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+L'\,oggetto \textsl{FieldDefault} (vedi~\ref{code:FieldDefault}) è quello messo
+a disposizione dalla \textsl{Service Interface}, espandendo tutte le componenti
+in formato \textit{yaml} abbiamo:
+
+\begin{lstlisting}[language=yaml, caption={configurazione, area default campi}, 
+label=code:defaults-conf]
+defaults:
+  abc:
+    check: Ascii        # None, Ascii, Latin1, Valid
+    onOverflow: Trunc   # Error, Trunc
+    onUnderflow: Pad    # Error, Pad
+    normalize: None     # None, Trim, Trim1
+    checkGetter: true
+    checkSetter: true
+  num:
+    onOverflow: Trunc   # Error, Trunc
+    onUnderflow: Pad    # Error, Pad
+    normalize: None     # None, Trim
+    wordWidth: W4       # W1(1,8-bit), W2(2,16-bit), W4(4,32-bit), W8(8,64-bit)
+    access: String      # String(Str), Numeric(Num), Both(All)
+  cus:
+    pad: ' '
+    init: ' '
+    check: Ascii        # None, Ascii, Latin1, Valid, Digit, DigitOrBlank
+    align: LFT          # LFT, RGT
+    onOverflow: Trunc   # Error, Trunc
+    onUnderflow: Pad    # Error, Pad
+    normalize: None     # None, Trim, Trim1
+    checkGetter: true
+    checkSetter: true
+  nux:
+    onOverflow: Trunc   # Error, Trunc
+    onUnderflow: Pad    # Error, Pad
+    normalize: None     # None, Trim
+    wordWidth: W4       # W1(1,8-bit), W2(2,16-bit), W4(4,32-bit), W8(8,64-bit)
+    access: String      # String(Str), Numeric(Num), Both(All)
+    initialize: Spaces  # Spaces(Space), Zeroes(Zero)
+  fil:
+    fill: 0             # \u0000
+    check: None         # None, Ascii, Latin1, Valid
+
+\end{lstlisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+i valori mostrati nel sorgente~\ref{code:defaults-conf} sono i valori 
+preimpostati, se viene omessa la valorizzazione di questa struttura, 
+completamente o in parte verranno usati questi valori.
+I parametri sono presenti anche a livello di singolo campo, le impostazioni a 
+livello di campo, hanno la precedenza rispetto ai valori impostati in questa
+sezione. Se i parametri non sono presenti a livello di campo, vengono utilizzati
+i valori impostati in questa sezione.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Dopo la configurazione dei default segue un elenco di definizioni per 
+\textsl{package} usando la classe del plugin \textsl{ClassPackage}
+
+\begin{lstlisting}[language=java, caption=classe di configurazione ClassPackage, 
+label=code:ClassPackage]
+@Data
+public class ClassPackage {
+    private String name;     // package name
+    private List<TraitModel> interfaces = new ArrayList<>();
+    private List<ClassModel> classes = new ArrayList<>();
+}
+\end{lstlisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+la classe permette di indicare il nome del package dove devono essere generate
+le classi, e permette di definire un elenco di interfacce e di classi; 
+espandendo i campi in formato \textit{yaml} abbiamo:
+
+\begin{lstlisting}[language=yaml, caption={configurazione, area packages / interfaces / classes}, 
+label=code:pakg-conf]
+packages:
+  - name: com.example.test  # package name
+    interfaces:
+      - &IFoo         # interface reference
+        name: IFoo    # interface name
+        length: 12    # interface length
+        fields:
+          - ...
+    classes:
+      - name: Foo           # class name
+        length: 10          # class length
+        onOverflow: Trunc   # Error, Trunc
+        onUnderflow: Pad    # Error, Pad
+        fields:
+          - ...
+\end{lstlisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+se non vengono usate interfacce, il nodo \texttt{interfaces} può essere omesso,
+sia per le classi che le interfacce il nome e la lunghezza del tracciato da 
+associare devono essere impostate dall'\,utente, nella definizione della classe
+può anche essere impostato il comportamento nel caso che venga fornita in fase
+di de-serializzazione una struttura con una dimensione maggiore o minore di 
+quella attesa.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{TraitModel --- interfaces}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+name       &     & String  & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+fields     &     & array & obbligatorio \\
+\hline
+\end{tabular}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\caption{Attributi impostabili per la definizione di una interfaccia} 
+\label{tab:attr.trait}
+\end{table}
+
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Anche se tutti i tipi di campo hanno una posizione di inizio e una lunghezza,
+il dettaglio dei parametri di configurazione varia da campo a campo ed è 
+opportuno introdurre i parametri di configurazione campo per campo.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{ClassModel --- classes}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+name       &     & String  & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+onOverflow & ovf & enum    & default \texttt{Trunc}\\
+\hline
+onUnderlow & unf & enum    & default \texttt{Pad}\\
+\hline
+fields     &     & array & obbligatorio \\
+\hline
+\end{tabular}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\caption{Attributi impostabili per la definizione di una classe} 
+\label{tab:attr.class}
+\end{table}
+
+\subsection{Campo Alfanumerico}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo alfanumerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:AbcModel}
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{AbcModel --- \texttt{!Abc}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+name       &     & String  & obbligatorio \\
+\hline
+override   & ovr & boolean & default \texttt{false} \\
+\hline
+audit      &     & boolean & default \texttt{false} \\
+\hline
+onOverflow & ovf & enum    & default \texttt{\$\{defaults.abc.onOverflow:Trunc\}}\\
+\hline
+onUnderlow & unf & enum    & default \texttt{\$\{defaults.abc.onUnderflow:Pad\}}\\
+\hline
+check      & chk & enum    & default \texttt{\$\{defaults.abc.check:Ascii\}}\\
+\hline
+normalize  & nrm & enum    & default \texttt{\$\{defaults.abc.normalize:None\}}\\
+\hline
+checkGetter & get & boolean & default \texttt{\$\{defaults.abc.checkGetter:true\}}\\
+\hline
+checkSetter & set & boolean & default \texttt{\$\{defaults.abc.checkSetter:true\}}\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo alfanumerico} \label{tab:attr.abc}
+\end{table}
+
+\subsection{Campo Numerico}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:NumModel}
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{NumModel --- \texttt{!Num}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+name       &     & String  & obbligatorio \\
+\hline
+override   & ovr & boolean & default \texttt{false} \\
+\hline
+audit      &     & boolean & default \texttt{false} \\
+\hline
+onOverflow & ovf & enum    & default \texttt{\$\{defaults.num.onOverflow:Trunc\}}\\
+\hline
+onUnderlow & unf & enum    & default \texttt{\$\{defaults.num.onUnderflow:Pad\}}\\
+\hline
+access     & acc & enum    & default \texttt{\$\{defaults.num.access:String\}}\\
+\hline
+wordWidth  & wid & enum    & default \texttt{\$\{defaults.num.wirdWidth:W4\}}\\
+\hline
+normalize  & nrm & enum    & default \texttt{\$\{defaults.num.normalize:None\}}\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo numerico} \label{tab:attr.num}
+\end{table}
+
+\subsection{Campo Custom (alfanumerico)}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:CusModel}
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{CusModel --- \texttt{!Cus}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+name       &     & String  & obbligatorio \\
+\hline
+override   & ovr & boolean & default \texttt{false} \\
+\hline
+audit      &     & boolean & default \texttt{false} \\
+\hline
+onOverflow & ovf & enum    & default \texttt{\$\{defaults.cus.onOverflow:Trunc\}}\\
+\hline
+onUnderlow & unf & enum    & default \texttt{\$\{defaults.cus.onUnderflow:Pad\}}\\
+\hline
+padChar    & pad & char    & default \texttt{\$\{defaults.cus.pad:' '\}}\\
+\hline
+initChar   & ini & char    & default \texttt{\$\{defaults.cus.init:' '\}}\\
+\hline
+check      & chk & enum    & default \texttt{\$\{defaults.cus.check:Ascii\}}\\
+\hline
+align      &     & enum    & default \texttt{\$\{defaults.cus.align:LFT\}}\\
+\hline
+normalize  & nrm & enum    & default \texttt{\$\{defaults.cus.normalize:None\}}\\
+\hline
+regex      &     & String  & opzionale \\
+\hline
+checkGetter & get & boolean & default \texttt{\$\{defaults.cus.checkGetter:true\}}\\
+\hline
+checkSetter & set & boolean & default \texttt{\$\{defaults.cus.checkSetter:true\}}\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo custom} \label{tab:attr.cus}
+\end{table}
+
+
+
+\subsection{Campo Numerico nullabile}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:NuxModel}
+
+\subsection{Campo Dominio}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:DomModel}
+
+\subsection{Campo Filler}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:FilModel}
+
+\subsection{Campo Costante}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:ValModel}
+
+\subsection{Campo Gruppo}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:GrpModel}
+
+\subsection{Campo Gruppo ripetuto}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:OccModel}
+
+\subsection{Campo incorporato da interfaccia}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:EmbModel}
+
+\subsection{Campo Gruppo da interfaccia}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:GrpTraitModel}
+
+\subsection{Campo Gruppo ripetuto da interfaccia}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{code:OccTraitModel}
+
+\chapter{Service Provider}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+%\appendix
+%\input{appe01.tex}
+\printindex
+
+\end{document}

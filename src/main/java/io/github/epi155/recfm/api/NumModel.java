@@ -4,10 +4,11 @@ public interface NumModel extends FieldModel {
     void setOffset(int offset);
     void setLength(int length);
     void setName(String name);
-    void setRedefines(boolean redefines);
+    void setOverride(boolean override);
     void setAudit(boolean audit);
     void setOnOverflow(OverflowAction onOverflow);
     void setOnUnderflow(UnderflowAction onUnderflow);
-    void setNumericAccess(boolean numericAccess);
+    void setAccess(AccesMode mode);
+    void setWordWidth(WordWidth width);
     void setNormalize(NormalizeNumMode normalize);
 }

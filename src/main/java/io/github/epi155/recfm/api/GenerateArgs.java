@@ -15,11 +15,5 @@ public class GenerateArgs {
     public final String artifact;
     public final String version;
     @Builder.Default
-    public final int align = 4;
-    @Builder.Default
     public final boolean doc = true;
-    @Builder.Default
-    public final boolean checkGetter = true;
-    @Builder.Default
-    public final boolean checkSetter = true;
 }

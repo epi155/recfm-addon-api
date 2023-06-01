@@ -10,5 +10,5 @@ public interface TraitModel {
     List<FieldModel> getFields();
     void setFields(List<FieldModel> fields);
 
-    void create(String namespace, GenerateArgs ga);
+    void create(String namespace, GenerateArgs ga, FieldDefault defaults);
 }
