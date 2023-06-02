@@ -2,7 +2,6 @@
 
 \usepackage[italian]{babel}     % sillabazione italiana
 \usepackage[body={17.8cm,24.7cm}]{geometry}
-\usepackage{makeidx}
 
 \usepackage[utf8x]{inputenc}
 \usepackage[T1]{fontenc}
@@ -13,8 +12,10 @@
 \usepackage{tocloft}
 
 \usepackage{esourcecode}	% custom style
+\usepackage{eflowchart}	% custom style
 
-\usepackage[pdftex]{graphicx}
+%\usepackage[pdftex]{graphicx}
+
 \usepackage[pdftex,
 %pdftitle={Graphics and Color with LaTeX},
 %pdfauthor={Patrick W Daly},
@@ -83,9 +84,48 @@ i valori.
 Questo gruppo di programmi si propone di minimizzare il tempo per creare queste
 classi.
 
-%--------1---------2---------3---------4---------5---------6---------7---------8
-Il programma è strutturato usando service provider interface
 
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}[>=latex,font={\sf}]
+\node(u1) at (0,1.5) [manual input,text width=2cm,fill=blue!10]{maven plugin};
+\node(u2) at (3,1.5) [manual input,text width=2cm,fill=blue!10]{gradle plugin};
+\node(u3) at (6,1.5) [manual input,text width=2cm,fill=blue!10]{custom client};
+\node(si) at (3,0.0) [preparation,fill=yellow!20]{addon-api};
+\node(a1) at (0,-1.5) [process,text width=1.7cm,fill=green!10]{java addon};
+\node(a2) at (3,-1.5) [process,text width=1.7cm,fill=green!10]{scala addon};
+\node(a3) at (6,-1.5) [process,text width=1.7cm,fill=green!10]{custom provider};
+
+\node at (9,1.5) {Service Consumer};
+\node at (9,0.0) {Service Interface};
+\node at (9,-1.5) {Service Provider};
+
+\draw[arrow] (u1) -- (si.north);
+\draw[arrow] (u2) -- (si.north);
+\draw[arrow] (u3) -- (si.north);
+\draw[arrow] (a1) -- (si.south);
+\draw[arrow] (a2) -- (si.south);
+\draw[arrow] (a3) -- (si.south);
+
+\end{tikzpicture}
+\caption{Struttura service-user, service-interface, service-provider} 
+\label{fig:spi}
+\end{figure}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Il programma è strutturato usando service provider interface, 
+vedi fig.~\ref{fig:spi}, abbiamo un plugin, o un programma utente 
+(\textsl{Service Consumer}), che vede direttamente le classi definite nella 
+\textsl{Service Interface} e recupera la implementazione usando il 
+\textsl{ServiceLoader}, in questo modo non ha una dipendenza specifica con una
+delle implementazioni usate. 
+Il \textsl{Service Provider} deve implementare le classi definite nella 
+\textsl{Service Interface}.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Se il \verb!maven-plugin! trova in esecuzione la libreria con 
+l'\,implementazione \verb!java-addon! genererà i sorgenti in java, ma se trova
+l'\,implementazione \verb!scala-addon! genererà i sorgenti in scala.
 
 \chapter{Service Interface}
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -214,10 +254,11 @@ interfacce.
 Vediamo in cosa consiste la classe \textsl{FieldDefault}
 
 \index{FieldDefault}
-\begin{lstlisting}[language=java, caption=interfaccia FieldDefault, 
+\begin{lstlisting}[language=java, caption=class FieldDefault, 
 label=code:FieldDefault]
 @Data
 public class FieldDefault {
+    private ClsDefault cls = new ClsDefault();
     private AbcDefault abc = new AbcDefault();
     private NumDefault num = new NumDefault();
     private NuxDefault nux = new NuxDefault();
@@ -226,11 +267,31 @@ public class FieldDefault {
 }
 \end{lstlisting}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-in pratica permette di impostare dei valori di default di alcuni parametri per
-cinque tipologie di campi. Non avendo mostrato il dettaglio delle definizione
-delle varie tipologie di campo, non è opportuno introdurre in questo punto il
-contenuto delle classi dei default, saranno mostrate insieme al campo 
-corrispondente.
+Il primo default riguarda il comportamento di default della classe quando viene 
+creata partendo da una struttura (stringa), e questa ha una dimensione diversa 
+da quella attesa
+
+\begin{lstlisting}[language=java, caption=classe ClsDefault, 
+label=code:ClsDefault]
+@Data
+public static class ClsDefault {
+    private LoadOverflowAction onOverflow = LoadOverflowAction.Trunc;   // enum {Error, Trunc}
+    private LoadUnderflowAction onUnderflow = LoadUnderflowAction.Pad;  // enum {Error, Pad}
+}
+\end{lstlisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+nel caso che la lunghezza della struttura fornita sia maggiore di quella attesa
+è possibile lanciare una eccezione e ignorare il contenuto in eccesso,
+nel caso che la lunghezza della struttura fornita sia minore di quella atteso è
+possibile lanciare una eccezione o completare la parte mancante con i valori di
+default della parte mancante.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Gli altri default permettono di impostare i valori di default di alcuni 
+parametri per cinque tipologie di campi. Non avendo mostrato il dettaglio delle 
+definizione delle varie tipologie di campo, non è opportuno introdurre in 
+questo punto il contenuto delle classi dei default, saranno mostrate insieme al 
+campo corrispondente.
 
 \section{Definizione di campi}
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -242,7 +303,7 @@ dimensione (length); molti campi sono referenziabili tramite un nome,
 ma non tutti hanno necessariamente il nome; quando i campi hanno un nome
 possono essere primari o sovra-definire (override) campi primari, in fase di 
 inizializzazione dei campi di una classe vengono considerati solo le definizioni
-dei campi primari
+dei campi primari.
 
 \subsection{Campo Alfanumerico}
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -256,7 +317,6 @@ public interface AbcModel extends FieldModel {
     void setName(String name);
 
     void setOverride(boolean override);
-    void setAudit(boolean audit);
 
     void setOnOverflow(OverflowAction onOverflow);
     void setOnUnderflow(UnderflowAction onUnderflow);
@@ -295,7 +355,6 @@ public interface NumModel extends FieldModel {
     void setName(String name);
 
     void setOverride(boolean override);
-    void setAudit(boolean audit);
 
     void setOnOverflow(OverflowAction onOverflow);
     void setOnUnderflow(UnderflowAction onUnderflow);
@@ -331,7 +390,6 @@ public interface CusModel extends FieldModel {
     void setName(String name);
     
     void setOverride(boolean override);
-    void setAudit(boolean audit);
     
     void setOnOverflow(OverflowAction onOverflow);
     void setOnUnderflow(UnderflowAction onUnderflow);
@@ -375,7 +433,6 @@ public interface NuxModel extends FieldModel {
     void setName(String name);
     
     void setOverride(boolean override);
-    void setAudit(boolean audit);
     
     void setOnOverflow(OverflowAction onOverflow);
     void setOnUnderflow(UnderflowAction onUnderflow);
@@ -412,7 +469,6 @@ public interface DomModel extends FieldModel {
     void setName(String name);
     
     void setOverride(boolean override);
-    void setAudit(boolean audit);
     
     void setItems(String[] items);
 }
@@ -429,8 +485,7 @@ public interface FilModel extends FieldModel {
     void setOffset(int offset);
     void setLength(int length);
     
-    void setFillChar(Character fillChar);
-    void setCheck(CheckChar check);
+    void setFill(Character fill);
 }
 \end{lstlisting}
 
@@ -453,8 +508,6 @@ label=code:ValModel]
 public interface ValModel extends FieldModel {
     void setOffset(int offset);
     void setLength(int length);
-    
-    void setAudit(boolean audit);
     
     void setValue(String value);
 }
@@ -716,6 +769,9 @@ in formato \textit{yaml} abbiamo:
 \begin{lstlisting}[language=yaml, caption={configurazione, area default campi}, 
 label=code:defaults-conf]
 defaults:
+  cls:
+    onOverflow: Trunc   # Error, Trunc
+    onUnderflow: Pad    # Error, Pad
   abc:
     check: Ascii        # None, Ascii, Latin1, Valid
     onOverflow: Trunc   # Error, Trunc
@@ -748,7 +804,6 @@ defaults:
     initialize: Spaces  # Spaces(Space), Zeroes(Zero)
   fil:
     fill: 0             # \u0000
-    check: None         # None, Ascii, Latin1, Valid
 
 \end{lstlisting}
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -846,9 +901,9 @@ name       &     & String  & obbligatorio \\
 \hline
 length     & len & int     & obbligatorio \\
 \hline
-onOverflow & ovf & enum    & default \texttt{Trunc}\\
+onOverflow & ovf & enum    & default \texttt{\$\{defaults.cls.onOverflow:Trunc\}}\\
 \hline
-onUnderlow & unf & enum    & default \texttt{Pad}\\
+onUnderlow & unf & enum    & default \texttt{\$\{defaults.cls.onUnderflow:Pad\}}\\
 \hline
 fields     &     & array & obbligatorio \\
 \hline
@@ -880,8 +935,6 @@ length     & len & int     & obbligatorio \\
 name       &     & String  & obbligatorio \\
 \hline
 override   & ovr & boolean & default \texttt{false} \\
-\hline
-audit      &     & boolean & default \texttt{false} \\
 \hline
 onOverflow & ovf & enum    & default \texttt{\$\{defaults.abc.onOverflow:Trunc\}}\\
 \hline
@@ -922,8 +975,6 @@ name       &     & String  & obbligatorio \\
 \hline
 override   & ovr & boolean & default \texttt{false} \\
 \hline
-audit      &     & boolean & default \texttt{false} \\
-\hline
 onOverflow & ovf & enum    & default \texttt{\$\{defaults.num.onOverflow:Trunc\}}\\
 \hline
 onUnderlow & unf & enum    & default \texttt{\$\{defaults.num.onUnderflow:Pad\}}\\
@@ -961,8 +1012,6 @@ name       &     & String  & obbligatorio \\
 \hline
 override   & ovr & boolean & default \texttt{false} \\
 \hline
-audit      &     & boolean & default \texttt{false} \\
-\hline
 onOverflow & ovf & enum    & default \texttt{\$\{defaults.cus.onOverflow:Trunc\}}\\
 \hline
 onUnderlow & unf & enum    & default \texttt{\$\{defaults.cus.onUnderflow:Pad\}}\\
@@ -994,45 +1043,272 @@ checkSetter & set & boolean & default \texttt{\$\{defaults.cus.checkSetter:true\
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{code:NuxModel}
 
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{NuxModel --- \texttt{!Nux}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+name       &     & String  & obbligatorio \\
+\hline
+override   & ovr & boolean & default \texttt{false} \\
+\hline
+onOverflow & ovf & enum    & default \texttt{\$\{defaults.nux.onOverflow:Trunc\}}\\
+\hline
+onUnderlow & unf & enum    & default \texttt{\$\{defaults.nux.onUnderflow:Pad\}}\\
+\hline
+access     & acc & enum    & default \texttt{\$\{defaults.nux.access:String\}}\\
+\hline
+wordWidth  & wid & enum    & default \texttt{\$\{defaults.nux.wirdWidth:W4\}}\\
+\hline
+normalize  & nrm & enum    & default \texttt{\$\{defaults.nux.normalize:None\}}\\
+\hline
+initialize & ini & enum    & default \texttt{\$\{defaults.nux.initialize:Space\}}\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo numerico nullabile} \label{tab:attr.nux}
+\end{table}
+
+
 \subsection{Campo Dominio}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{code:DomModel}
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{DomModel --- \texttt{!Dom}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+name       &     & String  & obbligatorio \\
+\hline
+override   & ovr & boolean & default \texttt{false} \\
+\hline
+items      &     & array  & obbligatorio (valori permessi)\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo dominio} \label{tab:attr.dom}
+\end{table}
 
 \subsection{Campo Filler}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{code:FilModel}
 
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{FilModel --- \texttt{!Fil}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+fill       &     & char    & default \texttt{\$\{defaults.fil.fill:0\}}\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo filler} \label{tab:attr.fill}
+\end{table}
+
+
 \subsection{Campo Costante}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{code:ValModel}
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{ValModel --- \texttt{!Val}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+value      & val & string  & obbligatorio \\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo costante} \label{tab:attr.val}
+\end{table}
+
 
 \subsection{Campo Gruppo}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{code:GrpModel}
 
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{GrpModel --- \texttt{!Grp}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+name       &     & String  & obbligatorio \\
+\hline
+override   & ovr & boolean & default \texttt{false} \\
+\hline
+fields     &     & array  & obbligatorio (elenco campi)\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un gruppo} \label{tab:attr.grp}
+\end{table}
+
+
 \subsection{Campo Gruppo ripetuto}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{code:OccModel}
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{OccModel --- \texttt{!Occ}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+name       &     & String  & obbligatorio \\
+\hline
+override   & ovr & boolean & default \texttt{false} \\
+\hline
+times      & x   & int     & obbligatorio \\
+\hline
+fields     &     & array  & obbligatorio (elenco campi)\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un gruppo ripetuto} \label{tab:attr.occ}
+\end{table}
+
 
 \subsection{Campo incorporato da interfaccia}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{code:EmbModel}
 
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{EmbModel --- \texttt{!Emb}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+source     & src  & Trait  & obbligatorio (interfaccia)\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un elenco di campi importato da una interfaccia}
+\label{tab:attr.emb}
+\end{table}
+
+
 \subsection{Campo Gruppo da interfaccia}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{code:GrpTraitModel}
 
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{GrpTraitModel --- \texttt{!GRP}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+name       &     & String  & obbligatorio \\
+\hline
+override   & ovr & boolean & default \texttt{false} \\
+\hline
+typedef    & as  & Trait   & obbligatorio (interfaccia)\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un gruppo da interfaccia} \label{tab:attr.grpt}
+\end{table}
+
+
 \subsection{Campo Gruppo ripetuto da interfaccia}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{code:OccTraitModel}
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\hline
+\multicolumn{4}{|c|}{OccTraitModel --- \texttt{!OCC}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+offset     & at  & int     & obbligatorio \\
+\hline
+length     & len & int     & obbligatorio \\
+\hline
+name       &     & String  & obbligatorio \\
+\hline
+override   & ovr & boolean & default \texttt{false} \\
+\hline
+times      & x   & int     & obbligatorio \\
+\hline
+typedef    & as  & Trait   & obbligatorio (interfaccia)\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un gruppo ripetuto da interfaccia} \label{tab:attr.occt}
+\end{table}
+
 
 \chapter{Service Provider}
 %--------1---------2---------3---------4---------5---------6---------7---------8

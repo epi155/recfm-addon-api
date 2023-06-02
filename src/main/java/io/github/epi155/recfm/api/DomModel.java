@@ -5,6 +5,5 @@ public interface DomModel extends FieldModel {
     void setLength(int length);
     void setName(String name);
     void setOverride(boolean override);
-    void setAudit(boolean audit);
     void setItems(String[] items);
 }

@@ -18,9 +18,8 @@
     <!-- mvn dependency:tree -->
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <developers>
@@ -70,36 +69,65 @@
             <version>1.18.26</version>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.7</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.3.7</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>24.0.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.10.0</version>
-        </dependency>
-
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <!-- recompile with Java 9 only the module-info.java -->
+                        <configuration>
+                            <release>9</release>
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                    <version>1.18.26</version>
+                                </path>
+                            </annotationProcessorPaths>
+
+                            <includes>
+                                <include>module-info.java</include>
+                            </includes>
+                            <outputDirectory>${project.build.outputDirectory}/META-INF/versions/9</outputDirectory>
+                            <!-- still need this for IntelliJ -->
+                            <source>9</source>
+                            <target>9</target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>java8-compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <!-- recompile everything with Java 8 except the module-info.java -->
+                        <configuration>
+                            <fork>true</fork>
+                            <executable>/usr/lib/jvm/java-8-openjdk/bin/javac</executable>
+                            <excludes>
+                                <exclude>module-info.java</exclude>
+                            </excludes>
+                            <source>5</source>
+                            <target>5</target>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <!-- upgrade to final ASM 6.0 release -->
+                    <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm -->
+                    <dependency>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>9.5</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

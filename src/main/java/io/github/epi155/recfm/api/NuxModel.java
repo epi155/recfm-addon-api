@@ -5,7 +5,6 @@ public interface NuxModel extends FieldModel {
     void setLength(int length);
     void setName(String name);
     void setOverride(boolean override);
-    void setAudit(boolean audit);
     void setOnOverflow(OverflowAction onOverflow);
     void setOnUnderflow(UnderflowAction onUnderflow);
     void setAccess(AccesMode mode);

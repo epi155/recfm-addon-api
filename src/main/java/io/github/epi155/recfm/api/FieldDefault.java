@@ -29,7 +29,6 @@ public class FieldDefault {
     @Data
     public static class FilDefault {
         private char fill = 0;
-        private CheckChar check = CheckChar.None;
     }
 
     @Data
