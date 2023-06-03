@@ -29,6 +29,7 @@ urlcolor=green,
 ]
 {hyperref}
 
+\renewcommand{\arraystretch}{1.2}
 
 \usepackage{tikz}
 %\usetikzlibrary{shapes,arrows}
@@ -69,7 +70,7 @@ urlcolor=green,
 %\clearpage
 
 \tableofcontents
-%\listoffigures
+\listoffigures
 \listoftables
 \lstlistoflistings
 
@@ -132,26 +133,33 @@ l'\,implementazione \verb!scala-addon! genererà i sorgenti in scala.
 L'\,artifatto \verb!recfm-addon-api! mette a disposizione una serie di 
 interfacce, alcuni enum e java-bean per permettere al modulo client di definire
 i tracciati. 
+Il codice è compilato in moda da essere compatibile con il java 5, ma fornisce
+il \verb!module-info! per essere utilizzabile propriamente anche con il java 9
+e superiori.
 
-\section{CodeProvider}
+\section{CodeProvider}\index{CodeProvider}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Il punto di partenza è l'\,interfaccia \textsl{CodeProvider}
+Il punto di partenza è l'\,interfaccia \textsl{CodeProvider}, vedi 
+cod.~\ref{code:CodeProvider}, questa interfaccia fornisce l'\,istanza 
+dell'\,interfaccia \textsl{CodeFactory}
 
-\index{CodeProvider}
+\begin{figure*}[!htb]
 \begin{lstlisting}[language=java, caption=interfaccia CodeProvider, 
 label=code:CodeProvider]
 public interface CodeProvider {
      CodeFactory getInstance();
 }
 \end{lstlisting}
+\end{figure*}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-questa interfaccia fornisce l'\,istanza dell'\,interfaccia \textsl{CodeFactory}
 
-\section{CodeFactory}
+
+\section{CodeFactory} \index{CodeFactory}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L\,interfaccia \textsl{CodeFactory}
+L\,interfaccia \textsl{CodeFactory}, vedi cod.~\ref{code:CodeFactory}, fornisce i 
+metodi per definire tutti gli elementi della struttura.
 
-\index{CodeFactory}
+\begin{figure*}[!htb]
 \begin{lstlisting}[language=java, caption=interfaccia CodeFactory, 
 label=code:CodeFactory]
 public interface CodeFactory {
@@ -172,8 +180,8 @@ public interface CodeFactory {
     OccTraitModel newOccTraitModel();
 }
 \end{lstlisting}
+\end{figure*}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-fornisce i metodi per definire tutti gli elementi della struttura.
 
 \section{Classi / Interfacce}
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -624,6 +632,8 @@ meccanismo di innesco.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Il maven plugin \verb!recfm-maven-plugin! permette di creare più classi e 
 interfacce usando uno più file di configurazione in formato yaml.
+Le librerie esterne utilizzate richiedono il java 8, quindi per eseguire questo 
+plugin è necessario almeno il java 8.
 
 Il plugin si aspetta come parametri di configurazione
 \begin{lstlisting}[language=java, caption=parametri impostabili del maven plugin, 
@@ -655,52 +665,53 @@ label=code:spring-conf]
 \begin{itemize}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!generateDirectory}
-	Il campo \verb!generateDirectory! indica la directory root da utilizzare 
-	per la generazione dei sorgenti, viene usato per valorizzare il campo
-	\verb!sourceDirectory! della classe \verb!GenerateArgs!, come si vede dalla 
-	definizione, se il parametro è omesso viene utilizzata la directory 
-	\verb!target/generated-sources/recfm!, normalmente può essere lasciato il 
-	valore di default.
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{generateDirectory}} indica la 
+	directory root da utilizzare per la generazione dei sorgenti, viene usato 
+	per valorizzare il campo \verb!sourceDirectory! della classe 
+	\verb!GenerateArgs!, come si vede dalla definizione, se il parametro è 
+	omesso viene utilizzata la directory \verb!target/generated-sources/recfm!, 
+	normalmente può essere lasciato il valore di default.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!doc}
-	Il campo \verb!doc! indica se generare o no la documentazione javadoc nei
-	sorgenti, viene usato per valorizzare il campo \verb!doc! della classe 
-	\verb!GenerateArgs!, come si vede dalla definizione, se il parametro è 
-	omesso viene usato il valore \verb!true!, normalmente può essere lasciato il 
-	valore di default.
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{doc}} indica se generare o no 
+	la documentazione javadoc nei sorgenti, viene usato per valorizzare il campo 
+	\verb!doc! della classe \verb!GenerateArgs!, come si vede dalla definizione, 
+	se il parametro è omesso viene usato il valore \verb!true!, normalmente può 
+	essere lasciato il valore di default.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!settingsDirectory}
-	Il campo \verb!settingsDirectory! indica la directory che contiene i file
-	di configurazione, se il parametro è omesso viene usato il valore 
-	\verb!src/main/resources!, normalmente può essere lasciato il valore di 
-	default.
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{settingsDirectory}} indica la 
+	directory che contiene i file	di configurazione, se il parametro è omesso 
+	viene usato il valore \verb!src/main/resources!, normalmente può essere 
+	lasciato il valore di default.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!settings}
-	Il campo \verb!settings! indica l'elenco dei file di configurazione da
-	utilizzare per generare le classi/interfacce; il parametro deve essere 
-	fornito al plugin.
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{settings}} indica l'elenco dei 
+	file di configurazione da utilizzare per generare le classi/interfacce; il 
+	parametro deve essere fornito al plugin.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!addCompileSourceRoot}
-	Il campo \verb!addCompileSourceRoot! è un campo tecnico, indica a maven
-	che la directory dove sono stati generati i sorgenti deve essere inclusa tra
-	quelle utilizzate per la compilazione principale, se il parametro è omesso 
-	viene utilizzato il valore \verb!true!; il valore \verb!true! è opportuno 
-	quando viene usata una directory di generazione del codice diversa da 
-	\verb!src/main/java!, altrimenti è necessario usare plugin aggiuntivi per 
-	aggiungere il nuovo path a quello di compilazione di maven.
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{addCompileSourceRoot}} è un 
+	campo tecnico, indica a maven che la directory dove sono stati generati i 
+	sorgenti deve essere inclusa tra quelle utilizzate per la compilazione 
+	principale, se il parametro è omesso viene utilizzato il valore 
+	\verb!true!; il valore \verb!true! è opportuno quando viene usata una 
+	directory di generazione del codice diversa da \verb!src/main/java!, 
+	altrimenti è necessario usare plugin aggiuntivi per aggiungere il nuovo path 
+	a quello di compilazione di maven.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!addTestCompileSourceRoot}
-	Il campo \verb!addTestCompileSourceRoot! è analogo al campo precedente,
-	ma aggiunge la directory di generazione al path di compilazione dei test,
-	se omesso viene utilizzato il valore \verb!false!, tranne in casi 
-	particolari può essere lasciato il valore di default.
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{addTestCompileSourceRoot}} è 
+	analogo al campo precedente, ma aggiunge la directory di generazione al path 
+	di compilazione dei test, se omesso viene utilizzato il valore \verb!false!, 
+	tranne in casi particolari può essere lasciato il valore di default.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!codeProviderClassName}
-	Il campo \verb!codeProviderClassName! indica quale è la classe concreata
-	che implementa la \textsl{Service Interface}, se omesso viene utilizzata
-	la ``prima'' implementazione recuperata del \textsl{ServiceLoader}; se in
-	classpath è presente una sola implementazione, non è necessario valorizzare
-	il parametro.
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{codeProviderClassName}} indica 
+	quale è la classe concreata che implementa la \textsl{Service Interface}, se 
+	omesso viene utilizzata la ``prima'' implementazione recuperata del 
+	\textsl{ServiceLoader}; se in classpath è presente una sola implementazione, 
+	non è necessario valorizzare il parametro. 
 \end{itemize}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Nella classe \verb!GenerateArgs! (vedi \ref{code:GenerateArgs}) sono presenti 
@@ -810,10 +821,10 @@ defaults:
 i valori mostrati nel sorgente~\ref{code:defaults-conf} sono i valori 
 preimpostati, se viene omessa la valorizzazione di questa struttura, 
 completamente o in parte verranno usati questi valori.
-I parametri sono presenti anche a livello di singolo campo, le impostazioni a 
-livello di campo, hanno la precedenza rispetto ai valori impostati in questa
-sezione. Se i parametri non sono presenti a livello di campo, vengono utilizzati
-i valori impostati in questa sezione.
+I parametri possono essere impostate anche a livello di singolo campo, le 
+impostazioni a livello di campo, hanno la precedenza rispetto ai valori 
+impostati in questa sezione. Se i parametri non sono presenti a livello di 
+campo, vengono utilizzati i valori impostati in questa sezione.
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Dopo la configurazione dei default segue un elenco di definizioni per 
@@ -951,6 +962,23 @@ checkSetter & set & boolean & default \texttt{\$\{defaults.abc.checkSetter:true\
 \end{tabular}
 \caption{Attributi impostabili per un campo alfanumerico} \label{tab:attr.abc}
 \end{table}
+
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, caption={esempio definizione campi alfanumerici}, 
+label=code:xmplAbc]
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo
+        length: 50
+        fields:
+          - !Abc { name: cognome    , at:   1, len:    25 }
+          - !Abc { name: nome       , at:  26, len:    20 }
+          - !Abc { name: stCivile   , at:  46, len:     1 }
+          - !Abc { name: nazionalita, at:  47, len:     3 }
+          - !Abc { name: sesso      , at:  50, len:     1 }
+\end{lstlisting}
+\end{figure*}
 
 \subsection{Campo Numerico}
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1244,7 +1272,7 @@ source     & src  & Trait  & obbligatorio (interfaccia)\\
 \hline
 \end{tabular}
 \caption{Attributi impostabili per un elenco di campi importato da una interfaccia}
-\label{tab:attr.emb}
+\label{tab:attr.grp}
 \end{table}
 
 
@@ -1306,12 +1334,58 @@ times      & x   & int     & obbligatorio \\
 typedef    & as  & Trait   & obbligatorio (interfaccia)\\
 \hline
 \end{tabular}
-\caption{Attributi impostabili per un gruppo ripetuto da interfaccia} \label{tab:attr.occt}
+\caption{Attributi impostabili per un gruppo ripetuto da interfaccia} \label{tab:attr.grpt}
 \end{table}
 
 
 \chapter{Service Provider}
 %--------1---------2---------3---------4---------5---------6---------7---------8
+Nei capitoli precedenti abbiamo visto la \textsl{Service Interface}, che 
+definisce delle interfacce e delle classi che permettono di definire i 
+traccciati, e indicare alcuni comportamenti che dovranno essere usati in fase di
+utilizzazione dei tracciati; e alcuni esempi di \textsl{Service Consumer}, che
+semplicemente valorizza gli oggetti messi a disposizione della 
+\textsl{Service Interface}, ma il vero lavoro di generazione del codice è fatto
+dal \textsl{Service Provider}.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La struttuta SPI consente di avere codice generato diverso, implementato in modo
+diverso, o addirittura generare sorgente in un linguaggio diverso.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Qualunque sia il linguaggio generato e il dettaglio della implementazione il
+\textsl{Service Provider} dovrà fornire alcune funzionalità generali.
+
+\begin{itemize}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \textbf{decode}: partendo dalla stringa-dati, deve instanziare la 
+    classe-dati;
+\item \textbf{setter, getter}: la classe-dati generata deve fornire i metodi di 
+    accesso ai singoli campi;
+\item \textbf{costruttore vuoto}: la classe-dati può essere instanziata con i 
+    valori di default dei campi;
+\item \textbf{encode}: la classe-dati può essere serializzata nella 
+    stringa-dati.
+\end{itemize}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Sarebbe gradita anche qualche funzionalià accessoria:
+\begin{itemize}
+\item \textbf{validate}: validare la stringa-dati prima della 
+    deserializzaione, in modo da segnalare tutte le aree che non possono essere
+    assegnate ai relativi campi, tipicamente caratteri non numerici in campi di
+    tipo numerico;
+\item \textbf{cast}: se due stringhe-dati hanno la stessa lunghezza, poter 
+    passare da una classe-dati che le rappresenta all'\,altra;
+\item \textbf{toString}: fornire un metodo che mostra tutti i valori dei campi 
+    che compongono la classe-dati.
+\end{itemize}
+
+
+
+\section{Generazione sorgente java --- \texttt{java-addon}}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Questa implementazione
+
 
 %\appendix
 %\input{appe01.tex}
