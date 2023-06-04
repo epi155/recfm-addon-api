@@ -8,7 +8,7 @@ public interface CusModel extends FieldModel {
     void setOnOverflow(OverflowAction onOverflow);
     void setOnUnderflow(UnderflowAction onUnderflow);
     void setPadChar(Character padChar);
-    void setInitChar(Character character);
+    void setInitChar(Character initChar);
     void setCheck(CheckUser check);
     void setAlign(AlignMode align);
     void setNormalize(NormalizeAbcMode normalize);

@@ -15,6 +15,7 @@ public class FieldDefault {
     public static class ClsDefault {
         private LoadOverflowAction onOverflow = LoadOverflowAction.Trunc;
         private LoadUnderflowAction onUnderflow = LoadUnderflowAction.Pad;
+        private boolean doc = true;
     }
     @Data
     public static class AbcDefault {
@@ -33,8 +34,8 @@ public class FieldDefault {
 
     @Data
     public static class CusDefault {
-        private char pad = ' ';
-        private char init = ' ';
+        private char padChar = ' ';
+        private char initChar = ' ';
         private CheckUser check = CheckUser.Ascii;
         private AlignMode align = AlignMode.LFT;
         private OverflowAction onOverflow = OverflowAction.Trunc;

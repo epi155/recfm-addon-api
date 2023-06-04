@@ -7,8 +7,8 @@ public interface NuxModel extends FieldModel {
     void setOverride(boolean override);
     void setOnOverflow(OverflowAction onOverflow);
     void setOnUnderflow(UnderflowAction onUnderflow);
-    void setAccess(AccesMode mode);
-    void setWordWidth(WordWidth width);
+    void setAccess(AccesMode access);
+    void setWordWidth(WordWidth wordWidth);
     void setNormalize(NormalizeNumMode normalize);
     void setInitialize(InitializeNuxMode initialize);
 }

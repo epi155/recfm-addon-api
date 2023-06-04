@@ -9,6 +9,7 @@ public interface ClassModel {
     void setLength(int length);
     void setOnOverflow(LoadOverflowAction onOverflow);
     void setOnUnderflow(LoadUnderflowAction onUnderflow);
+    void setDoc(Boolean doc);
     void setFields(List<FieldModel> fields);
 
     void create(String namespace, GenerateArgs ga, FieldDefault defaults);

@@ -9,6 +9,7 @@ public interface TraitModel {
     void setLength(int length);
     List<FieldModel> getFields();
     void setFields(List<FieldModel> fields);
+    void setDoc(Boolean doc);
 
     void create(String namespace, GenerateArgs ga, FieldDefault defaults);
 }
