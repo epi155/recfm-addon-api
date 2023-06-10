@@ -7,7 +7,7 @@ public interface AbcModel extends FieldModel {
     void setOverride(boolean override);
     void setOnOverflow(OverflowAction onOverflow);
     void setOnUnderflow(UnderflowAction onUnderflow);
-    void setCheck(CheckChar check);
+    void setCheck(CheckAbc check);
     void setNormalize(NormalizeAbcMode normalize);
     void setCheckGetter(Boolean checkGetter);
     void setCheckSetter(Boolean checkSetter);

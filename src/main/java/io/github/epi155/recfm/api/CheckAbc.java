@@ -3,7 +3,7 @@ package io.github.epi155.recfm.api;
 /**
  * control algorithms for alphanumeric fields
  */
-public enum CheckChar {
+public enum CheckAbc {
     /**
      * No check
      */

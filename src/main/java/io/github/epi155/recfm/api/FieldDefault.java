@@ -19,7 +19,7 @@ public class FieldDefault {
     }
     @Data
     public static class AbcDefault {
-        private CheckChar check = CheckChar.Ascii;
+        private CheckAbc check = CheckAbc.Ascii;
         private OverflowAction onOverflow = OverflowAction.Trunc;
         private UnderflowAction onUnderflow = UnderflowAction.Pad;
         private NormalizeAbcMode normalize = NormalizeAbcMode.None;
@@ -36,7 +36,7 @@ public class FieldDefault {
     public static class CusDefault {
         private char padChar = ' ';
         private char initChar = ' ';
-        private CheckUser check = CheckUser.Ascii;
+        private CheckCus check = CheckCus.Ascii;
         private AlignMode align = AlignMode.LFT;
         private OverflowAction onOverflow = OverflowAction.Trunc;
         private UnderflowAction onUnderflow = UnderflowAction.Pad;
