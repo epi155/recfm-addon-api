@@ -9,7 +9,7 @@ import java.io.File;
 
 @Builder
 public class GenerateArgs {
-    @NonNull public final File sourceDirectory;
+    @NonNull public final String sourceDirectory;
     public final String group;
     public final String artifact;
     public final String version;
