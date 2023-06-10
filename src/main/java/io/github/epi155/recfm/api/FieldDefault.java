@@ -50,7 +50,7 @@ public class FieldDefault {
         private OverflowAction onOverflow = OverflowAction.Trunc;
         private UnderflowAction onUnderflow = UnderflowAction.Pad;
         private NormalizeNumMode normalize = NormalizeNumMode.None;
-        private WordWidth wordWidth = WordWidth.W4;
+        private WordWidth wordWidth = WordWidth.Int;
         private AccesMode access = AccesMode.String;
     }
     @Data
@@ -59,7 +59,7 @@ public class FieldDefault {
         private UnderflowAction onUnderflow = UnderflowAction.Pad;
         private NormalizeNumMode normalize = NormalizeNumMode.None;
         private InitializeNuxMode initialize = InitializeNuxMode.Spaces;
-        private WordWidth wordWidth = WordWidth.W4;
+        private WordWidth wordWidth = WordWidth.Int;
         private AccesMode access = AccesMode.String;
     }
 }
