@@ -23,7 +23,7 @@
 \usepackage{minted}
 \definecolor{bg}{rgb}{0.95,0.95,0.92}
 \usepackage{caption}
-\newenvironment{elisting}[1][!htb]
+\newenvironment{elisting}[1][H]
 %  {\captionsetup{aboveskip=-0.1\normalbaselineskip}\begin{listing}[#1]}
   {\captionsetup{aboveskip=0pt}\begin{listing}[#1]}
   {\end{listing}%
@@ -164,6 +164,22 @@ Il \textsl{Service Provider} deve implementare le classi definite nella
 Se il \verb!maven-plugin! trova in esecuzione la libreria con 
 l'\,implementazione \verb!java-addon! genererà i sorgenti in java, ma se trova
 l'\,implementazione \verb!scala-addon! genererà i sorgenti in scala.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La documentazione è divisa in tre parti. Nella prima viene data una descrizione
+dettagliata delle classi definite nella \textsl{service provider interface},
+questa parte è utile per chi volesse sviluppare un \textit{custom service} o
+un \textit{custom provider}. Se si è interessati solo a come generare il
+codice partendo dai file di configurazione può essere saltata.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella seconda parte viene data una descrizione di due plugin usati per definire
+i tracciati delle stringhe-dati e usare il codice.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella terza parte viene data una descrizione del \textsl{service provider}
+che genera il sorgente java mostrando anche alcune funzionalità aggiuntive
+delle classi generate oltre ai semplici setter e getter.
 \end{abstract}
 
 %\input{cover.tex}
@@ -181,6 +197,8 @@ l'\,implementazione \verb!scala-addon! genererà i sorgenti in scala.
 \fi
 
 \clearpage
+
+\part{Service Provider Interface}
 
 %  ___       _             __                
 % |_ _|_ __ | |_ ___ _ __ / _| __ _  ___ ___ 
@@ -214,7 +232,7 @@ public interface CodeProvider {
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface CodeProvider {
      |\hyperref[lst:CodeFactory]{CodeFactory}| getInstance();
@@ -255,7 +273,7 @@ public interface CodeFactory {
 \end{lstlisting}\index{CodeFactory}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface CodeFactory {
     |\hyperref[lst:ClassModel]{ClassModel}| newClassModel();
@@ -306,7 +324,7 @@ public interface ClassModel {
 \end{lstlisting}\index{ClassModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface ClassModel {
     void setName(String name);
@@ -345,7 +363,7 @@ public interface TraitModel {
 \end{lstlisting}\index{TraitModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface TraitModel {
     void setName(String name);
@@ -394,7 +412,7 @@ public class GenerateArgs {
 \end{lstlisting}\index{GenerateArgs}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 @Builder
 public class GenerateArgs {
@@ -439,7 +457,7 @@ public class FieldDefault {
 \end{lstlisting}\index{FieldDefault}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 @Data
 public class FieldDefault {
@@ -473,7 +491,7 @@ public static class ClsDefault {
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 @Data
 public static class ClsDefault {
@@ -500,7 +518,7 @@ definizione delle varie tipologie di campo, non è opportuno introdurre in
 questo punto il contenuto delle classi dei default, saranno mostrate insieme al 
 campo corrispondente.
 
-\section{Definizione di campi}
+\chapter{Definizione di campi singoli}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Nella definizione della classe, e dell'\,interfaccia l'\,elenco dei campi è
 impostato come \verb!List<FieldModel>!, ma l'\,interfaccia \verb!FieldModel! è
@@ -512,7 +530,12 @@ possono essere primari o sovra-definire (override) campi primari, in fase di
 inizializzazione dei campi di una classe vengono considerati solo le definizioni
 dei campi primari.
 
-\subsection{Campo Alfanumerico}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nelle definizioni dei campi la posizione iniziale del campo (offset) è impostata 
+come \texttt{Integer}, cioè in generale non è obbligatorio impostarla, può 
+essere calcolata automaticamente dal \textsl{Service Provider}.
+
+\section{Campo Alfanumerico}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Un campo alfanumerico ha i 4 parametri base: \verb!offset!, \verb!length!,
 \verb!name! e \verb!override!.
@@ -549,7 +572,7 @@ nell'\,ultimo vengono accettati i caratteri UTF-8 validi.
 caption=interfaccia AbcModel (campo alfanumerico), 
 label=lst:AbcModel]
 public interface AbcModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
 
@@ -565,10 +588,10 @@ public interface AbcModel extends FieldModel {
 \end{lstlisting}\index{AbcModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface AbcModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
 
@@ -625,7 +648,7 @@ public class AbcDefault {
 \end{lstlisting}\index{AbcDefault}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 @Data
 public class AbcDefault {
@@ -648,7 +671,7 @@ di default per i parametri \verb!onOverflow!, \verb!onUnderflow!, \verb!check!,
 \verb!normalize!, \verb!checkGetter!, \verb!checkSetter!, nel caso non siano 
 impostati dal client.
 
-\subsection{Campo Numerico}
+\section{Campo Numerico}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Anche un campo numerico ha i 4 parametri base: \verb!offset!, \verb!length!,
 \verb!name! e \verb!override!.
@@ -676,7 +699,7 @@ e in fase di getter che la stringa restituita sia numerica.
 caption=interfaccia NumModel (campo numerico), 
 label=lst:NumModel]
 public interface NumModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
 
@@ -691,10 +714,10 @@ public interface NumModel extends FieldModel {
 \end{lstlisting}\index{NumModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface NumModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
 
@@ -764,7 +787,7 @@ public class NumDefault {
 \end{lstlisting}\index{NumDefault}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 @Data
 public class NumDefault {
@@ -786,7 +809,7 @@ di default per i parametri \verb!access!, \verb!wordWidth!, \texttt{onOver\-flow
 \verb!onUnderflow! e \verb!normalize! nel caso non siano  impostati dal client.
 
 
-\subsection{Campo Custom (alfanumerico)}
+\section{Campo Custom (alfanumerico)}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Anche un campo custom ha i 4 parametri base: \verb!offset!, \verb!length!,
 \verb!name! e \verb!override!.
@@ -819,7 +842,7 @@ campo.
 caption=interfaccia CusModel (campo custom), 
 label=lst:CusModel]
 public interface CusModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -839,10 +862,10 @@ public interface CusModel extends FieldModel {
 \end{lstlisting}\index{CusModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface CusModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -900,7 +923,7 @@ public class CusDefault {
 \end{lstlisting}\index{CusDefault}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 @Data
 public class CusDefault {
@@ -938,7 +961,7 @@ di default per i parametri \verb!align!, \verb!padChar!, \verb!initChar!,
 client.
 
 
-\subsection{Campo Numerico nullabile}
+\section{Campo Numerico nullabile}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Un campo numerico nullabile è una estensione di un campo numerico ordinario.
 La differenza è che nella stringa-dati è permesso il valore spazio (tutti i
@@ -951,7 +974,7 @@ campo della classe-dati.
 caption=interfaccia NuxModel (campo numerico nullabile), 
 label=lst:NuxModel]
 public interface NuxModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
 
@@ -967,10 +990,10 @@ public interface NuxModel extends FieldModel {
 \end{lstlisting}\index{NuxModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface NuxModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
 
@@ -1013,7 +1036,7 @@ public class NuxDefault {
 \end{lstlisting}\index{NuxDefault}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 @Data
 public class NuxDefault {
@@ -1026,7 +1049,7 @@ public class NuxDefault {
 }
 \end{javacode}
 \caption{class NuxDefault (default campo numerico nullabile)}
-\label{lst:NuxDefault}
+\label{lst:NuxDefault}\index{NuxDefault}
 \end{elisting}
 \fi
 
@@ -1035,7 +1058,7 @@ Per gestire il default a livello generale per questo tipo di campi viene usata
 una classe default dedicata, che è la copia della corrispondente per il caso
 numerico ordinario, con in più il default di inizializzazione.
 
-\subsection{Campo Dominio}
+\section{Campo Dominio}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Un campo di tipo dominio è un campo alfanumerico che può assumere solo dei 
 valori costanti predefiniti.
@@ -1049,7 +1072,7 @@ parametro \verb!items! che dovrà fornire l'\,elenco dei valori costanti ammessi
 caption=interfaccia DomModel (campo dominio), 
 label=lst:DomModel]
 public interface DomModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -1060,10 +1083,10 @@ public interface DomModel extends FieldModel {
 \end{lstlisting}\index{DomModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface DomModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -1073,7 +1096,7 @@ public interface DomModel extends FieldModel {
 }
 \end{javacode}
 \caption{interfaccia DomModel (campo dominio)}
-\label{lst:DomModel}
+\label{lst:DomModel}\index{DomModel}
 \end{elisting}
 \fi
 
@@ -1082,7 +1105,7 @@ Per questo tipo di campo non ha senso nessun default globale come visto per i
 campi alfanumerici e numerici. Il valori permessi sono quelli forniti nel 
 parametro \verb!items!, qualunque altro valore causerà una eccezione.
 
-\subsection{Campo Filler}
+\section{Campo Filler}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Un campo di tipo \textsl{Filler}, non è un campo vero e proprio, non ha un nome 
 associato, non genera nessun setter o getter nella classe-dati, e nessun metodo
@@ -1096,7 +1119,7 @@ stringa-dati.
 caption=interfaccia FilModel (campo filler), 
 label=lst:FilModel]
 public interface FilModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     
     void setFill(Character fill);
@@ -1104,17 +1127,17 @@ public interface FilModel extends FieldModel {
 \end{lstlisting}\index{FilModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface FilModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     
     void setFill(Character fill);
 }
 \end{javacode}
 \caption{interfaccia FilModel (campo filler)}
-\label{lst:FilModel}
+\label{lst:FilModel}\index{FilModel}
 \end{elisting}
 \fi
 
@@ -1135,7 +1158,7 @@ public class FilDefault {
 \end{lstlisting}\index{FilDefault}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 @Data
 public class FilDefault {
@@ -1143,7 +1166,7 @@ public class FilDefault {
 }
 \end{javacode}
 \caption{class FilDefault (default campo filler)}
-\label{lst:FilDefault}
+\label{lst:FilDefault}\index{FilDefault}
 \end{elisting}
 \fi
 
@@ -1151,7 +1174,7 @@ public class FilDefault {
 Il campo filler prevede una classe default dedicata per indicare il carattere di
 riempimento a livello generale.
 
-\subsection{Campo Valore costante}
+\section{Campo Valore costante}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Un campo di tipo \textsl{Costante} è simile al campo filler. Come per il campo
 filler non vengono generati setter e getter nella classe-dati, ma nella 
@@ -1164,7 +1187,7 @@ campo abbia il valore costante indicato.
 caption=interfaccia ValModel (campo costante), 
 label=lst:ValModel]
 public interface ValModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     
     void setValue(String value);
@@ -1172,17 +1195,17 @@ public interface ValModel extends FieldModel {
 \end{lstlisting}\index{ValModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface ValModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     
     void setValue(String value);
 }
 \end{javacode}
 \caption{interfaccia ValModel (campo costante)}
-\label{lst:ValModel}
+\label{lst:ValModel}\index{ValModel}
 \end{elisting}
 \fi
 
@@ -1193,7 +1216,14 @@ Ha poi il parametro \verb!value! per indicare il valore costante atteso.
 Il valore fornito viene usato per \textit{valorizzare} il campo quando la 
 classe-dati viene istanziata con il costruttore vuoto.
 
-\subsection{Campo Gruppo di campi}
+\chapter{Definizione di campi multipli}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In alcuni casi può essere utile raggruppare alcuni campi all'\,interno di un
+elemento contenitore. Questo permette di avere all'\,interno della definizione
+della struttura della stringa-dati due campi con lo stesso nome all'\,interno
+di elementi contenitori diversi.
+
+\section{Gruppo di campi}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Un campo di tipo \textsl{Gruppo} non è un campo vero e proprio, è in realtà un
 contenitore di altri campi.
@@ -1204,7 +1234,7 @@ contenitore di altri campi.
 caption=interfaccia GrpModel (campo gruppo), 
 label=lst:GrpModel]
 public interface GrpModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -1215,10 +1245,10 @@ public interface GrpModel extends FieldModel {
 \end{lstlisting}\index{GrpModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface GrpModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -1228,7 +1258,7 @@ public interface GrpModel extends FieldModel {
 }
 \end{javacode}
 \caption{interfaccia GrpModel (campo gruppo)}
-\label{lst:GrpModel}
+\label{lst:GrpModel}\index{GrpModel}
 \end{elisting}
 \fi
 
@@ -1242,7 +1272,7 @@ essere completamente definita dai campi figli.
 È possibile per un campo figlio, usare lo stesso nome di un campo definito
 allo stesso livello del campo padre. 
 
-\subsection{Campo Gruppo di campi ripetuto}
+\section{Gruppo di campi ripetuto}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Un campo di tipo \textsl{Gruppo Ripetuto} è simile al campo gruppo, con la 
 differenza che sono presenti $n$ occorrenze del gruppo.
@@ -1255,7 +1285,7 @@ che indica il numero di volte che il gruppo è ripetuto.
 caption=interfaccia OccModel (campo gruppo ripetuto), 
 label=lst:OccModel]
 public interface OccModel extends  FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -1267,10 +1297,10 @@ public interface OccModel extends  FieldModel {
 \end{lstlisting}\index{OccModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface OccModel extends  FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -1281,7 +1311,7 @@ public interface OccModel extends  FieldModel {
 }
 \end{javacode}
 \caption{interfaccia OccModel (campo gruppo ripetuto)}
-\label{lst:OccModel}
+\label{lst:OccModel}\index{OccModel}
 \end{elisting}
 \fi
 
@@ -1290,7 +1320,7 @@ In questo caso l'\,area della stringa-dati definita da \verb!offset! e
 \verb!length! è quella della prima occorrenza del gruppo. La dimensione realmente
 usata è \verb!length! $\times$ \verb!times!.
 
-\subsection{Campi incorporati mediante interfaccia}
+\section{Campi incorporati mediante interfaccia}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Una interfaccia (cod.~\ref{lst:TraitModel}) può essere definita allo stesso modo
 di una classe (cod.~\ref{lst:ClassModel}).
@@ -1304,7 +1334,7 @@ interpretata con i campi definiti dalla interfaccia indicata.
 caption=interfaccia EmbModel (campo incorporato), 
 label=lst:EmbModel]
 public interface EmbModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     
     void setSource((*\hyperref[lst:TraitModel]{TraitModel}*) source);
@@ -1312,17 +1342,17 @@ public interface EmbModel extends FieldModel {
 \end{lstlisting}\index{EmbModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface EmbModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     
     void setSource(|\hyperref[lst:TraitModel]{TraitModel}| source);
 }
 \end{javacode}
 \caption{interfaccia EmbModel (campo incorporato)}
-\label{lst:EmbModel}
+\label{lst:EmbModel}\index{EmbModel}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1335,7 +1365,7 @@ verrà traslata per adattarla al valore indicato dal campo incorporato.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La classe generata, ovviamente, implementerà l'\,interfaccia indicata.
 
-\subsection{Campo Gruppo di campi definito mediante interfaccia} 
+\section{Gruppo di campi definito mediante interfaccia} 
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Il campo \textsl{Gruppo/Interfaccia} è simile al campo incorporato.
 In questo caso i campi definiti dall'\,interfaccia non vengono incorporati al
@@ -1347,7 +1377,7 @@ livello corrente, ma viene definito un gruppo che li contiene.
 caption=interfaccia GrpTraitModel (campo gruppo/interfaccia), 
 label=lst:GrpTraitModel]
 public interface GrpTraitModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -1358,10 +1388,10 @@ public interface GrpTraitModel extends FieldModel {
 \end{lstlisting}\index{GrpTraitModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface GrpTraitModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -1371,7 +1401,7 @@ public interface GrpTraitModel extends FieldModel {
 }
 \end{javacode}
 \caption{interfaccia GrpTraitModel (campo gruppo/interfaccia)}
-\label{lst:GrpTraitModel}
+\label{lst:GrpTraitModel}\index{GrpTraitModel}
 \end{elisting}
 \fi
 
@@ -1387,7 +1417,7 @@ gruppo/interfaccia.
 In questo caso è il gruppo che implementa l'\,interfaccia indicata.
 
 
-\subsection{Campo Gruppo di campi ripetuto definito mediante interfaccia}
+\section{Gruppo di campi ripetuto definito mediante interfaccia}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Il campo \textsl{Gruppo/Interfaccia Ripetuto} è simile al campo 
 gruppo/interfaccia, con la differenza che sono presenti $n$ occorrenze del 
@@ -1400,7 +1430,7 @@ parametro \verb!times!, che indica il numero di volte che il gruppo è ripetuto.
 caption=interfaccia OccTraitModel (campo gruppo/interfaccia ripetuto), 
 label=lst:OccTraitModel]
 public interface OccTraitModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -1412,10 +1442,10 @@ public interface OccTraitModel extends FieldModel {
 \end{lstlisting}\index{OccTraitModel}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface OccTraitModel extends FieldModel {
-    void setOffset(int offset);
+    void setOffset(Integer offset);
     void setLength(int length);
     void setName(String name);
     
@@ -1426,7 +1456,7 @@ public interface OccTraitModel extends FieldModel {
 }
 \end{javacode}
 \caption{interfaccia OccTraitModel (campo gruppo/interfaccia ripetuto)}
-\label{lst:OccTraitModel}
+\label{lst:OccTraitModel}\index{OccTraitModel}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1434,7 +1464,7 @@ Come per il caso del gruppo ripetuto l'\,area della stringa-dati definita
 da \verb!offset! e \verb!length! è quella della prima occorrenza del gruppo. 
 La dimensione realmente usata è \verb!length! $\times$ \verb!times!.
 
-\subsection{enum utilizzati}
+\chapter{enum utilizzati}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Molte delle classi o interfacce di configurazione hanno dei campi con valori
 limitati ad alcuni valori espresse mediante \texttt{enum}.
@@ -1451,7 +1481,7 @@ public enum LoadOverflowAction { Error, Trunc }
 \begin{javacode}
 public enum LoadOverflowAction { Error, Trunc }
 \end{javacode}
-\caption{enum LoadOverflowAction}\label{lst:LoadOverflowAction}
+\caption{enum LoadOverflowAction}\label{lst:LoadOverflowAction}\index{LoadOverflowAction}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1471,7 +1501,7 @@ public enum LoadUnderflowAction { Error, Pad }
 \begin{javacode}
 public enum LoadUnderflowAction { Error, Pad }
 \end{javacode}
-\caption{enum LoadUnderflowAction}\label{lst:LoadUnderflowAction}
+\caption{enum LoadUnderflowAction}\label{lst:LoadUnderflowAction}\index{LoadUnderflowAction}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1491,7 +1521,7 @@ public enum CheckAbc { None, Ascii, Latin1, Valid }
 \begin{javacode}
 public enum CheckAbc { None, Ascii, Latin1, Valid }
 \end{javacode}
-\caption{enum CheckAbc}\label{lst:CheckAbc}
+\caption{enum CheckAbc}\label{lst:CheckAbc}\index{CheckAbc}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1510,7 +1540,7 @@ public enum OverflowAction { Error, Trunc }
 \begin{javacode}
 public enum OverflowAction { Error, Trunc }
 \end{javacode}
-\caption{enum OverflowAction}\label{lst:OverflowAction}
+\caption{enum OverflowAction}\label{lst:OverflowAction}\index{OverflowAction}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1534,7 +1564,7 @@ public enum UnderflowAction { Error, Pad }
 \begin{javacode}
 public enum UnderflowAction { Error, Pad }
 \end{javacode}
-\caption{enum UnderflowAction}\label{lst:UnderflowAction}
+\caption{enum UnderflowAction}\label{lst:UnderflowAction}\index{UnderflowAction}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1558,7 +1588,7 @@ public enum NormalizeAbcMode { None, Trim, Trim1 }
 \begin{javacode}
 public enum NormalizeAbcMode { None, Trim, Trim1 }
 \end{javacode}
-\caption{enum NormalizeAbcMode}\label{lst:NormalizeAbcMode}
+\caption{enum NormalizeAbcMode}\label{lst:NormalizeAbcMode}\index{NormalizeAbcMode}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1579,7 +1609,7 @@ public enum NormalizeNumMode { None, Trim }
 \begin{javacode}
 public enum NormalizeNumMode { None, Trim }
 \end{javacode}
-\caption{enum NormalizeNumMode}\label{lst:NormalizeNumMode}
+\caption{enum NormalizeNumMode}\label{lst:NormalizeNumMode}\index{NormalizeNumMode}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1600,7 +1630,7 @@ public enum WordWidth { Byte, Short, Int, Long }
 \begin{javacode}
 public enum WordWidth { Byte, Short, Int, Long }
 \end{javacode}
-\caption{enum WordWidth}\label{lst:WordWidth}
+\caption{enum WordWidth}\label{lst:WordWidth}\index{WordWidth}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1622,7 +1652,7 @@ public enum AccesMode { String, Number, Both }
 \begin{javacode}
 public enum AccesMode { String, Number, Both }
 \end{javacode}
-\caption{enum AccesMode}\label{lst:AccesMode}
+\caption{enum AccesMode}\label{lst:AccesMode}\index{AccesMode}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1644,7 +1674,7 @@ public enum InitializeNuxMode { Spaces, Zeroes }
 \begin{javacode}
 public enum InitializeNuxMode { Spaces, Zeroes }
 \end{javacode}
-\caption{enum InitializeNuxMode}\label{lst:InitializeNuxMode}
+\caption{enum InitializeNuxMode}\label{lst:InitializeNuxMode}\index{InitializeNuxMode}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1664,7 +1694,7 @@ public enum CheckCus { None, Ascii, Latin1, Valid, Digit, DigitOrBlank }
 \begin{javacode}
 public enum CheckCus { None, Ascii, Latin1, Valid, Digit, DigitOrBlank }
 \end{javacode}
-\caption{enum CheckCus}\label{lst:CheckCus}
+\caption{enum CheckCus}\label{lst:CheckCus}\index{CheckCus}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1685,7 +1715,7 @@ public enum AlignMode { LFT, RGT }
 \begin{javacode}
 public enum AlignMode { LFT, RGT }
 \end{javacode}
-\caption{enum AlignMode}\label{lst:AlignMode}
+\caption{enum AlignMode}\label{lst:AlignMode}\index{AlignMode}
 \end{elisting}
 \fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -1695,6 +1725,7 @@ L'\,enum \hyperref[lst:CheckCus]{\texttt{CheckCus}} è usato dalla classe
 
 \vfill
 
+\part{Service}
 
 %  ____                  _          
 % / ___|  ___ _ ____   _(_) ___ ___ 
@@ -1726,7 +1757,7 @@ label=lst:getCodeProvider]
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
         ServiceLoader<CodeProvider> loader = ServiceLoader.load(CodeProvider.class);
         |\hyperref[lst:CodeProvider]{CodeProvider}| codeProvider = loader.iterator().next();
@@ -1780,15 +1811,15 @@ label=lst:spring-conf]
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
     @Parameter(defaultValue = "${project.build.directory}/generated-sources/recfm",
         property = "maven.recfm.generateDirectory", required = true)
-    private String generateDirectory;
+    private File generateDirectory;
 
     @Parameter(defaultValue = "${project.build.resources[0].directory}",
         property = "maven.recfm.settingsDirectory", required = true)
-    private String settingsDirectory;
+    private File settingsDirectory;
     
     @Parameter(required = true)
     private String[] settings;
@@ -1889,7 +1920,7 @@ plugin, label=lst:mvn-xmpl]
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{minted}[frame=single,framesep=2mm,bgcolor=bg,fontsize=\footnotesize]{xml}
 <plugin>
     <groupId>io.github.epi155</groupId>
@@ -1951,7 +1982,7 @@ public class MasterBook {
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 @Data
 public class MasterBook {
@@ -2040,7 +2071,7 @@ public class ClassPackage {
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 @Data
 public class ClassPackage {
@@ -2088,7 +2119,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
   cls:
@@ -2227,9 +2258,9 @@ Per indicare esplicitamente il tipo di campo utilizzato vengono introdotti dei
 \label{tab:tag.class}
 \end{table}
 
+\section{Campi Singoli}
 
-
-\subsubsection{Campo Alfanumerico} \label{sub:yaml.abc}
+\subsection{Campo Alfanumerico} \label{sub:yaml.abc}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo alfanumerico riflette la struttura imposta dalla
 service provider interface, vedi~\ref{lst:AbcModel}.
@@ -2265,7 +2296,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
   abc:
@@ -2309,7 +2340,7 @@ nomi canonici.
 	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \cline{2-6} \multicolumn{1}{c|}{}
-&offset     & at  & int     & \ding{52} & \\
+&offset     & at  & int     & \ding{51} & auto-calcolato \\
 \cline{2-6} \multicolumn{1}{c|}{}
 &length     & len & int     & \ding{52} & \\
 \cline{2-6} \multicolumn{1}{c|}{}
@@ -2317,7 +2348,7 @@ nomi canonici.
 \cline{2-6} \multicolumn{1}{c|}{}
 &override   & ovr & boolean & & \texttt{false} \\
 \hline
-\parbox[t]{2mm}{\multirow{6}{*}{\rotatebox[origin=c]{90}{\hyperref[lst:AbcDefault]{AbcDefault}}}}
+\parbox[t]{2.5mm}{\multirow{6}{*}{\rotatebox[origin=c]{90}{\hyperref[lst:AbcDefault]{AbcDefault}}}}
 &onOverflow & ovf & \hyperref[lst:OverflowAction]{enum} & & \texttt{\$\{defaults.abc.onOverflow:Trunc\}}\\
 \cline{2-6}
 &onUnderlow & unf & \hyperref[lst:UnderflowAction]{enum} & & \texttt{\$\{defaults.abc.onUnderflow:Pad\}}\\
@@ -2335,7 +2366,7 @@ nomi canonici.
 \end{table}
 
 
-\subsubsection{Campo Numerico} \label{sub:yaml.num}
+\subsection{Campo Numerico} \label{sub:yaml.num}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:NumModel}
@@ -2364,7 +2395,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
   num:
@@ -2400,7 +2431,7 @@ packages:
 	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \cline{2-6} \multicolumn{1}{c|}{}
-&offset     & at  & int     & \ding{52} & \\
+&offset     & at  & int     & \ding{51} & auto-calcolato \\
 \cline{2-6} \multicolumn{1}{c|}{}
 &length     & len & int     & \ding{52} & \\
 \cline{2-6} \multicolumn{1}{c|}{}
@@ -2408,14 +2439,14 @@ packages:
 \cline{2-6} \multicolumn{1}{c|}{}
 &override   & ovr & boolean & & \texttt{false} \\
 \hline
-\parbox[t]{2mm}{\multirow{5}{*}{\rotatebox[origin=c]{90}{\hyperref[lst:NumDefault]{NumDefault}}}}
+\parbox[t]{2.5mm}{\multirow{5}{*}{\rotatebox[origin=c]{90}{\hyperref[lst:NumDefault]{NumDefault}}}}
 &onOverflow & ovf & \hyperref[lst:OverflowAction]{enum} & & \texttt{\$\{defaults.num.onOverflow:Trunc\}}\\
 \cline{2-6}
 &onUnderlow & unf & \hyperref[lst:UnderflowAction]{enum} & & \texttt{\$\{defaults.num.onUnderflow:Pad\}}\\
 \cline{2-6}
 &access     & acc & \hyperref[lst:AccesMode]{enum} & & \texttt{\$\{defaults.num.access:String\}}\\
 \cline{2-6}
-&wordWidth  & wid & \hyperref[lst:WordWidth]{enum} & & \texttt{\$\{defaults.num.wirdWidth:Int\}}\\
+&wordWidth  & wid & \hyperref[lst:WordWidth]{enum} & & \texttt{\$\{defaults.num.wordWidth:Int\}}\\
 \cline{2-6}
 &normalize  & nrm & \hyperref[lst:NormalizeNumMode]{enum} & & \texttt{\$\{defaults.num.normalize:None\}}\\
 \hline
@@ -2425,7 +2456,7 @@ packages:
 
 
 
-\subsubsection{Campo Custom (alfanumerico)} \label{sub:yaml.cus}
+\subsection{Campo Custom (alfanumerico)} \label{sub:yaml.cus}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:CusModel}
@@ -2458,7 +2489,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
   cus:
@@ -2497,7 +2528,7 @@ packages:
 	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \cline{2-6} \multicolumn{1}{c|}{}
-&offset     & at  & int     & \ding{52} & \\
+&offset     & at  & int     & \ding{51} & auto-calcolato \\
 \cline{2-6} \multicolumn{1}{c|}{}
 &length     & len & int     & \ding{52} & \\
 \cline{2-6} \multicolumn{1}{c|}{}
@@ -2505,7 +2536,7 @@ packages:
 \cline{2-6} \multicolumn{1}{c|}{}
 &override   & ovr & boolean & & \texttt{false} \\
 \hline
-\parbox[t]{2mm}{\multirow{9}{*}{\rotatebox[origin=c]{90}{\hyperref[lst:CusDefault]{CusDefault}}}}
+\parbox[t]{2.5mm}{\multirow{9}{*}{\rotatebox[origin=c]{90}{\hyperref[lst:CusDefault]{CusDefault}}}}
 &onOverflow & ovf & \hyperref[lst:OverflowAction]{enum} & & \texttt{\$\{defaults.cus.onOverflow:Trunc\}}\\
 \cline{2-6}
 &onUnderlow & unf & \hyperref[lst:UnderflowAction]{enum} & & \texttt{\$\{defaults.cus.onUnderflow:Pad\}}\\
@@ -2532,44 +2563,10 @@ packages:
 
 
 
-\subsubsection{Campo Numerico nullabile} \label{sub:yaml.nux}
+\subsection{Campo Numerico nullabile} \label{sub:yaml.nux}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:NuxModel}
-
-\begin{table}[!htb]
-\centering
-\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
-\hline
-\multicolumn{4}{|c|}{NuxModel --- \texttt{!Nux}}\\
-\hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
-\hline
-\hline
-offset     & at  & int     & obbligatorio \\
-\hline
-length     & len & int     & obbligatorio \\
-\hline
-name       &     & String  & obbligatorio \\
-\hline
-override   & ovr & boolean & default \texttt{false} \\
-\hline
-onOverflow & ovf & enum    & default \texttt{\$\{defaults.nux.onOverflow:Trunc\}}\\
-\hline
-onUnderlow & unf & enum    & default \texttt{\$\{defaults.nux.onUnderflow:Pad\}}\\
-\hline
-access     & acc & enum    & default \texttt{\$\{defaults.nux.access:String\}}\\
-\hline
-wordWidth  & wid & enum    & default \texttt{\$\{defaults.nux.wirdWidth:Int\}}\\
-\hline
-normalize  & nrm & enum    & default \texttt{\$\{defaults.nux.normalize:None\}}\\
-\hline
-initialize & ini & enum    & default \texttt{\$\{defaults.nux.initialize:Space\}}\\
-\hline
-\end{tabular}
-\caption{Attributi impostabili per un campo numerico nullabile} \label{tab:attr.nux}
-\end{table}
 
 \ifesource
 \begin{figure*}[!htb]
@@ -2597,7 +2594,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
   nux:
@@ -2623,34 +2620,46 @@ packages:
 \end{elisting}
 \fi
 
-\subsubsection{Campo Dominio} \label{sub:yaml.dom}
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|c|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{5}{c|}{\texttt{!Nux}: \hyperref[lst:NuxModel]{NuxModel}}\\
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&offset     & at  & int     & \ding{51} & auto-calcolato \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&length     & len & int     & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&name       &     & String  & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&override   & ovr & boolean & & \texttt{false} \\
+\hline
+\parbox[t]{2.5mm}{\multirow{6}{*}{\rotatebox[origin=c]{90}{\hyperref[lst:NuxDefault]{NuxDefault}}}}
+&onOverflow & ovf & \hyperref[lst:OverflowAction]{enum} & & \texttt{\$\{defaults.nux.onOverflow:Trunc\}}\\
+\cline{2-6}
+&onUnderlow & unf & \hyperref[lst:UnderflowAction]{enum} & & \texttt{\$\{defaults.nux.onUnderflow:Pad\}}\\
+\cline{2-6}
+&access     & acc & \hyperref[lst:AccesMode]{enum} & & \texttt{\$\{defaults.nux.access:String\}}\\
+\cline{2-6}
+&wordWidth  & wid & \hyperref[lst:WordWidth]{enum} & & \texttt{\$\{defaults.nux.wordWidth:Int\}}\\
+\cline{2-6}
+&normalize  & nrm & \hyperref[lst:NormalizeNumMode]{enum} & & \texttt{\$\{defaults.nux.normalize:None\}}\\
+\cline{2-6}
+&initialize & ini & \hyperref[lst:InitializeNuxMode]{enum} & & \texttt{\$\{defaults.nux.initialize:Space\}}\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo numerico nullabile} \label{tab:attr.nux}
+\end{table}
+
+
+\subsection{Campo Dominio} \label{sub:yaml.dom}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:DomModel}
-
-\begin{table}[!htb]
-\centering
-\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
-\hline
-\multicolumn{4}{|c|}{DomModel --- \texttt{!Dom}}\\
-\hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
-\hline
-\hline
-offset     & at  & int     & obbligatorio \\
-\hline
-length     & len & int     & obbligatorio \\
-\hline
-name       &     & String  & obbligatorio \\
-\hline
-override   & ovr & boolean & default \texttt{false} \\
-\hline
-items      &     & array  & obbligatorio (valori permessi)\\
-\hline
-\end{tabular}
-\caption{Attributi impostabili per un campo dominio} \label{tab:attr.dom}
-\end{table}
 
 \ifesource
 \begin{figure*}[!htb]
@@ -2672,7 +2681,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
   - name: com.example.test
@@ -2693,27 +2702,53 @@ packages:
 \end{elisting}
 \fi
 
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\texttt{!Dom}: \hyperref[lst:DomModel]{DomModel}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & \ding{51} & auto-calcolato \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+items      &     & array  & \ding{52} & \\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo dominio} \label{tab:attr.dom}
+\end{table}
 
-\subsubsection{Campo Filler} \label{sub:yaml.fil}
+
+
+\subsection{Campo Filler} \label{sub:yaml.fil}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:FilModel}
 
 \begin{table}[!htb]
 \centering
-\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\begin{tabular}{|c|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{5}{c|}{\texttt{!Fil}: \hyperref[lst:FilModel]{FilModel}}\\
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&offset     & at  & int     & \ding{51} & auto-calcolato \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&length     & len & int     & \ding{52} & \\
 \hline
-\multicolumn{4}{|c|}{FilModel --- \texttt{!Fil}}\\
-\hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
-\hline
-\hline
-offset     & at  & int     & obbligatorio \\
-\hline
-length     & len & int     & obbligatorio \\
-\hline
-fill       &     & char    & default \texttt{\$\{defaults.fil.fill:0\}}\\
+\hyperref[lst:FilDefault]{FilDefault}
+&fill       &     & char    & & \texttt{\$\{defaults.fil.fill:0\}}\\
 \hline
 \end{tabular}
 \caption{Attributi impostabili per un campo filler} \label{tab:attr.fill}
@@ -2742,7 +2777,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
   fil:
@@ -2765,30 +2800,10 @@ packages:
 \end{elisting}
 \fi
 
-\subsubsection{Campo Costante} \label{sub:yaml.val}
+\subsection{Campo Costante} \label{sub:yaml.val}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:ValModel}
-
-\begin{table}[!htb]
-\centering
-\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
-\hline
-\multicolumn{4}{|c|}{ValModel --- \texttt{!Val}}\\
-\hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
-\hline
-\hline
-offset     & at  & int     & obbligatorio \\
-\hline
-length     & len & int     & obbligatorio \\
-\hline
-value      & val & string  & obbligatorio \\
-\hline
-\end{tabular}
-\caption{Attributi impostabili per un campo costante} \label{tab:attr.val}
-\end{table}
 
 \ifesource
 \begin{figure*}[!htb]
@@ -2809,7 +2824,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
   - name: com.example.test
@@ -2828,34 +2843,32 @@ packages:
 \end{elisting}
 \fi
 
-\subsubsection{Campo Gruppo} \label{sub:yaml.grp}
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\texttt{!Val}: \hyperref[lst:ValModel]{ValModel}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & \ding{51} & auto-calcolato \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+value      & val & string  & \ding{52} & \\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo costante} \label{tab:attr.val}
+\end{table}
+
+\section{Gruppo di campi}
+
+\subsection{Campo Gruppo} \label{sub:yaml.grp}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:GrpModel}
-
-\begin{table}[!htb]
-\centering
-\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
-\hline
-\multicolumn{4}{|c|}{GrpModel --- \texttt{!Grp}}\\
-\hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
-\hline
-\hline
-offset     & at  & int     & obbligatorio \\
-\hline
-length     & len & int     & obbligatorio \\
-\hline
-name       &     & String  & obbligatorio \\
-\hline
-override   & ovr & boolean & default \texttt{false} \\
-\hline
-fields     &     & array  & obbligatorio (elenco campi)\\
-\hline
-\end{tabular}
-\caption{Attributi impostabili per un gruppo} \label{tab:attr.grp}
-\end{table}
 
 \ifesource
 \begin{figure*}[!htb]
@@ -2881,7 +2894,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
   - name: com.example.test
@@ -2905,32 +2918,57 @@ packages:
 \end{elisting}
 \fi
 
-\subsubsection{Campo Gruppo ripetuto} \label{sub:yaml.occ}
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\texttt{!Grp}: \hyperref[lst:GrpModel]{GrpModel}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & \ding{51} & auto-calcolato \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+fields     &     & array  & \ding{52} & \\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un gruppo} \label{tab:attr.grp}
+\end{table}
+
+
+\subsection{Campo Gruppo ripetuto} \label{sub:yaml.occ}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:OccModel}
 
 \begin{table}[!htb]
 \centering
-\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
 \hline
-\multicolumn{4}{|c|}{OccModel --- \texttt{!Occ}}\\
+\multicolumn{5}{|c|}{\texttt{!Occ}: \hyperref[lst:OccModel]{OccModel}}\\
 \hline
 \multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
 \hline
+offset     & at  & int     & \ding{51} & auto-calcolato \\
 \hline
-offset     & at  & int     & obbligatorio \\
+length     & len & int     & \ding{52} & \\
 \hline
-length     & len & int     & obbligatorio \\
+name       &     & String  & \ding{52} & \\
 \hline
-name       &     & String  & obbligatorio \\
+override   & ovr & boolean & & \texttt{false} \\
 \hline
-override   & ovr & boolean & default \texttt{false} \\
+times      & x   & int     & \ding{52} & \\
 \hline
-times      & x   & int     & obbligatorio \\
-\hline
-fields     &     & array  & obbligatorio (elenco campi)\\
+fields     &     & array  & \ding{52} & \\
 \hline
 \end{tabular}
 \caption{Attributi impostabili per un gruppo ripetuto} \label{tab:attr.occ}
@@ -2956,7 +2994,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
   - name: com.example.test
@@ -2976,26 +3014,26 @@ packages:
 \end{elisting}
 \fi
 
-\subsubsection{Campo incorporato da interfaccia} \label{sub:yaml.emb}
+\subsection{Campo incorporato da interfaccia} \label{sub:yaml.emb}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:EmbModel}
 
 \begin{table}[!htb]
 \centering
-\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
 \hline
-\multicolumn{4}{|c|}{EmbModel --- \texttt{!Emb}}\\
+\multicolumn{5}{|c|}{\texttt{!Emb}: \hyperref[lst:EmbModel]{EmbModel}}\\
 \hline
 \multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
 \hline
+offset     & at  & int     & \ding{51} & auto-calcolato\\
 \hline
-offset     & at  & int     & obbligatorio \\
+length     & len & int     & \ding{52} & \\
 \hline
-length     & len & int     & obbligatorio \\
-\hline
-source     & src  & Trait  & obbligatorio (interfaccia)\\
+source     & src  & interface & \ding{52} & \\
 \hline
 \end{tabular}
 \caption{Attributi impostabili per un elenco di campi importato da una interfaccia}
@@ -3003,30 +3041,30 @@ source     & src  & Trait  & obbligatorio (interfaccia)\\
 \end{table}
 
 
-\subsubsection{Campo Gruppo da interfaccia} \label{sub:yaml.igrp}
+\subsection{Campo Gruppo da interfaccia} \label{sub:yaml.igrp}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:GrpTraitModel}
 
 \begin{table}[!htb]
 \centering
-\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
 \hline
-\multicolumn{4}{|c|}{GrpTraitModel --- \texttt{!GRP}}\\
+\multicolumn{5}{|c|}{\texttt{!GRP}: \hyperref[lst:GrpTraitModel]{GrpTraitModel}}\\
 \hline
 \multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
 \hline
+offset     & at  & int     & \ding{51} & auto-calcolato \\
 \hline
-offset     & at  & int     & obbligatorio \\
+length     & len & int     & \ding{52} & \\
 \hline
-length     & len & int     & obbligatorio \\
+name       &     & String  & \ding{52} & \\
 \hline
-name       &     & String  & obbligatorio \\
+override   & ovr & boolean & & \texttt{false} \\
 \hline
-override   & ovr & boolean & default \texttt{false} \\
-\hline
-typedef    & as  & Trait   & obbligatorio (interfaccia)\\
+typedef    & as  & interface & \ding{52} & \\
 \hline
 \end{tabular}
 \caption{Attributi impostabili per un gruppo da interfaccia} \label{tab:attr.igrp}
@@ -3056,7 +3094,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
   - name: com.example.test
@@ -3080,32 +3118,32 @@ packages:
 \end{elisting}
 \fi
 
-\subsubsection{Campo Gruppo ripetuto da interfaccia} \label{sub:yaml.iocc}
+\subsection{Campo Gruppo ripetuto da interfaccia} \label{sub:yaml.iocc}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 La definizione yaml del campo numerico riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:OccTraitModel}
 
 \begin{table}[!htb]
 \centering
-\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|l|}
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
 \hline
-\multicolumn{4}{|c|}{OccTraitModel --- \texttt{!OCC}}\\
+\multicolumn{5}{|c|}{\texttt{!OCC}: \hyperref[lst:OccTraitModel]{OccTraitModel}}\\
 \hline
 \multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{note} \\
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
 \hline
+offset     & at  & int     & \ding{51} & auto-calcolato \\
 \hline
-offset     & at  & int     & obbligatorio \\
+length     & len & int     & \ding{52} & \\
 \hline
-length     & len & int     & obbligatorio \\
+name       &     & String  & \ding{52} & \\
 \hline
-name       &     & String  & obbligatorio \\
+override   & ovr & boolean & & \texttt{false} \\
 \hline
-override   & ovr & boolean & default \texttt{false} \\
+times      & x   & int     & \ding{52} & \\
 \hline
-times      & x   & int     & obbligatorio \\
-\hline
-typedef    & as  & Trait   & obbligatorio (interfaccia)\\
+typedef    & as  & interface & \ding{52} & \\
 \hline
 \end{tabular}
 \caption{Attributi impostabili per un gruppo ripetuto da interfaccia} \label{tab:attr.iocc}
@@ -3135,7 +3173,7 @@ packages:
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
   - name: com.example.test
@@ -3152,12 +3190,14 @@ packages:
         length: 590
         fields:
           - !Num { name: nmErrors, at: 1, len: 2}
-          - !Occ { name: tabError, at: 3, len: 49, x: 12, as: *Error }
+          - !OCC { name: tabError, at: 3, len: 49, x: 12, as: *Error }
 \end{yamlcode}
 \caption{esempio definizione gruppo di campi ripetuto da interfaccia}
 \label{lst:xmplIOcc}
 \end{elisting}
 \fi
+
+\part{Service Provider}
 
 
 \chapter{Service Provider}
@@ -3229,7 +3269,7 @@ public class Foo312 extends FixRecord {
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public class Foo312 extends FixRecord {
     public static final int LRECL = 50;
@@ -3275,7 +3315,7 @@ public interface FieldValidateHandler {
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface FieldValidateHandler {
     void error(|\hyperref[lst:FieldValidateError:java]{FieldValidateError}| fieldValidateError);
@@ -3304,7 +3344,7 @@ public interface FieldValidateError {
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public interface FieldValidateError {
     String name();          // field name in error
@@ -3333,7 +3373,7 @@ public enum ValidateError {
 \end{lstlisting}
 \end{figure*}
 \else
-\begin{elisting}
+\begin{elisting}[!htb]
 \begin{javacode}
 public enum ValidateError {
     NotNumber, NotAscii, NotLatin, NotValid, NotDomain, NotBlank, NotEqual, NotMatch, NotDigitBlank
