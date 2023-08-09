@@ -8,7 +8,7 @@
 
     <name>API for recfm plugin/addon</name>
     <description>API for recfm-*-plugin (client) and recfm-*-addon (server) </description>
-    <url>https://github.com/epi155/recfm-addon-api/tree/0.7.0</url>
+    <url>https://github.com/epi155/recfm-addon-api/tree/recfm-addon-api/0.7.0</url>
 
     <!-- mvn versions:display-dependency-updates ! check for new version -->
     <!-- mvn release:clean ! clean release file -->
