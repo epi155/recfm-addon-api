@@ -1,0 +1,492 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[english]{babel}     % sillabazione italiana
+\usepackage[body={17.8cm,24.7cm}]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{pifont}
+\usepackage{array,multirow}
+
+\usepackage{multicol}
+
+\usepackage{xcolor,colortbl}
+\usepackage{minted}
+\definecolor{bg}{rgb}{0.95,0.95,0.92}
+\usepackage{caption}
+\newenvironment{elisting}[1][H]
+%  {\captionsetup{aboveskip=-0.1\normalbaselineskip}\begin{listing}[#1]}
+  {\captionsetup{aboveskip=0pt}\begin{listing}[#1]}
+  {\end{listing}%
+}
+
+\newminted{java}{
+  frame=single,
+  framesep=2mm,
+  bgcolor=bg,
+  fontsize=\footnotesize,
+  escapeinside=||,
+    tabsize=4,
+%    fontfamily=courier,
+    autogobble,
+%    xleftmargin=5pt,
+%    xrightmargin=5pt,
+%    frame=lines,
+}
+\newminted{yaml}{
+  frame=single,
+  framesep=2mm,
+  bgcolor=bg,
+  fontsize=\footnotesize,
+    tabsize=4,
+%    fontfamily=courier,
+    autogobble,
+%    xleftmargin=5pt,
+%    xrightmargin=5pt,
+%    frame=lines,
+}
+
+\newminted{xml}{
+  frame=single,
+  framesep=2mm,
+  bgcolor=bg,fontsize=\footnotesize,
+  tabsize=4,
+  autogobble,
+}
+
+\usepackage[pdftex]{graphicx}
+
+
+\renewcommand{\arraystretch}{1.2}
+
+%\usepackage{bera}
+%\usepackage{beraserif}
+%\usepackage{berasans}
+%\usepackage[scaled=0.9]{beramono}
+\usepackage{newcent}
+\usepackage[scaled=0.9]{beramono}
+%\usepackage{bookman}
+%\usepackage{dejavu}
+%\usepackage{roboto}
+
+\pagestyle{empty}
+
+%--- begin - document ---------------------------------------------------------
+\begin{document}
+
+
+\section*{RECFM Quick reference \quad \texttt{0.7.0}}
+
+\begin{elisting}%[!htb]
+\begin{xmlcode}
+<plugin>
+    <groupId>io.github.epi155</groupId>
+    <artifactId>recfm-maven-plugin</artifactId>  <!-- the plugin -->
+    <version>0.7.0</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+            <configuration>
+                <settings>
+                    <setting>foo.yaml</setting>
+                </settings>
+            </configuration>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.epi155</groupId>
+            <artifactId>recfm-java-addon</artifactId>  <!-- java generate dependency -->
+            <version>0.7.0</version>
+        </dependency>
+    </dependencies>
+</plugin>
+\end{xmlcode}
+\caption{\texttt{pom.xml}: plugin usage example}
+\end{elisting}
+
+\vspace*{-20pt}
+
+\begin{elisting}%[!htb]
+\begin{yamlcode}
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo
+        length: 55
+        fields:
+          - !Abc { name: firstName   , at:  1, len: 15 }
+          - !Abc { name: lastName    , at: 16, len: 15 }
+          - !Num { name: birthDate   , at: 31, len:  8 }
+          - !Abc { name: birthPlace  , at: 39, len: 14 }
+          - !Abc { name: birthCountry, at: 53, len:  3 }
+\end{yamlcode}
+\caption{configuration yaml example}
+\end{elisting}
+
+\vspace*{-20pt}
+
+\begin{elisting}%[!htb]
+\begin{xmlcode}
+<dependencies>
+  <dependency>
+    <groupId>io.github.epi155</groupId>
+    <artifactId>recfm-java-lib</artifactId>  <!-- java runtime dependency -->
+    <version>0.7.0</version>
+  </dependency>
+</dependencies>
+\end{xmlcode}
+\caption{addon-java runtime dependencies}
+\end{elisting}
+
+\begin{multicols}{2}
+\small\centering
+
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{classes}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+name     &     & String  & \ding{52} & \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+onOverflow & ovf & enum & & \texttt{\$\{*:=Trunc\}}\\
+\hline
+onUnderlow & unf & enum & & \texttt{\$\{*:=Pad\}}\\
+\hline
+doc        &     & boolean & & \texttt{\$\{*:=true\}}\\
+\hline
+fields     &     & array & \ding{52} & \\
+\hline
+\end{tabular}
+
+\columnbreak
+
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{interfaces}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+name     &     & String  & \ding{52} & \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+doc        &     & boolean & & \texttt{\$\{*:=true\}}\\
+\hline
+fields     &     & array & \ding{52} & \\
+\hline
+\end{tabular}
+
+
+\end{multicols}
+
+\clearpage
+
+\begin{multicols}{2}
+\small\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\textbf{\texttt{!Abc}}: alphanumeric field}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+onOverflow & ovf & enum & & \texttt{\$\{*:=Trunc\}}\\
+\hline
+onUnderlow & unf & enum & & \texttt{\$\{*:=Pad\}}\\
+\hline
+check      & chk & enum & & \texttt{\$\{*:=Ascii\}}\\
+\hline
+normalize  & nrm & enum & & \texttt{\$\{*:=None\}}\\
+\hline
+checkGetter & get & boolean & & \texttt{\$\{*:=true\}}\\
+\hline
+checkSetter & set & boolean & & \texttt{\$\{*:=true\}}\\
+\hline
+\end{tabular}
+
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\textbf{\texttt{!Num}}: numeric field}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+onOverflow & ovf & enum & & \texttt{\$\{*:=Trunc\}}\\
+\hline
+onUnderlow & unf & enum & & \texttt{\$\{*:=Pad\}}\\
+\hline
+access     & acc & enum & & \texttt{\$\{*:=String\}}\\
+\hline
+wordWidth  & wid & enum & & \texttt{\$\{*:=Int\}}\\
+\hline
+normalize  & nrm & enum & & \texttt{\$\{*:=None\}}\\
+\hline
+\end{tabular}
+
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\textbf{\texttt{!Fil}}: filler field}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+fill       &     & char    & & \texttt{\$\{*:=0\}}\\
+\hline
+\end{tabular}
+
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\texttt{!Dom}: domain field}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+items      &     & array  & \ding{52} & \\
+\hline
+\end{tabular}
+
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\textbf{\texttt{!Grp}}: group of fields}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+fields     &     & array  & \ding{52} & \\
+\hline
+\end{tabular}
+
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\textbf{\texttt{!Occ}}: group of repeating fields}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+times      & x   & int     & \ding{52} & \\
+\hline
+fields     &     & array  & \ding{52} & \\
+\hline
+\end{tabular}
+
+\columnbreak
+
+\small\centering
+\scalebox{1}[0.97]{
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\textbf{\texttt{!Cus}}: custom field}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+onOverflow & ovf & enum & & \texttt{\$\{*:=Trunc\}}\\
+\hline
+onUnderlow & unf & enum & & \texttt{\$\{*:=Pad\}}\\
+\hline
+padChar    & pad & char    & & \texttt{\$\{*:=' '\}}\\
+\hline
+initChar   & ini & char    & & \texttt{\$\{*:=' '\}}\\
+\hline
+check      & chk & enum & & \texttt{\$\{*:=Ascii\}}\\
+\hline
+align      &     & enum & & \texttt{\$\{*:=LFT\}}\\
+\hline
+normalize  & nrm & enum & & \texttt{\$\{*:=None\}}\\
+\hline
+checkGetter & get & boolean & & \texttt{\$\{*:=true\}}\\
+\hline
+checkSetter & set & boolean & & \texttt{\$\{*:=true\}}\\
+\hline
+regex      &     & String  & & \texttt{null} \\
+\hline
+\end{tabular}
+}
+
+\scalebox{1}[0.97]{
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\textbf{\texttt{!Nux}}: nullable numeric field}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+onOverflow & ovf & enum & & \texttt{\$\{*:=Trunc\}}\\
+\hline
+onUnderlow & unf & enum & & \texttt{\$\{*:=Pad\}}\\
+\hline
+access     & acc & enum & & \texttt{\$\{*:=String\}}\\
+\hline
+wordWidth  & wid & enum & & \texttt{\$\{*:=Int\}}\\
+\hline
+normalize  & nrm & enum & & \texttt{\$\{*:=None\}}\\
+\hline
+initialize & ini & enum & & \texttt{\$\{*:=Space\}}\\
+\hline
+\end{tabular}
+}
+
+\scalebox{1}[0.97]{
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\textbf{\texttt{!Val}}: constant field}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+value      & val & string  & \ding{52} & \\
+\hline
+\end{tabular}
+}
+
+\scalebox{1}[0.97]{
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\textbf{\texttt{!Emb}}: embedded via interface}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated\\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+source     & src  & interface & \ding{52} & \\
+\hline
+\end{tabular}
+}
+
+\scalebox{1}[0.97]{
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\textbf{\texttt{!GRP}}: group of fields via interface}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+typedef    & as  & interface & \ding{52} & \\
+\hline
+\end{tabular}
+}
+
+\scalebox{1}[0.97]{
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\textbf{\texttt{!OCC}}: group of repeating fields via interface}\\
+\hline
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+times      & x   & int     & \ding{52} & \\
+\hline
+typedef    & as  & interface & \ding{52} & \\
+\hline
+\end{tabular}
+}
+\end{multicols}
+
+
+
+\end{document}

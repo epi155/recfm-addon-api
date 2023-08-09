@@ -139,7 +139,7 @@ urlcolor=green,
 \rule{\unitlength}{1.6pt}\\[\baselineskip]
 %{\large\scshape drawings by the artist}\par
 \vfill
-%{\large\scshape the publisher}\\[\baselineskip]
+{\large\scshape Versione 0.7.0}\\[\baselineskip]
 {\small\scshape \today}\par
 \vspace*{\drop}
 \end{titlepage}
@@ -151,7 +151,7 @@ In alcune occasioni può capitare di avere a che fare con file (o aree di
 memoria) posizionali, vedi fig.~\ref{fig:str.data}, in questi casi è necessario 
 perdere un sacco di tempo per fare una classe dedicata a ogni stringa-dati con 
 i setter e getter per leggere e scrivere i valori\footnote{%
-esiste \texttt{com.ancientprogramming.fixedformat4j:fixedformat4j:1.2.2} che 
+esiste \texttt{com.ancientprogramming.fixedformat4j:fixedformat4j} che 
 fornisce alcune funzionalità base, ma in molte situazioni non è sufficientemente
 flessibile.
 }. 
@@ -218,6 +218,7 @@ flessibile.
 }}
 
 
+\iffalse
 \scalebox{0.7}[1]{
 \texttt{%
 \fbox[lb]{O}%01
@@ -275,6 +276,66 @@ flessibile.
 \fbox[lb]{U}%43
 \fbox[lb]{K}%44
 \fbox[lbr]{R}%45
+}}
+\fi
+
+\scalebox{0.7}[1]{
+\texttt{%
+\fbox[lb]{A}%01
+\fbox[lb]{N}%02
+\fbox[lb]{A}%03
+\fbox[lb]{ }%04
+\fbox[lb]{ }%05
+\fbox[lb]{ }%06
+\fbox[lb]{ }%07
+\fbox[lb]{ }%08
+\fbox[lb]{ }%09
+\fbox[lb]{ }%10
+\fbox[lb]{ }%11
+\fbox[lb]{ }%12
+\fbox[lb]{ }%13
+\fbox[lb]{ }%14
+\fbox[lb]{ }%15
+\fbox[lb]{D}%16
+\fbox[lb]{E}%17
+\fbox[lb]{ }%18
+\fbox[lb]{A}%19
+\fbox[lb]{R}%20
+\fbox[lb]{M}%21
+\fbox[lb]{A}%22
+\fbox[lb]{S}%23
+\fbox[lb]{ }%24
+\fbox[lb]{ }%25
+\fbox[lb]{ }%26
+\fbox[lb]{ }%27
+\fbox[lb]{ }%28
+\fbox[lb]{ }%29
+\fbox[lb]{ }%30
+\fbox[lb]{1}%31
+\fbox[lb]{9}%32
+\fbox[lb]{8}%33
+\fbox[lb]{8}%34
+\fbox[lb]{0}%35
+\fbox[lb]{4}%36
+\fbox[lb]{3}%37
+\fbox[lb]{0}%38
+\fbox[lb]{H}%39
+\fbox[lb]{A}%40
+\fbox[lb]{V}%31
+\fbox[lb]{A}%32
+\fbox[lb]{N}%33
+\fbox[lb]{A}%34
+\fbox[lb]{ }%35
+\fbox[lb]{ }%36
+\fbox[lb]{ }%37
+\fbox[lb]{ }%38
+\fbox[lb]{ }%39
+\fbox[lb]{ }%40
+\fbox[lb]{ }%41
+\fbox[lb]{ }%42
+\fbox[lb]{C}%43
+\fbox[lb]{U}%44
+\fbox[lbr]{B}%45
 }}
 
 \caption{Esempio di file-dati posizionale} 
@@ -2319,7 +2380,7 @@ necessario introdurre i parametri di configurazione campo per campo.
 &doc        &     & boolean & & \texttt{\$\{defaults.cls.doc:true\}}\\
 \hline \multicolumn{1}{c|}{}
 &fields     &     & array & \ding{52} & \\
-\cline{2-6} \multicolumn{1}{c|}{}
+\cline{2-6}
 \end{tabular}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \caption{Attributi impostabili per la definizione di una classe} 
@@ -2628,11 +2689,11 @@ con rappresentare il valore del campo.
 
 \subsection{Campo Custom (alfanumerico)} \label{sub:yaml.cus}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo custom/alfanumerico riflette la struttura imposta 
+La definizione yaml del campo custom riflette la struttura imposta 
 dalla service provider interface, vedi~\ref{lst:CusModel}.
 Un campo alfanumerico è specificato indicando il \textsl{tag} 
 \fcolorbox{black}{yellow!75}{\texttt{!Cus}}\,, 
-un esempio di definizione di campi custom/alfanumerici è mostrato nel 
+un esempio di definizione di campi custom è mostrato nel 
 cod.~\ref{lst:xmplCus}, nell'\,esempio è mostrato anche il nodo del default
 globale per i campi custom, i valori impostati sono quelli di default
 della \textsl{service provider interface}, quindi non è necessario impostare
@@ -2729,7 +2790,7 @@ packages:
 \cline{2-6}
 &padChar    & pad & char    & & \texttt{\$\{defaults.cus.pad:' '\}}\\
 \cline{2-6}
-&initChar   & ini & char    & & \texttt{\$\{defaults.cus.init:' '\}}\\
+&initChar   & ini & char    & & \texttt{\$\{defaults.cus.ini:' '\}}\\
 \cline{2-6}
 &check      & chk & \hyperref[lst:CheckCus]{enum} & & \texttt{\$\{defaults.cus.check:Ascii\}}\\
 \cline{2-6}
@@ -2748,7 +2809,7 @@ packages:
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Nella tabella~\ref{tab:attr.cus} sono mostrati tutti gli attributi previsti per 
-un campo custom/alfanumerico, i relativi nomi abbreviati, il corrispondente 
+un campo custom, i relativi nomi abbreviati, il corrispondente 
 tipo-dati, se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore 
 di default.
 
@@ -2869,7 +2930,7 @@ default.
 
 \subsection{Campo Dominio} \label{sub:yaml.dom}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo numerico riflette la struttura imposta dalla
+La definizione yaml del campo dominio riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:DomModel}.
 Un campo dominio è specificato indicando il \textsl{tag} 
 \fcolorbox{black}{yellow!75}{\texttt{!Dom}}\,, 
@@ -2958,7 +3019,7 @@ valori.
 
 \subsection{Campo Filler} \label{sub:yaml.fil}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo numerico riflette la struttura imposta dalla
+La definizione yaml del campo filler riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:FilModel}.
 Un campo filler è specificato indicando il \textsl{tag} 
 \fcolorbox{black}{yellow!75}{\texttt{!Fil}}\,, 
@@ -3049,11 +3110,11 @@ default.
 
 \subsection{Campo Costante} \label{sub:yaml.val}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo numerico riflette la struttura imposta dalla
+La definizione yaml del campo costante riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:ValModel}.
 Un campo costante è specificato indicando il \textsl{tag} 
 \fcolorbox{black}{yellow!75}{\texttt{!Val}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
+un esempio di definizione di campi costanti è mostrato nel 
 cod.~\ref{lst:xmplVal}, questo tipo di campo non prevede default globali.
 
 \ifesource
@@ -3138,7 +3199,7 @@ La definizione yaml del campo gruppo riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:GrpModel}.
 Un campo gruppo è specificato indicando il \textsl{tag} 
 \fcolorbox{black}{yellow!75}{\texttt{!Grp}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
+un esempio di definizione di campi gruppo è mostrato nel 
 cod.~\ref{lst:xmplGrp}.
 
 \ifesource
@@ -3225,7 +3286,7 @@ La definizione yaml del campo gruppo ripetuto riflette la struttura imposta
 dalla service interface, vedi~\ref{lst:OccModel}.
 Un campo gruppo ripetuto è specificato indicando il \textsl{tag} 
 \fcolorbox{black}{yellow!75}{\texttt{!Occ}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
+un esempio di definizione di campo gruppo ripetuto è mostrato nel 
 cod.~\ref{lst:xmplOcc}.
 
 \ifesource
@@ -3305,7 +3366,7 @@ La definizione yaml del campo incorporato riflette la struttura imposta dalla
 service interface, vedi~\ref{lst:EmbModel}.
 Un campo incorporato è specificato indicando il \textsl{tag} 
 \fcolorbox{black}{yellow!75}{\texttt{!Emb}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
+un esempio di definizione di campo incorporato è mostrato nel 
 cod.~\ref{lst:xmplEmb}.
 
 \ifesource
@@ -3399,7 +3460,7 @@ La definizione yaml del campo gruppo/interfaccia riflette la struttura imposta
 dalla service interface, vedi~\ref{lst:GrpTraitModel}.
 Un campo gruppo/interfaccia è specificato indicando il \textsl{tag} 
 \fcolorbox{black}{yellow!75}{\texttt{!GRP}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
+un esempio di definizione di campi gruppo/interfaccia è mostrato nel 
 cod.~\ref{lst:xmplIGrp}.
 
 \ifesource
@@ -3489,7 +3550,7 @@ La definizione yaml del campo gruppo/interfaccia ripetuto riflette la struttura
 imposta dalla service interface, vedi~\ref{lst:OccTraitModel}.
 Un campo gruppo/interfaccia ripetuto è specificato indicando il \textsl{tag} 
 \fcolorbox{black}{yellow!75}{\texttt{!OCC}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
+un esempio di definizione di campi gruppo/interfaccia ripetuto è mostrato nel 
 cod.~\ref{lst:xmplIOcc}.
 
 \ifesource
@@ -3585,7 +3646,7 @@ plugin è necessario almeno il java 8.
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
 Il gradle plugin \verb!recfm-gradle-plugin! è semplicemente l'\,adattamento del 
-\verb!recfm-gradle-plugin! per essere usato in un progetto \textsl{gradle}.
+\verb!recfm-maven-plugin! per essere usato in un progetto \textsl{gradle}.
 Se si esclude il modo in cui vengono passati i parametri di input, e come viene
 attivato il plugin, il codice è la copia della versione per maven.
 
@@ -3678,7 +3739,7 @@ Qualunque sia il linguaggio generato e il dettaglio della implementazione il
     stringa-dati.
 \end{itemize}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Sarebbe gradita anche qualche funzionalià accessoria:
+Sarebbe gradita anche qualche funzionalità accessoria:
 \begin{itemize}
 \item \textbf{validate}: validare la stringa-dati prima della 
     de-serializzazione, in modo da segnalare tutte le aree che non possono essere
@@ -3705,15 +3766,16 @@ hanno una serie di metodi ausiliari, vedi cod.~\ref{lst:Foo312:java}.
 \begin{lstlisting}[language=java, caption=esempio di classe generata (Foo312), 
 label=lst:Foo312:java]
 public class Foo312 extends FixRecord {
-    public static final int LRECL = 50;
     public Foo312() { /* ... */ }
     public static Foo312 of(FixRecord r) { /* ... */ }
     public static Foo312 decode(String s) { /* ... */ }
     public Foo312 copy() { /* ... */ }
     // setter and getter ...
     public boolean validateFails((*\hyperref[lst:FieldValidateHandler:java]{FieldValidateHandler}*) handler) { /* ... */ }
+    public boolean validateAllFails((*\hyperref[lst:FieldValidateHandler:java]{FieldValidateHandler}*) handler) { /* ... */ }
     public String toString() { /* ... */ }
     public String encode() { /* ... */ }    // from super class
+    public int length() { return LRECL; }   // string-data length
 }
 \end{lstlisting}
 \end{figure*}
@@ -3721,15 +3783,16 @@ public class Foo312 extends FixRecord {
 \begin{elisting}[!htb]
 \begin{javacode}
 public class Foo312 extends FixRecord {
-    public static final int LRECL = 50;
     public Foo312() { /* ... */ }
     public static Foo312 of(FixRecord r) { /* ... */ }
     public static Foo312 decode(String s) { /* ... */ }
     public Foo312 copy() { /* ... */ }
     // setter and getter ...
     public boolean validateFails(|\hyperref[lst:FieldValidateHandler:java]{FieldValidateHandler}| handler) { /* ... */ }
+    public boolean validateAllFails(|\hyperref[lst:FieldValidateHandler:java]{FieldValidateHandler}| handler) { /* ... */ }
     public String toString() { /* ... */ }
     public String encode() { /* ... */ }    // from super class
+    public int length() { return LRECL; }   // string-data length
 }
 \end{javacode}
 \caption{esempio di classe generata (Foo312)}
@@ -3739,17 +3802,16 @@ public class Foo312 extends FixRecord {
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \begin{itemize}
-\item viene messa a disposizione una costante con la lunghezza della 
-    stringa-dati attesa
 \item viene fornito un costruttore senza argomenti, che crea la classe con i 
     valori a default
 \item viene fornito un costruttore \textit{cast-like}, che prende come argomento
     qualunque altra classe che rappresenta una classe-dati
 \item viene fornito un costruttore da stringa-dati (de-serializzatore)
 \item viene fornito un metodo \textit{deep-copy} per duplicare la classe-dati
-\item viene fornito un metodo di validazione
+\item vengono forniti due metodo di validazione
 \item viene fornito un metodo di \texttt{toString}
 \item viene fornito un metodo per generare la stringa-dati (serializzatore)
+\item viene fornito un metodo per recuperare la lunghezza della stringa-dati
 \end{itemize}
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
@@ -3779,9 +3841,9 @@ superiori.
 
 \subsection{Validazione}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Come visto nel sorgente~\ref{lst:Foo312:java} per ogni classe viene generato
-un metodo di validazione. L'\,argomento è una interfaccia dedicata, ma questo è
-per compatibilità pre-java-8.
+Come visto nel sorgente~\ref{lst:Foo312:java} per ogni classe vengono generati
+due metodi di validazione. Per entrambi l'\,argo\-men\-to è una interfaccia 
+dedicata, ma questo è per compatibilità pre-java-8.
 L'\,argometo sarà una \textit{closure}, implementata con una classe anonima o 
 interna o una $\lambda$-function.
 
@@ -3808,32 +3870,16 @@ public interface FieldValidateHandler {
 \fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Il metodo \texttt{validateFails} indica se la validzione della stringa-dati
+I metodi di validazione indicano se la stringa-dati
 acquisita con il costruttore statico \texttt{decode} ha superato la validazione
 richiesta dalla definizione dei campi oppure no, ma ogni volta che viene 
 rilevato un errore di validazione viene chiamato il metodo \texttt{error}
 dell'\,interfaccia fornita come argomento con i dettagli dell'\,errore.
 In questo modo è possibile accumulare tutti gli errori di validazione rilevati.
-
-
-\begin{elisting}[!htb]
-\begin{javacode}
-public class FixError {
-    public static synchronized void failFirst() { /* ... */ }
-    public static synchronized void failAll() { /* ... */ }
-    /* ... */
-}
-\end{javacode}
-\caption{Impostazione comportamento in caso di errore multipli sullo stesso campo}
-\label{lst:failFirst.failAll}
-\end{elisting}
-
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nel caso che un campo abbia più caratteri in errore è possibile segnalare solo
-il primo carattere in errore, o tutti i caratteri in errore.
-La scelta è discrezionale, la classe \texttt{FixError} mette a disposizione due 
-metodi per impostare in modo globale questa scelta. Se non viene impostato
-esplicitamente viene segnalato solo il primo carattere in errore del campo.
+La differenza tra i due metodi è che il primo \texttt{validateFails} in caso di
+più caratteri errati sullo stesso campo, segnala solo il primo, mentre il 
+secondo \texttt{validateAllFails} segnala tutti i caratteri in errore.
 
 \ifesource
 \begin{figure*}[!htb]
@@ -4048,6 +4094,7 @@ classe-dati. Anche tutte le classi-dati implementano l'\,interfaccia
 \begin{javacode}
 public interface Validable {
     boolean validateFails(FieldValidateHandler handler);
+    boolean validateAllFails(FieldValidateHandler handler);
 }
 \end{javacode}
 \caption{Interfaccia di validazione, a livello classe-dati e gruppo}

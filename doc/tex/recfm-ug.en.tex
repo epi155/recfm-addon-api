@@ -139,7 +139,7 @@ urlcolor=green,
 \rule{\unitlength}{1.6pt}\\[\baselineskip]
 %{\large\scshape drawings by the artist}\par
 \vfill
-%{\large\scshape the publisher}\\[\baselineskip]
+{\large\scshape Version 0.7.0}\\[\baselineskip]
 {\small\scshape \today}\par
 \vspace*{\drop}
 \end{titlepage}
@@ -151,7 +151,7 @@ Sometimes it may happen that you have to deal with positional files (or memory
 areas), see fig.~\ref{fig:str.data}, in these cases you need to waste a lot of 
 time to make a class dedicated to each string-data with the setters and getters
 to read and write values\footnote{%
-there is \texttt{com.ancientprogramming.fixedformat4j:fixedformat4j:1.2.2} 
+there is \texttt{com.ancientprogramming.fixedformat4j:fixedformat4j} 
 which provides some basic functionality, but in most situations it is not 
 flexible enough.}.
 
@@ -216,7 +216,7 @@ flexible enough.}.
 \fbox[lbr]{A}%45
 }}
 
-
+\iffalse
 \scalebox{0.7}[1]{
 \texttt{%
 \fbox[lb]{O}%01
@@ -275,8 +275,68 @@ flexible enough.}.
 \fbox[lb]{K}%44
 \fbox[lbr]{R}%45
 }}
+\fi
 
-\caption{Positional datafile example} 
+\scalebox{0.7}[1]{
+\texttt{%
+\fbox[lb]{A}%01
+\fbox[lb]{N}%02
+\fbox[lb]{A}%03
+\fbox[lb]{ }%04
+\fbox[lb]{ }%05
+\fbox[lb]{ }%06
+\fbox[lb]{ }%07
+\fbox[lb]{ }%08
+\fbox[lb]{ }%09
+\fbox[lb]{ }%10
+\fbox[lb]{ }%11
+\fbox[lb]{ }%12
+\fbox[lb]{ }%13
+\fbox[lb]{ }%14
+\fbox[lb]{ }%15
+\fbox[lb]{D}%16
+\fbox[lb]{E}%17
+\fbox[lb]{ }%18
+\fbox[lb]{A}%19
+\fbox[lb]{R}%20
+\fbox[lb]{M}%21
+\fbox[lb]{A}%22
+\fbox[lb]{S}%23
+\fbox[lb]{ }%24
+\fbox[lb]{ }%25
+\fbox[lb]{ }%26
+\fbox[lb]{ }%27
+\fbox[lb]{ }%28
+\fbox[lb]{ }%29
+\fbox[lb]{ }%30
+\fbox[lb]{1}%31
+\fbox[lb]{9}%32
+\fbox[lb]{8}%33
+\fbox[lb]{8}%34
+\fbox[lb]{0}%35
+\fbox[lb]{4}%36
+\fbox[lb]{3}%37
+\fbox[lb]{0}%38
+\fbox[lb]{H}%39
+\fbox[lb]{A}%40
+\fbox[lb]{V}%31
+\fbox[lb]{A}%32
+\fbox[lb]{N}%33
+\fbox[lb]{A}%34
+\fbox[lb]{ }%35
+\fbox[lb]{ }%36
+\fbox[lb]{ }%37
+\fbox[lb]{ }%38
+\fbox[lb]{ }%39
+\fbox[lb]{ }%40
+\fbox[lb]{ }%41
+\fbox[lb]{ }%42
+\fbox[lb]{C}%43
+\fbox[lb]{U}%44
+\fbox[lbr]{B}%45
+}}
+
+\caption{Positional data-file example} 
 \label{fig:str.data}
 \end{figure}
 
@@ -1188,264 +1248,161 @@ The dimension actually used is \verb!length! $\times$ \verb!times!.
 
 \vspace*{5cm}
 
-\chapter{enum utilizzati}
+\chapter{Used enums}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Molte delle classi o interfacce di configurazione hanno dei campi con valori
-limitati ad alcuni valori espresse mediante \texttt{enum}.
-Vediamoli uno per uno.
+Many of the configuration classes or interfaces have fields with values that are 
+limited to some value expressed by \texttt{enum}. 
+Let's see them one by one.
 
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum LoadOverflowAction, 
-label=lst:LoadOverflowAction]
-public enum LoadOverflowAction { Error, Trunc }
-\end{lstlisting}\index{LoadOverflowAction}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum LoadOverflowAction { Error, Trunc }
 \end{javacode}
 \caption{enum LoadOverflowAction}\label{lst:LoadOverflowAction}\index{LoadOverflowAction}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:LoadOverflowAction]{\texttt{LoadOverflowAction}} è usato 
-dalla classe \hyperref[lst:ClassModel]{\texttt{ClassModel}} per indicare come 
-comportarsi quando la classe viene deserializzata e la stringa-dati ha una 
-dimensione maggiore di quella attesa dalla classe-dati.
+The \hyperref[lst:LoadOverflowAction]{\texttt{LoadOverflowAction}} enum is used 
+by the \hyperref[lst:ClassModel]{\texttt{ClassModel}} class to indicate how to 
+behave when the class is deserialized and the data-string is larger than 
+expected by the data-class.
 
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum LoadUnderflowAction, 
-label=lst:LoadUnderflowAction]
-public enum LoadUnderflowAction { Error, Pad }
-\end{lstlisting}\index{LoadUnderflowAction}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum LoadUnderflowAction { Error, Pad }
 \end{javacode}
 \caption{enum LoadUnderflowAction}\label{lst:LoadUnderflowAction}\index{LoadUnderflowAction}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:LoadUnderflowAction]{\texttt{LoadUnderflowAction}} è 
-usato dalla classe \hyperref[lst:ClassModel]{\texttt{ClassModel}} per indicare 
-come comportarsi quando la classe viene deserializzata e la stringa-dati ha una 
-dimensione inferiore a quella attesa dalla classe-dati.
+The \hyperref[lst:LoadUnderflowAction]{\texttt{LoadUnderflowAction}} enum is 
+used by the \hyperref[lst:ClassModel]{\texttt{ClassModel}} class to indicate how 
+to behave when the class is deserialized and the data-string has a smaller size 
+than expected by the data-class.
 
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum CheckAbc, 
-label=lst:CheckAbc]
-public enum CheckAbc { None, Ascii, Latin1, Valid }
-\end{lstlisting}\index{CheckAbc}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum CheckAbc { None, Ascii, Latin1, Valid }
 \end{javacode}
 \caption{enum CheckAbc}\label{lst:CheckAbc}\index{CheckAbc}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:CheckAbc]{\texttt{CheckAbc}} è usato dalla classe
-\hyperref[lst:AbcModel]{\texttt{AbcModel}} per indicare quali caratteri sono
-considerati validi.
+The \hyperref[lst:CheckAbc]{\texttt{CheckAbc}} enum is used by the 
+\hyperref[lst:AbcModel]{\texttt{AbcModel}} class to indicate which characters 
+are considered valid.
 
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum OverflowAction, 
-label=lst:OverflowAction]
-public enum OverflowAction { Error, Trunc }
-\end{lstlisting}\index{OverflowAction}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum OverflowAction { Error, Trunc }
 \end{javacode}
 \caption{enum OverflowAction}\label{lst:OverflowAction}\index{OverflowAction}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:OverflowAction]{\texttt{OverflowAction}} è usato dalla 
-classi per gestire i campi numerici e alfanumerici 
-(\hyperref[lst:AbcModel]{\texttt{AbcModel}},\break
+The \hyperref[lst:OverflowAction]{\texttt{OverflowAction}} enum is used by the 
+class to manage numeric and alphanumeric fields 
+(\hyperref[lst:AbcModel]{\texttt{AbcModel}},
 \hyperref[lst:NumModel]{\texttt{NumModel}},
 \hyperref[lst:CusModel]{\texttt{CusModel}},
-\hyperref[lst:NuxModel]{\texttt{NuxModel}}), per indicare come comportarsi
-quando il setter propone un valore che ha una dimensione maggiore di quella
-attesa per quel campo.
+\hyperref[lst:NuxModel]{\texttt{NuxModel}}), to indicate how to behave when the 
+setter proposes a value that has a size greater than the one expected for that 
+field.
 
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum UnderflowAction, 
-label=lst:UnderflowAction]
-public enum UnderflowAction { Error, Pad }
-\end{lstlisting}\index{UnderflowAction}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum UnderflowAction { Error, Pad }
 \end{javacode}
 \caption{enum UnderflowAction}\label{lst:UnderflowAction}\index{UnderflowAction}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:UnderflowAction]{\texttt{UnderflowAction}} è usato dalla 
-classi per gestire i campi numerici e alfanumerici 
-(\hyperref[lst:AbcModel]{\texttt{AbcModel}},\break
+The \hyperref[lst:UnderflowAction]{\texttt{UnderflowAction}} enum is used by the 
+class to manage numeric and alphanumeric fields 
+(\hyperref[lst:AbcModel]{\texttt{AbcModel}},
 \hyperref[lst:NumModel]{\texttt{NumModel}},
 \hyperref[lst:CusModel]{\texttt{CusModel}},
-\hyperref[lst:NuxModel]{\texttt{NuxModel}}), per indicare come comportarsi
-quando il setter propone un valore che ha una dimensione inferiore a quella
-attesa per quel campo.
+\hyperref[lst:NuxModel]{\texttt{NuxModel}}), to indicate how to behave when the 
+setter proposes a value that has a size smaller than the one expected for that 
+field.
 
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum NormalizeAbcMode, 
-label=lst:NormalizeAbcMode]
-public enum NormalizeAbcMode { None, Trim, Trim1 }
-\end{lstlisting}\index{NormalizeAbcMode}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum NormalizeAbcMode { None, Trim, Trim1 }
 \end{javacode}
 \caption{enum NormalizeAbcMode}\label{lst:NormalizeAbcMode}\index{NormalizeAbcMode}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:NormalizeAbcMode]{\texttt{NormalizeAbcMode}} è usato 
-dalla classi per gestire i campi alfanumerici 
+The \hyperref[lst:NormalizeAbcMode]{\texttt{NormalizeAbcMode}} enum is used by 
+the class to manage alphanumeric fields 
 (\hyperref[lst:AbcModel]{\texttt{AbcModel}},
-\hyperref[lst:CusModel]{\texttt{CusModel}}), per indicare come normalizzare
-il valore restituito dal getter.
+\hyperref[lst:CusModel]{\texttt{CusModel}}), to indicate how to normalize the 
+value returned by the getter.
 
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum NormalizeNumMode, 
-label=lst:NormalizeNumMode]
-public enum NormalizeNumMode { None, Trim }
-\end{lstlisting}\index{NormalizeNumMode}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum NormalizeNumMode { None, Trim }
 \end{javacode}
 \caption{enum NormalizeNumMode}\label{lst:NormalizeNumMode}\index{NormalizeNumMode}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:NormalizeNumMode]{\texttt{NormalizeNumMode}} è usato 
-dalla classi per gestire i campi numerici 
-(\hyperref[lst:NumModel]{\texttt{NumModel}},
-\hyperref[lst:NuxModel]{\texttt{NuxModel}}), per indicare come normalizzare
-il valore restituito dal getter.
+The \hyperref[lst:NormalizeNumMode]{\texttt{NormalizeNumMode}} enum is used by 
+the class to manage numeric fields (\hyperref[lst:NumModel]{\texttt{NumModel}},
+\hyperref[lst:NuxModel]{\texttt{NuxModel}}), to indicate how to normalize the 
+value returned by the getter.
 
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum WordWidth, 
-label=lst:WordWidth]
-public enum WordWidth { Byte, Short, Int, Long }
-\end{lstlisting}\index{WordWidth}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum WordWidth { Byte, Short, Int, Long }
 \end{javacode}
 \caption{enum WordWidth}\label{lst:WordWidth}\index{WordWidth}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:WordWidth]{\texttt{WordWidth}} è usato 
-dalla classi per gestire i campi numerici 
-(\hyperref[lst:NumModel]{\texttt{NumModel}},
-\hyperref[lst:NuxModel]{\texttt{NuxModel}}), per indicare il tipo dato numerico
-primitivo di dimensione minima da usare quando vengono creati setter e getter
-numerici.
+The \hyperref[lst:WordWidth]{\texttt{WordWidth}} enum is used by the class to 
+handle numeric fields (\hyperref[lst:NumModel]{\texttt{NumModel}},
+\hyperref[lst:NuxModel]{\texttt{NuxModel}}), to indicate the primitive numeric 
+data type of minimum size to use when creating numeric setters and getters.
 
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum AccesMode, 
-label=lst:AccesMode]
-public enum AccesMode { String, Number, Both }
-\end{lstlisting}\index{AccesMode}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum AccesMode { String, Number, Both }
 \end{javacode}
 \caption{enum AccesMode}\label{lst:AccesMode}\index{AccesMode}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:AccesMode]{\texttt{AccesMode}} è usato 
-dalla classi per gestire i campi numerici 
-(\hyperref[lst:NumModel]{\texttt{NumModel}},
-\hyperref[lst:NuxModel]{\texttt{NuxModel}}), per indicare se creare setter e
-getter alfanumerici, numerici o entrambi.
+The \hyperref[lst:AccesMode]{\texttt{AccesMode}} enum is used by the class to 
+handle numeric fields (\hyperref[lst:NumModel]{\texttt{NumModel}},
+\hyperref[lst:NuxModel]{\texttt{NuxModel}}), to indicate whether to create 
+alphanumeric, numeric, or both setters and getters.
 
-
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum InitializeNuxMode, 
-label=lst:InitializeNuxMode]
-public enum InitializeNuxMode { Spaces, Zeroes }
-\end{lstlisting}\index{InitializeNuxMode}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum InitializeNuxMode { Spaces, Zeroes }
 \end{javacode}
 \caption{enum InitializeNuxMode}\label{lst:InitializeNuxMode}\index{InitializeNuxMode}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:InitializeNuxMode]{\texttt{InitializeNuxMode}} è usato 
-dalla classe \hyperref[lst:NuxModel]{\texttt{NuxModel}}, per indicare come 
-inizializzare il campo quando la classe-dati viene creata col costruttore senza
-argomenti.
+The \hyperref[lst:InitializeNuxMode]{\texttt{InitializeNuxMode}} enum is used 
+by the \hyperref[lst:NuxModel]{\texttt{NuxModel}} class, to indicate how to 
+initialize the field when the data-class is created with the constructor with 
+no arguments.
 
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum CheckCus, 
-label=lst:CheckCus]
-public enum CheckCus { None, Ascii, Latin1, Valid, Digit, DigitOrBlank }
-\end{lstlisting}\index{CheckCus}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum CheckCus { None, Ascii, Latin1, Valid, Digit, DigitOrBlank }
 \end{javacode}
 \caption{enum CheckCus}\label{lst:CheckCus}\index{CheckCus}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:CheckCus]{\texttt{CheckCus}} è usato dalla classe
-\hyperref[lst:CusModel]{\texttt{CusModel}} per indicare quali caratteri sono
-considerati validi.
+The \hyperref[lst:CheckCus]{\texttt{CheckCus}} enum is used by the 
+\hyperref[lst:CusModel]{\texttt{CusModel}} class to indicate which characters 
+are considered valid.
 
-
-
-\ifesource
-\begin{lstlisting}[language=java, 
-caption=enum AlignMode, 
-label=lst:AlignMode]
-public enum AlignMode { LFT, RGT }
-\end{lstlisting}\index{AlignMode}
-\else
 \begin{elisting}
 \begin{javacode}
 public enum AlignMode { LFT, RGT }
 \end{javacode}
 \caption{enum AlignMode}\label{lst:AlignMode}\index{AlignMode}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,enum \hyperref[lst:CheckCus]{\texttt{CheckCus}} è usato dalla classe
-\hyperref[lst:CusModel]{\texttt{CusModel}} per indicare come allineare il campo.
-
+The \hyperref[lst:CheckCus]{\texttt{CheckCus}} enum is used by the 
+\hyperref[lst:CusModel]{\texttt{CusModel}} class to indicate how to align the 
+field.
 
 \vfill
 
@@ -1460,85 +1417,49 @@ L'\,enum \hyperref[lst:CheckCus]{\texttt{CheckCus}} è usato dalla classe
 
 \chapter*{Service}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La \textsl{Service Provider Interface} fissa semplicemente la struttura 
-generale, ma contiene solo interfacce e java-bean.
-Il \textsl{Service} è l'\,applicazione che permette all'\,utente di fornire
-l'\,input previsto dalla \textsl{Service Provider Interface}.
-Per produrre l'\,output, il \textsl{Service} utilizzerà il 
-\textsl{ServiceLoader} per cercare nel classpath un \textsl{Service Provider} 
-che implementi la \textsl{Service Provider Interface}, e sarà il 
-\textsl{Service Provider} a generare l'\,output dall'\,input.
+The \textsl{Service Provider Interface} simply fixes the general structure, but 
+contains only interfaces and java-beans.
+The \textsl{Service} is the application that allows the user to provide the 
+input required by the \textsl{Service Provider Interface}. 
+To produce the output, the \textsl{Service} will use the \textsl{ServiceLoader} 
+to search the classpath for a \textsl{Service Provider} that implements the 
+\textsl{Service Provider Interface}, and the \textsl{Service Provider} will 
+generate the output from the input.
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Il cuore del \textsl{Service Provider Interface} \verb!recfm-addon-api! è la
-interfaccia \textsl{CodeProvider}. L'\,implementazione della interfaccia
-viene cercata col meccanismo del ServiceLoader, cod.\ref{lst:getCodeProvider}.
+The heart of the \textsl{Service Provider Interface}, \verb!recfm-addon-api!, is 
+the \textsl{CodeProvider} interface. The implementation of the interface is 
+searched with the ServiceLoader mechanism, lst.~\ref{lst:getCodeProvider}.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=java, caption=recupero del CodeProvider, 
-label=lst:getCodeProvider]
-        ServiceLoader<CodeProvider> loader = ServiceLoader.load(CodeProvider.class);
-        (*\hyperref[lst:CodeProvider]{CodeProvider}*) codeProvider = loader.iterator().next();
-        (*\hyperref[lst:CodeFactory]{CodeFactory}*) factory = codeProvider.getInstance();
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{javacode}
         ServiceLoader<CodeProvider> loader = ServiceLoader.load(CodeProvider.class);
         |\hyperref[lst:CodeProvider]{CodeProvider}| codeProvider = loader.iterator().next();
         |\hyperref[lst:CodeFactory]{CodeFactory}| factory = codeProvider.getInstance();
 \end{javacode}
-\caption{recupero del CodeProvider}
+\caption{retrieve of the CodeProvider}
 \label{lst:getCodeProvider}
 \end{elisting}
-\fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Una volta recuperata una istanza di \textsl{CodeFactory} è possibile creare le
-definizioni delle stringhe-dati e generare i sorgenti delle classi-dati.
+Once an instance of \textsl{CodeFactory} has been retrieved, it is possible to 
+create the definitions of the data-strings and generate the sources of the 
+data-classes.
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Sono stati sviluppati due \textsl{client}, uno sotto forma di maven plugin 
-\verb!recfm-maven-plugin!, e l'\,altro sotto forma di gradle plugin 
-\verb!recfm-gradle-plugin!. Il codice in gran parte è identico, cambia solo il 
-meccanismo di innesco.
+Two \textsl{clients} have been developed, one in the form of a maven plugin 
+(\verb!recfm-maven-plugin!), and the other in the form of a gradle plugin 
+(\verb!recfm-gradle-plugin!). 
+The code is largely identical, only the trigger mechanism changes.
 
 \chapter{Maven plugin}\label{sec:maven}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Il maven plugin \verb!recfm-maven-plugin! permette di creare più classi e 
-interfacce usando uno più file di configurazione in formato yaml.
-Le librerie esterne utilizzate richiedono il java 8, quindi per eseguire questo 
-plugin è necessario almeno il java 8.
+The \verb!recfm-maven-plugin! maven plugin allows you to create multiple classes 
+and interfaces using one or more configuration files in yaml format. 
+The external libraries used require java 8, so you need at least java 8 to run 
+this plugin.
 
-Il plugin si aspetta come parametri di configurazione
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=java, caption=parametri impostabili del maven plugin, 
-label=lst:maven.conf]
-    @Parameter(defaultValue = "${project.build.directory}/generated-sources/recfm",
-        property = "maven.recfm.generateDirectory", required = true)
-    private File generateDirectory;
-
-    @Parameter(defaultValue = "${project.build.resources[0].directory}",
-        property = "maven.recfm.settingsDirectory", required = true)
-    private File settingsDirectory;
-    
-    @Parameter(required = true)
-    private String[] settings;
-
-    @Parameter(defaultValue = "true", property = "maven.recfm.addCompileSourceRoot")
-    private boolean addCompileSourceRoot = true;
-
-    @Parameter(defaultValue = "false", property = "maven.recfm.addTestCompileSourceRoot")
-    private boolean addTestCompileSourceRoot = false;
-    
-    @Parameter
-    private String codeProviderClassName;
-\end{lstlisting}
-\end{figure*}
-\else
+The plugin expects configuration parameters as parameters:
 \begin{elisting}[!htb]
 \begin{javacode}
     @Parameter(defaultValue = "${project.build.directory}/generated-sources/recfm",
@@ -1561,93 +1482,59 @@ label=lst:maven.conf]
     @Parameter
     private String codeProviderClassName;
 \end{javacode}
-\caption{parametri impostabili del maven plugin}
+\caption{settable parameters of the maven plugin}
 \label{lst:maven.conf}
 \end{elisting}
-\fi
 
 \begin{itemize}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!generateDirectory}
-	Il campo \fcolorbox{black}{yellow!75}{\texttt{generateDirectory}} indica la 
-	directory root da utilizzare per la generazione dei sorgenti, viene usato 
-	per valorizzare il campo \verb!sourceDirectory! della classe 
-	\hyperref[lst:GenerateArgs]{\texttt{GenerateArgs}}, come si vede dalla 
-	definizione, se il parametro è omesso viene utilizzata la directory 
-	\verb!target/generated-sources/recfm!, 	normalmente può essere lasciato il 
-	valore di default.
-	Gli altri tre parametri di \texttt{GenerateArgs} sono un identificativo del
-	programma \textsl{service} e vengono valorizzati automaticamente.
+    The \fcolorbox{black}{yellow!75}{\texttt{generateDirectory}} field indicates 
+    the root directory to use for generating the sources, it is used to set the 
+    value of the \verb!sourceDirectory! field of the 
+    \hyperref[lst:GenerateArgs]{\texttt{GenerateArgs}} class, as can be seen 
+    from the definition, if the parameter is omitted the 
+    \verb!target/generated-sources/recfm! directory is used, normally the 
+    default value can be left. 
+    The other three parameters of \texttt{GenerateArgs} are an identifier of the 
+    \textsl{service} program and are set automatically.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!settingsDirectory}
-	Il campo \fcolorbox{black}{yellow!75}{\texttt{settingsDirectory}} indica la 
-	directory che contiene i file	di configurazione, se il parametro è omesso 
-	viene usato il valore \verb!src/main/resources!, normalmente può essere 
-	lasciato il valore di default.
+    The \fcolorbox{black}{yellow!75}{\texttt{settingsDirectory}} field indicates 
+    the directory containing the configuration files, if the parameter is 
+    omitted the value \verb!src/main/resources! is used, normally the default 
+    value can be left.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!settings}
-	Il campo \fcolorbox{black}{yellow!75}{\texttt{settings}} indica l'elenco dei 
-	file di configurazione da utilizzare per generare le classi/interfacce; il 
-	parametro deve essere fornito al plugin.
+    The \fcolorbox{black}{yellow!75}{\texttt{settings}} field indicates the list 
+    of configuration files to be used to generate the classes/interfaces; the 
+    parameter must be supplied to the plugin.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!addCompileSourceRoot}
-	Il campo \fcolorbox{black}{yellow!75}{\texttt{addCompileSourceRoot}} è un 
-	campo tecnico, indica a maven che la directory dove sono stati generati i 
-	sorgenti deve essere inclusa tra quelle utilizzate per la compilazione 
-	principale, se il parametro è omesso viene utilizzato il valore 
-	\verb!true!; il valore \verb!true! è opportuno quando viene usata una 
-	directory di generazione del codice diversa da \verb!src/main/java!, 
-	altrimenti è necessario usare plugin aggiuntivi per aggiungere il nuovo path 
-	a quello di compilazione di maven.
+    The \fcolorbox{black}{yellow!75}{\texttt{addCompileSourceRoot}} field is a 
+    technical field, it indicates to maven that the directory where the sources 
+    were generated must be included among those used for the main compilation, 
+    if the parameter is omitted the value \verb!true! is used; the \verb!true! 
+    value is appropriate when a code generation directory other than 
+    \verb!src/main/java! is used, otherwise it is necessary to use additional 
+    plugins to add the new path to the maven compilation path.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!addTestCompileSourceRoot}
-	Il campo \fcolorbox{black}{yellow!75}{\texttt{addTestCompileSourceRoot}} è 
-	analogo al campo precedente, ma aggiunge la directory di generazione al path 
-	di compilazione dei test, se omesso viene utilizzato il valore \verb!false!, 
-	tranne in casi particolari può essere lasciato il valore di default.
+    The \fcolorbox{black}{yellow!75}{\texttt{addTestCompileSourceRoot}} field is 
+    similar to the previous field, but adds the generation directory to the test 
+    compilation path, if omitted the value \verb!false! is used, except in 
+    special cases the default value can be left.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 \item \index{plugin!codeProviderClassName}
-	Il campo \fcolorbox{black}{yellow!75}{\texttt{codeProviderClassName}} indica 
-	quale è la classe concreata che implementa la \textsl{Service Interface}, se 
-	omesso viene utilizzata la ``prima'' implementazione recuperata del 
-	\textsl{ServiceLoader}; se in classpath è presente una sola implementazione, 
-	non è necessario valorizzare il parametro. 
+    The \fcolorbox{black}{yellow!75}{\texttt{codeProviderClassName}} field 
+    indicates which is the concreated class that implements the 
+    \textsl{Service Interface}, if omitted the ``first'' implementation of the 
+    \textsl{ServiceLoader} retrieved is used; if there is only one 
+    implementation in the classpath, it is not necessary to set the parameter.
 \end{itemize}
 %--------1---------2---------3---------4---------5---------6---------7---------8
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=XML, caption=esempio minimale di esecuzione del 
-plugin, label=lst:mvn-xmpl]
-<plugin>
-    <groupId>io.github.epi155</groupId>
-    <artifactId>recfm-maven-plugin</artifactId>
-    <version>0.7.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>generate</goal>
-            </goals>
-            <configuration>
-                <settings>
-                    <setting>foo.yaml</setting>
-                    <setting>bar.yaml</setting>
-                </settings>
-            </configuration>
-        </execution>
-    </executions>
-    <dependencies>
-        <dependency>
-            <groupId>io.github.epi155</groupId>
-            <artifactId>recfm-java-addon</artifactId>
-            <version>0.7.0</version>
-        </dependency>
-    </dependencies>
-</plugin>
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{xmlcode}
 <plugin>
@@ -1662,7 +1549,6 @@ plugin, label=lst:mvn-xmpl]
             <configuration>
                 <settings>
                     <setting>foo.yaml</setting>
-                    <setting>bar.yaml</setting>
                 </settings>
             </configuration>
         </execution>
@@ -1676,40 +1562,27 @@ plugin, label=lst:mvn-xmpl]
     </dependencies>
 </plugin>
 \end{xmlcode}
-\caption{esempio minimale di esecuzione del plugin}
+\caption{minimal example of plugin execution}
 \label{lst:mvn-xmpl}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Un esempio di esecuzione del plugin è mostrato nel cod.~\ref{lst:mvn-xmpl},
-il plugin per essere eseguito deve avere come dipendenza una libreria che 
-fornisca l'\,implementazione dell'\,inter\-fac\-cia, altrimenti il 
-\verb!ServiceLoader! non trova nulla ed il plugin termina in errore.
+An example of plugin execution is shown in the lst.~\ref{lst:mvn-xmpl}, the 
+plugin to be executed must have as dependency a library that provides the 
+implementation of the interface, otherwise the \verb!ServiceLoader! does not 
+find anything and the plugin terminates in error.
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Tutti gli altri parametri sono forniti nei file di configurazione.
+All other parameters are provided in the configuration files.
 
-\section{Struttura del file di configurazione}
+\section{Configuration file structure}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Per gestire la configurazione dei tracciati il plugin definisce la classe
-\textsl{MasterBook}, vedi cod.~\ref{lst:MasterBook}, è divisa in due componenti,
-la prima \texttt{defaults} è semplicemente il java-bean \textsl{FieldDefault}
-(vedi~\ref{lst:FieldDefault}) messo a disposizione dalla 
-\textsl{Service Provider Interface} per fornire i valori di default dei 
-parametri ``poco variabili'' delle classi e dei campi.
+To manage the layout configuration the plugin defines the \textsl{MasterBook} 
+class, see lst.~\ref{lst:MasterBook}, is divided into two components, the first 
+\texttt{defaults} is simply the java-bean \textsl{FieldDefault} 
+(see~\ref{lst:FieldDefault}) made available by the 
+\textsl{Service Provider Interface} to provide the default values of the 
+``slightly variable'' parameters of the classes and fields.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=java, caption=classe di configurazione MasterBook, 
-label=lst:MasterBook]
-@Data
-public class MasterBook {
-    private (*\hyperref[lst:FieldDefault]{FieldDefault}*) defaults = new FieldDefault();
-    private List<(*\hyperref[lst:ClassPackage]{ClassPackage}*)> packages = new ArrayList<>();
-}
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{javacode}
 @Data
@@ -1718,33 +1591,18 @@ public class MasterBook {
     private List<|\hyperref[lst:ClassPackage]{ClassPackage}|> packages = new ArrayList<>();
 }
 \end{javacode}
-\caption{classe di configurazione MasterBook}
+\caption{MasterBook configuration class}
 \label{lst:MasterBook}
 \end{elisting}
-\fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Per semplificare la valorizzazione del file di configurazione yaml, viene usata
-un funzionalità delle librerie yaml, che permette di definire nomi abbreviati o
-alternativi dei parametri e dei valori dei campi di tipo enum.
-I dettagli della componenti del campo \texttt{defaults} sarà mostrato insieme al
-campo a cui fornisce il default del valore dei parametri.
-
+To simplify the enhancement of the yaml configuration file, a feature of the 
+yaml libraries is used, which allows you to define abbreviated or alternative 
+names of the parameters and values of the enum type fields. 
+The component details of the \texttt{defaults} field will be shown along with 
+the field it supplies the default parameter value to.
 %--------1---------2---------3---------4---------5---------6---------7---------8
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=java, caption=classe di configurazione ClassPackage, 
-label=lst:ClassPackage]
-@Data
-public class ClassPackage {
-    private String name;     // package name
-    private List<(*\hyperref[lst:TraitModel]{TraitModel}*)> interfaces = new ArrayList<>();
-    private List<(*\hyperref[lst:ClassModel]{ClassModel}*)> classes = new ArrayList<>();
-}
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{javacode}
 @Data
@@ -1757,42 +1615,13 @@ public class ClassPackage {
 \caption{classe di configurazione ClassPackage}
 \label{lst:ClassPackage}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La seconda componente di \textsl{MasterBook}, \texttt{packages}, è una lista di
-\textsl{ClassPackage} (\ref{lst:ClassPackage}), cioè di package all'\,in\-ter\-no
-dei quali vengono definiti un elenco di interfacce e classi.
-Espandendo un esempio di questo oggetto in formato yaml (con il default 
-relativo) abbiamo:
+The second component of \textsl{MasterBook}, \texttt{packages}, is a list of 
+\textsl{ClassPackage} (\ref{lst:ClassPackage}), i.e. packages within which a 
+list of interfaces and classes are defined. 
+Expanding an example of this object in yaml format (with relative default) 
+we have:
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, 
-caption={configurazione, area packages / interfaces / classes}, 
-label=lst:pakg-conf]
-defaults:
-  cls:
-    onOverflow: Trunc   # :ovf: Error, Trunc
-    onUnderflow: Pad    # :unf: Error, Pad
-    doc: true
-packages:
-  - name: com.example.test  # package name
-    interfaces:
-      - &IFoo         (*\color{purple}{\# interface reference}*)
-        name: IFoo    # interface name
-        length: 12    # :len: interface length
-        fields:
-          - ...
-    classes:
-      - name: Foo           # class name
-        length: 10          # :len: class length
-        onOverflow: Trunc   # :ovf: Error, Trunc
-        onUnderflow: Pad    # :unf: Error, Pad
-        fields:
-          - ...
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
@@ -1816,19 +1645,17 @@ packages:
         fields:
           - ...
 \end{yamlcode}
-\caption{configurazione, area packages / interfaces / classes}
+\caption{configuration, packages / interfaces / classes areas}
 \label{lst:pakg-conf}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nei commenti vengono mostrati gli eventuali nomi alternativi dei campi e 
-l'\,elenco dei valori \textsl{enum} permessi.
-Se non vengono usate interfacce, il nodo \texttt{interfaces} può essere omesso.
-Sia per le classi che le interfacce il nome e la lunghezza del tracciato da 
-associare devono essere impostate dall'\,utente, nella definizione della classe
-può anche essere impostato il comportamento nel caso che venga fornita in fase
-di de-serializzazione una struttura con una dimensione maggiore o minore di 
-quella attesa.
+The possible alternative names of the fields and the list of allowed 
+\textsl{enum} values are shown in the comments. 
+If no interfaces are used, the \texttt{interfaces} node can be omitted. 
+For both classes and interfaces, the name and length of the path to be 
+associated must be set by the user, in the definition of the class the behavior 
+can also be set if a structure with a larger size is provided during 
+the de-serialization phase or less than expected.
 
 \begin{table}[!htb]
 \centering
@@ -1836,8 +1663,8 @@ quella attesa.
 \cline{2-6} \multicolumn{1}{c|}{}
 &\multicolumn{5}{c|}{interfaces \quad \hyperref[lst:TraitModel]{TraitModel}}\\
 \cline{2-6} \multicolumn{1}{c|}{}
-&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+&\multicolumn{1}{c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \cline{2-6} \multicolumn{1}{c|}{}
 &name     &     & String  & \ding{52} & \\
@@ -1851,15 +1678,14 @@ quella attesa.
 \cline{2-6}
 \end{tabular}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-\caption{Attributi impostabili per la definizione di una interfaccia} 
+\caption{Attributes that can be set for defining an interface} 
 \label{tab:attr.trait}
 \end{table}
 
-
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Anche se tutti i tipi di campo hanno una posizione di inizio e una lunghezza,
-il dettaglio dei parametri di configurazione varia da campo a campo ed è 
-necessario introdurre i parametri di configurazione campo per campo.
+Although all field types have a starting position and length, the detail of the 
+configuration parameters varies from field to field and it is necessary to enter 
+the configuration parameters field by field.
 
 \begin{table}[!htb]
 \centering
@@ -1867,8 +1693,8 @@ necessario introdurre i parametri di configurazione campo per campo.
 \cline{2-6} \multicolumn{1}{c|}{}
 &\multicolumn{5}{c|}{classes \quad \hyperref[lst:ClassModel]{ClassModel}}\\
 \cline{2-6} \multicolumn{1}{c|}{}
-&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+&\multicolumn{1}{c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \cline{2-6} \multicolumn{1}{c|}{}
 &name     &     & String  & \ding{52} & \\
@@ -1884,120 +1710,90 @@ necessario introdurre i parametri di configurazione campo per campo.
 &doc        &     & boolean & & \texttt{\$\{defaults.cls.doc:true\}}\\
 \hline \multicolumn{1}{c|}{}
 &fields     &     & array & \ding{52} & \\
-\cline{2-6} \multicolumn{1}{c|}{}
+\cline{2-6}
 \end{tabular}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-\caption{Attributi impostabili per la definizione di una classe} 
+\caption{Attributes that can be set for the definition of a class} 
 \label{tab:attr.class}
 \end{table}
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Per indicare esplicitamente il tipo di campo utilizzato vengono introdotti dei
-\textsl{tag} da associare ad ogni campo, nella tabella~\ref{tab:tag.class} sono
-mostrati i \textsl{tag} associati a ogni tipo di campo.
+To explicitly indicate the type of field used, \textsl{tag} are introduced to be 
+associated with each field. Table~\ref{tab:tag.class} shows the tags associated 
+with each type of field.
 
 \begin{table}[!htb]
 \centering
 \begin{tabular}{|>{\tt}l|>{\tt}l|l|}
 \hline
-\multicolumn{3}{|c|}{Tag definizione campo}\\
+\multicolumn{3}{|c|}{Field definition tag}\\
 \hline
-\multicolumn{1}{|c|}{tag} & \multicolumn{1}{c|}{classe} 
+\multicolumn{1}{|c|}{tag} & \multicolumn{1}{c|}{class} 
 	& \multicolumn{1}{c|}{note} \\
 \hline
 \hline
-\hyperref[sub:yaml.abc]{!Abc} & \hyperref[lst:AbcModel]{AbcModel} & campo alfanumerico \\
+\hyperref[sub:yaml.abc]{!Abc} & \hyperref[lst:AbcModel]{AbcModel} & alphanumeric field \\
 \hline
-\hyperref[sub:yaml.num]{!Num} & \hyperref[lst:NumModel]{NumModel} & campo numerico \\
+\hyperref[sub:yaml.num]{!Num} & \hyperref[lst:NumModel]{NumModel} & numeric field \\
 \hline
-\hyperref[sub:yaml.cus]{!Cus} & \hyperref[lst:CusModel]{CusModel} & campo custom \\
+\hyperref[sub:yaml.cus]{!Cus} & \hyperref[lst:CusModel]{CusModel} & custom field \\
 \hline
-\hyperref[sub:yaml.nux]{!Nux} & \hyperref[lst:NuxModel]{NuxModel} & campo numerico nullabile \\
+\hyperref[sub:yaml.nux]{!Nux} & \hyperref[lst:NuxModel]{NuxModel} & Nullable numeric field \\
 \hline
-\hyperref[sub:yaml.dom]{!Dom} & \hyperref[lst:DomModel]{DomModel} & campo dominio \\
+\hyperref[sub:yaml.dom]{!Dom} & \hyperref[lst:DomModel]{DomModel} & domain field \\
 \hline
-\hyperref[sub:yaml.fil]{!Fil} & \hyperref[lst:FilModel]{FilModel} & campo filler \\
+\hyperref[sub:yaml.fil]{!Fil} & \hyperref[lst:FilModel]{FilModel} & filler field \\
 \hline
-\hyperref[sub:yaml.val]{!Val} & \hyperref[lst:ValModel]{ValModel} & campo costante \\
+\hyperref[sub:yaml.val]{!Val} & \hyperref[lst:ValModel]{ValModel} & constant field \\
 \hline
-\hyperref[sub:yaml.grp]{!Grp} & \hyperref[lst:GrpModel]{GrpModel} & gruppo di campi \\
+\hyperref[sub:yaml.grp]{!Grp} & \hyperref[lst:GrpModel]{GrpModel} & field group of fields \\
 \hline
-\hyperref[sub:yaml.occ]{!Occ} & \hyperref[lst:OccModel]{OccModel} & gruppo di campi ripetuti \\
+\hyperref[sub:yaml.occ]{!Occ} & \hyperref[lst:OccModel]{OccModel} & field group of repeating fields \\
 \hline
-\hyperref[sub:yaml.emb]{!Emb} & \hyperref[lst:EmbModel]{EmbModel} & campi inclusi da interfaccia \\
+\hyperref[sub:yaml.emb]{!Emb} & \hyperref[lst:EmbModel]{EmbModel} & fields embedded via interface \\
 \hline
-\hyperref[sub:yaml.igrp]{!GRP} & \hyperref[lst:GrpTraitModel]{GrpTraitModel} & gruppo di campi inclusi da interfaccia \\
+\hyperref[sub:yaml.igrp]{!GRP} & \hyperref[lst:GrpTraitModel]{GrpTraitModel} & field group of fields via interface \\
 \hline
-\hyperref[sub:yaml.iocc]{!OCC} & \hyperref[lst:OccTraitModel]{OccTraitModel} & gruppo di campi ripetuti inclusi da interfaccia\\
+\hyperref[sub:yaml.iocc]{!OCC} & \hyperref[lst:OccTraitModel]{OccTraitModel} & field group of repeating fields via interface \\
 \hline
 \end{tabular}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-\caption{Tag yaml per la identificazione del campo} 
+\caption{Yaml tag for field identification} 
 \label{tab:tag.class}
 \end{table}
 
-\begin{quote}
+\begin{quote}\small\bf
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Riguardo all'\,offeset dei campi, va segnalato, che alcune caratteristiche non 
-dipendono dal \textsl{Service}, ma dal \textsl{Service Provider}:
-l'\,offset minimo può essere zero o uno, l'\,impostazione dell'\,offset può
-essere obbligatoria, o facoltativa (l'\,offset può essere calcolato 
-automaticamente usando l'\,offset e la lunghezza del campo precedente), 
-o non permessa.
+With regard to the offset of the fields, it should be noted that some 
+characteristics do not depend on the \textsl{Service}, but on the 
+\textsl{Service Provider}: the minimum offset can be zero or one, the offset 
+setting can be mandatory or optional (the offset can be calculated automatically 
+using the offset and length of the previous field), or not allowed.
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Il \textsl{Service Provider} descritto nella sezione~\ref{sec:java.addon}
-utilizza un offset minimo 1 e l'\,impostazione dell'\,offset è facoltativa.
-Se si omette l'\,offset in un campo definito con \textsl{override}, si assume 
-che  il campo ridefinisce il campo che lo precede nella definizione della 
-struttura.
-Nella definizione delle interfacce l'\,uso dell'\,offset è opzionale, ma a 
-differenza delle classi, che richiedono un offset minimo 1, per le interfacce
-può essere usato qualunque valore iniziale, l'\,offset effettivo viene corretto
-quando l'\,interfaccia viene applicata alla classe.
+The \textsl{Service Provider} described in \S~\ref{sec:java.addon} uses a 
+minimum offset of 1 and setting the offset is optional. If you omit the offset 
+in a field defined with an override, it is assumed that the field overrides the 
+field that precedes it in the structure definition. 
+When defining interfaces the use of the offset is optional, but unlike classes, 
+which require a minimum offset of 1, any initial value can be used for 
+interfaces, the effective offset is corrected when the interface is applied to 
+the class.
 \end{quote}
 
+\section{Single fields}
 
-\section{Campi Singoli}
-
-\subsection{Campo Alfanumerico} \label{sub:yaml.abc}
+\subsection{Alphanumeric field} \label{sub:yaml.abc}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo alfanumerico riflette la struttura imposta dalla
-service provider interface, vedi~\ref{lst:AbcModel}.
-Un campo alfanumerico è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!Abc}}\,, 
-un esempio di definizione di campi alfanumerici è mostrato nel 
-cod.~\ref{lst:xmplAbc}, nell'\,esempio è mostrato anche il nodo del default
-globale per i campi alfanumerici, i valori impostati sono quelli di default
-della \textsl{service provider interface}, quindi non è necessario impostare
-esplicitamente i parametri se si vuole impostare questi valori.
+The yaml definition of the alphanumeric field reflects the structure imposed by 
+the service provider interface, see~\ref{lst:AbcModel}. 
+An alphanumeric field is specified by indicating the 
+\fcolorbox{black}{yellow!75}{\texttt{!Abc}} \textsl{tag} , an example of 
+defining alphanumeric fields is shown in lst.~\ref{lst:xmplAbc}, the example 
+also shows the global default node for alphanumeric fields, the values set are 
+the default ones of the \textsl{service provider interface}, so it is not 
+necessary to explicitly set the parameters if you want to set these values.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, caption={esempio definizione campi alfanumerici}, 
-label=lst:xmplAbc]
-defaults:
-  abc:
-    check: Ascii        # :chk: None, Ascii, Latin1, Valid
-    onOverflow: Trunc   # :ovf: Error, Trunc
-    onUnderflow: Pad    # :unf: Error, Pad
-    normalize: None     # :nrm: None, Trim, Trim1
-    checkGetter: true   # :get:
-    checkSetter: true   # :set:
-packages:
-  - name: com.example.test
-    classes:
-      - name: Foo3111
-        length: 50
-        fields:
-          - !Abc { name: cognome    , at:   1, len:    25 }
-          - !Abc { name: nome       , at:  26, len:    20 }
-          - !Abc { name: stCivile   , at:  46, len:     1 }
-          - !Abc { name: nazionalita, at:  47, len:     3 }
-          - !Abc { name: sesso      , at:  50, len:     1 }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
@@ -2020,17 +1816,15 @@ packages:
           - !Abc { name: birthPlace  , at: 39, len: 14 }
           - !Abc { name: birthCountry, at: 53, len:  3 }
 \end{yamlcode}
-\caption{esempio definizione campi alfanumerici}
+\caption{example of definition of alphanumeric fields}
 \label{lst:xmplAbc}
 \end{elisting}
-\fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nell'\,esempio, il nodo di default dei campi alfanumerici, è impostato usando
-i nomi canonici dei parametri. Il \textit{plugin} usa una funzionalità 
-disponibile della libreria per leggere il file yaml, e definisce dei nomi
-abbreviati dei parametri, che possono essere utilizzati come alternativa ai
-nomi canonici.
+In the example, the default node of alphanumeric fields is set using the 
+canonical names of the parameters. The \textit{plugin} uses an available 
+functionality of the library to read the yaml file, and defines short parameter 
+names, which can be used as an alternative to the canonical names.
 
 \begin{table}[!htb]
 \centering
@@ -2038,11 +1832,11 @@ nomi canonici.
 \cline{2-6} \multicolumn{1}{c|}{}
 &\multicolumn{5}{c|}{\texttt{!Abc}: \hyperref[lst:AbcModel]{AbcModel}}\\
 \cline{2-6} \multicolumn{1}{c|}{}
-&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+&\multicolumn{1}{c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \cline{2-6} \multicolumn{1}{c|}{}
-&offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+&offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
 \cline{2-6} \multicolumn{1}{c|}{}
 &length     & len & int     & \ding{52} & \\
 \cline{2-6} \multicolumn{1}{c|}{}
@@ -2064,51 +1858,25 @@ nomi canonici.
 &checkSetter & set & boolean & & \texttt{\$\{defaults.abc.checkSetter:true\}}\\
 \hline
 \end{tabular}
-\caption{Attributi impostabili per un campo alfanumerico} \label{tab:attr.abc}
+\caption{Attributes that can be set for an alphanumeric field} \label{tab:attr.abc}
 \end{table}
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.abc} sono mostrati tutti gli attributi previsti per 
-un campo alfanumerico, i relativi nomi abbreviati, il corrispondente tipo-dati,
-se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
-default.
+Table~\ref{tab:attr.abc} shows all the attributes expected for an alphanumeric 
+field, the relative abbreviated names, the corresponding data-type, whether the 
+attribute is mandatory or optional, and any default value.
 
-\subsection{Campo Numerico} \label{sub:yaml.num}
+\subsection{Numeric field} \label{sub:yaml.num}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo numerico riflette la struttura imposta dalla
-service interface, vedi~\ref{lst:NumModel}
-Un campo numerico è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!Num}}\,, 
-un esempio di definizione di campi numerici è mostrato nel 
-cod.~\ref{lst:xmplNum}, nell'\,esempio è mostrato anche il nodo del default
-globale per i campi numerici, i valori impostati sono quelli di default
-della \textsl{service provider interface}, quindi non è necessario impostare
-esplicitamente i parametri se si vuole impostare questi valori.
+The yaml definition of the numeric field reflects the structure imposed by the 
+service interface, see~\ref{lst:NumModel}. 
+A numeric field is specified by indicating the  
+\fcolorbox{black}{yellow!75}{\texttt{!Num}} \textsl{tag}, an example of defining
+numeric fields is shown in the lst.~\ref{lst:xmplNum}, the example also shows 
+the global default node for numeric fields, the values set are the default ones 
+of the \textsl{service provider interface}, so it is not necessary to explicitly 
+set the parameters if you want to set these values.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, caption={esempio definizione campi numerici}, 
-label=lst:xmplNum]
-defaults:
-  num:
-    onOverflow: Trunc   # :ovf: Error, Trunc
-    onUnderflow: Pad    # :unf: Error, Pad
-    normalize: None     # :nrm: None, Trim
-    wordWidth: Int      # :wid: Byte(1,byte), Short(2,short), Int(4,int), Long(8,long)
-    access: String      # :acc: String(Str), Numeric(Num), Both(All)
-packages:
-  - name: com.example.test
-    classes:
-      - name: Foo3112
-        length: 8
-        doc: No
-        fields:
-          - !Num { name: year , at: 1, len: 4 }
-          - !Num { name: month, at: 5, len: 2 }
-          - !Num { name: mday , at: 7, len: 2 }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
@@ -2129,10 +1897,9 @@ packages:
           - !Num { name: month, at: 5, len: 2 }
           - !Num { name: mday , at: 7, len: 2 }
 \end{yamlcode}
-\caption{esempio definizione campi numerici}
+\caption{example of definition of numeric fields}
 \label{lst:xmplNum}
 \end{elisting}
-\fi
 
 
 \begin{table}[!htb]
@@ -2141,11 +1908,11 @@ packages:
 \cline{2-6} \multicolumn{1}{c|}{}
 &\multicolumn{5}{c|}{\texttt{!Num}: \hyperref[lst:NumModel]{NumModel}}\\
 \cline{2-6} \multicolumn{1}{c|}{}
-&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+&\multicolumn{1}{c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \cline{2-6} \multicolumn{1}{c|}{}
-&offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+&offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
 \cline{2-6} \multicolumn{1}{c|}{}
 &length     & len & int     & \ding{52} & \\
 \cline{2-6} \multicolumn{1}{c|}{}
@@ -2165,81 +1932,48 @@ packages:
 &normalize  & nrm & \hyperref[lst:NormalizeNumMode]{enum} & & \texttt{\$\{defaults.num.normalize:None\}}\\
 \hline
 \end{tabular}
-\caption{Attributi impostabili per un campo numerico} \label{tab:attr.num}
+\caption{Attributes that can be set for a numeric field} \label{tab:attr.num}
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.num} sono mostrati tutti gli attributi previsti per 
-un campo numerico, i relativi nomi abbreviati, il corrispondente tipo-dati,
-se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
-default.
+Table~\ref{tab:attr.num} shows all the attributes expected for a numeric field, 
+the relative abbreviated names, the corresponding data-type, whether the 
+attribute is mandatory or optional, and any default value. 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Anche se i parametri \texttt{acccess} e \texttt{wordWidth} sono stati introdotti
-nella \S~\ref{sec:spi.num}, ricordo che un campo ``numerico'' può essere 
-gestito come una stringa (dove sono ammessi solo caratteri numerici), o 
-convertito in un formato numerico nativo, o entrambi. Il parametro 
-\texttt{access} indica se creare soltanto i setter/getter stringa, creare 
-soltanto i setter/getter numerici o entrambi.
-%come mostrato nei commenti nel default del cod.~\ref{lst:xmplNum} i valori
-%dell'\,enum \textsl{String, Numeric, Both} possono essere abbreviati nei 
-%corrispondenti \textsl{Str, Num, All}.
+Even if the \texttt{acccess} and \texttt{wordWidth} parameters were introduced 
+in \S~\ref{sec:spi.num}, I remind you that a ``numeric'' field can be managed as 
+a string (where only numeric characters are allowed), or converted into a native 
+numeric format, or both. The \texttt{access} parameter indicates whether to 
+create string setters/getters only, create numeric setters/getters only, or 
+both. 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nel caso che venga utilizzata una rappresentazione numerica nativa, il parametro
-\texttt{wordWidth} indica la rappresentazione nativa di dimensione minima da 
-usare.
-In generale il \textsl{Service Provider} selezionerà la dimensione della
-rappresentazione nativa in base alla dimensione della stringa-dati che finirà 
-con rappresentare il valore del campo.
+In case a native number representation is used, the \texttt{wordWidth} parameter 
+indicates the minimum size native representation to use. 
+In general the \textsl{Service Provider} will select the size of the native 
+representation based on the size of the data-string that will end up r
+epresenting the value of the field.
 
 
-\subsection{Campo Custom (alfanumerico)} \label{sub:yaml.cus}
+\subsection{Custom field (alphanumeric)} \label{sub:yaml.cus}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo custom/alfanumerico riflette la struttura imposta 
-dalla service provider interface, vedi~\ref{lst:CusModel}.
-Un campo alfanumerico è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!Cus}}\,, 
-un esempio di definizione di campi custom/alfanumerici è mostrato nel 
-cod.~\ref{lst:xmplCus}, nell'\,esempio è mostrato anche il nodo del default
-globale per i campi custom, i valori impostati sono quelli di default
-della \textsl{service provider interface}, quindi non è necessario impostare
-esplicitamente i parametri se si vuole impostare questi valori.
+The yaml definition of the custom field reflects the structure 
+imposed by the service provider interface, see~\ref{lst:CusModel}.
+A custom field is specified by indicating the 
+\fcolorbox{black}{yellow!75}{\texttt{!Cus}} \textsl{tag}, an example of defining 
+custom fields is shown in the lst.~\ref{lst:xmplCus}, in the 
+example the global default node for the custom fields is also shown, the values 
+set are the default ones of the \textsl{service provider interface}, therefore 
+it is not necessary to explicitly set the parameters if you want to set these 
+values.
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Un campo custom è una estensione di un campo alfanumerico. Un campo alfanumerico
-è necessariamente allineato a sinistra, troncato, trim-ato a destra, pad-dato a
-destra con spazi, inizializzato a spazi. In un campo custom è possibile 
-scegliere l'\,allineamento del campo, il carattere di  pad-ding e di 
-inizializzazione; ha un \texttt{check} esteso rispetto a quello alfanumerico,
-infine, l'\,attributo \texttt{regex} può essere usato per validare i valori
-ammessi per il campo (al posto di quello definito con \texttt{check}).
+A custom field is an extension of an alphanumeric field. An alphanumeric field 
+is necessarily left-aligned, right-truncated/trimmed, right-padded with spaces, 
+initialized to spaces. In a custom field it is possible to choose the alignment 
+of the field, the padding and initialization character; it has an extended 
+\texttt{check} with respect to the alphanumeric one, finally, the \texttt{regex} 
+attribute can be used to validate the values allowed for the field (instead of 
+the one defined with \texttt{check}).
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, caption={esempio definizione campi custom}, 
-label=lst:xmplCus]
-defaults:
-  cus:
-    padChar: ' '        # :pad:
-    initChar: ' '       # :ini:
-    check: Ascii        # :chk: None, Ascii, Latin1, Valid, Digit, DigitOrBlank
-    align: LFT          # LFT, RGT
-    onOverflow: Trunc   # :ovf: Error, Trunc
-    onUnderflow: Pad    # :unf: Error, Pad
-    normalize: None     # :nrm: None, Trim, Trim1
-    checkGetter: true   # :get:
-    checkSetter: true   # :set:
-packages:
-  - name: com.example.test
-    classes:
-      - name: Foo3113
-        length: 8
-        doc: No
-        fields:
-          - !Cus { name: year , at: 1, len: 4 }
-          - !Cus { name: month, at: 5, len: 2 }
-          - !Cus { name: mday , at: 7, len: 2 }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
@@ -2264,10 +1998,9 @@ packages:
           - !Cus { name: month, at: 5, len: 2 }
           - !Cus { name: mday , at: 7, len: 2 }
 \end{yamlcode}
-\caption{esempio definizione campi custom}
+\caption{example of definition of custom fields}
 \label{lst:xmplCus}
 \end{elisting}
-\fi
 
 \begin{table}[!htb]
 \centering
@@ -2275,11 +2008,11 @@ packages:
 \cline{2-6} \multicolumn{1}{c|}{}
 &\multicolumn{5}{c|}{\texttt{!Cus}: \hyperref[lst:CusModel]{CusModel}}\\
 \cline{2-6} \multicolumn{1}{c|}{}
-&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+&\multicolumn{1}{c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \cline{2-6} \multicolumn{1}{c|}{}
-&offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+&offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
 \cline{2-6} \multicolumn{1}{c|}{}
 &length     & len & int     & \ding{52} & \\
 \cline{2-6} \multicolumn{1}{c|}{}
@@ -2294,7 +2027,7 @@ packages:
 \cline{2-6}
 &padChar    & pad & char    & & \texttt{\$\{defaults.cus.pad:' '\}}\\
 \cline{2-6}
-&initChar   & ini & char    & & \texttt{\$\{defaults.cus.init:' '\}}\\
+&initChar   & ini & char    & & \texttt{\$\{defaults.cus.ini:' '\}}\\
 \cline{2-6}
 &check      & chk & \hyperref[lst:CheckCus]{enum} & & \texttt{\$\{defaults.cus.check:Ascii\}}\\
 \cline{2-6}
@@ -2309,55 +2042,25 @@ packages:
 &regex      &     & String  & & \texttt{null} \\
 \cline{2-6}
 \end{tabular}
-\caption{Attributi impostabili per un campo custom} \label{tab:attr.cus}
+\caption{Attributes that can be set for a custom field} \label{tab:attr.cus}
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.cus} sono mostrati tutti gli attributi previsti per 
-un campo custom/alfanumerico, i relativi nomi abbreviati, il corrispondente 
-tipo-dati, se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore 
-di default.
+Table~\ref{tab:attr.cus} shows all the attributes expected for a 
+custom field, the related abbreviated names, the corresponding 
+data-type, whether the attribute is mandatory or optional, and any default value.
 
-
-
-\subsection{Campo Numerico nullabile} \label{sub:yaml.nux}
+\subsection{Nullable numeric field} \label{sub:yaml.nux}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo numerico nullabile riflette la struttura imposta 
-dalla service interface, vedi~\ref{lst:NuxModel}.
-Un campo numerico nullabile è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!Nux}}\,, 
-un esempio di definizione di campi numerici nullabili è mostrato nel 
-cod.~\ref{lst:xmplNux}, nell'\,esempio è mostrato anche il nodo del default
-globale per i campi numerici nullabili, i valori impostati sono quelli di 
-default della \textsl{service provider interface}, quindi non è necessario 
-impostare esplicitamente i parametri se si vuole impostare questi valori.
+The yaml definition of the nullable numeric field reflects the structure imposed 
+by the service interface, see~\ref{lst:NuxModel}. 
+A nullable numeric field is specified by indicating the 
+\fcolorbox{black}{yellow!75}{\texttt{!Nux}} \textsl{tag}, an example of the 
+definition of nullable numeric fields is shown in the lst.~\ref{lst:xmplNux}, 
+the example also shows the global default node for nullable numeric fields, the 
+values set are the default ones of the \textsl{service provider interface}, so 
+it is not necessary to explicitly set the parameters if you want to set these 
+values.
 
-
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, 
-caption={esempio definizione campi numerici nullabili}, 
-label=lst:xmplNux]
-defaults:
-  nux:
-    onOverflow: Trunc   # :ovf: Error, Trunc
-    onUnderflow: Pad    # :unf: Error, Pad
-    normalize: None     # :nrm: None, Trim
-    wordWidth: Int      # :wid: Byte(1,byte), Short(2,short), Int(4,int), Long(8,long)
-    access: String      # :acc: String(Str), Numeric(Num), Both(All)
-    initialize: Spaces  # :ini: Spaces(Space), Zeroes(Zero)
-packages:
-  - name: com.example.test
-    classes:
-      - name: Foo3114
-        length: 8
-        doc: No
-        fields:
-          - !Nux { name: year , at: 1, len: 4 }
-          - !Nux { name: month, at: 5, len: 2 }
-          - !Nux { name: mday , at: 7, len: 2 }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
@@ -2379,18 +2082,18 @@ packages:
           - !Nux { name: month, at: 5, len: 2 }
           - !Nux { name: mday , at: 7, len: 2 }
 \end{yamlcode}
-\caption{esempio definizione campi numerici nullabili}
+\caption{example of definition of nullable numeric fields}
 \label{lst:xmplNux}
 \end{elisting}
-\fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Un campo numerico nullabile è una estensione di un campo numerico ordinario,
-la differenza è che nella rappresentazione stringa-dati può assumere il valore
-spazio (tutti spazi), che corrisponde nella classe dati al valore \texttt{null}.
-Conseguentemente nella definizione del campo è presente un parametro aggiuntivo 
-per indicare se il campo deve essere inizializzato a \texttt{null} o a zero 
-quando la classe-dati viene creata col costruttore vuoto.
+A nullable numeric field is an extension of an ordinary numeric field, the 
+difference is that in the string-data representation it can assume the value 
+space (all spaces), which corresponds to the \texttt{null} value in the data 
+class. 
+Consequently, in the definition of the field there is an additional parameter to
+indicate whether the field must be initialized to \texttt{null} or to zero when 
+the data-class is created with the empty constructor.
 
 \begin{table}[!htb]
 \centering
@@ -2398,11 +2101,11 @@ quando la classe-dati viene creata col costruttore vuoto.
 \cline{2-6} \multicolumn{1}{c|}{}
 &\multicolumn{5}{c|}{\texttt{!Nux}: \hyperref[lst:NuxModel]{NuxModel}}\\
 \cline{2-6} \multicolumn{1}{c|}{}
-&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+&\multicolumn{1}{c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \cline{2-6} \multicolumn{1}{c|}{}
-&offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+&offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
 \cline{2-6} \multicolumn{1}{c|}{}
 &length     & len & int     & \ding{52} & \\
 \cline{2-6} \multicolumn{1}{c|}{}
@@ -2424,44 +2127,22 @@ quando la classe-dati viene creata col costruttore vuoto.
 &initialize & ini & \hyperref[lst:InitializeNuxMode]{enum} & & \texttt{\$\{defaults.nux.initialize:Space\}}\\
 \hline
 \end{tabular}
-\caption{Attributi impostabili per un campo numerico nullabile} \label{tab:attr.nux}
+\caption{Attributes that can be set for a nullable numeric field} \label{tab:attr.nux}
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.nux} sono mostrati tutti gli attributi previsti per 
-un campo numerico, i relativi nomi abbreviati, il corrispondente tipo-dati,
-se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
-default.
+Table~\ref{tab:attr.nux} shows all the attributes expected for a numeric field, 
+the relative abbreviated names, the corresponding data-type, whether the 
+attribute is mandatory or optional, and any default value.
 
-\subsection{Campo Dominio} \label{sub:yaml.dom}
+\subsection{Domain field} \label{sub:yaml.dom}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo numerico riflette la struttura imposta dalla
-service interface, vedi~\ref{lst:DomModel}.
-Un campo dominio è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!Dom}}\,, 
-un esempio di definizione di campi dominio è mostrato nel 
-cod.~\ref{lst:xmplDom}, questo tipo di campo non ha nessun default globale.
+The yaml definition of the numeric field reflects the structure imposed by the 
+service interface, see~\ref{lst:DomModel}. 
+A domain field is specified by indicating the 
+\fcolorbox{black}{yellow!75}{\texttt{!Dom}} \textsl{tag}, an example of domain 
+field definition is shown in the lst.~\ref{lst:xmplDom}, this field type has no 
+global default.
 
-
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, caption={esempio definizione campi dominio}, 
-label=lst:xmplDom]
-packages:
-  - name: com.example.test
-    classes:
-      - name: Foo3115
-        length: 12
-        doc: No
-        fields:
-          - !Num { name: year , at: 1, len: 4 }
-          - !Dom { name: month, at: 5, len: 3, 
-                   items: [ Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec ] }
-          - !Num { name: mday , at: 8, len: 2 }
-          - !Dom { name: wday , at: 10, len: 3, 
-                   items: [ Sun, Mon, Tue, Wed, Thu, Fri, Sat ] }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
@@ -2478,14 +2159,13 @@ packages:
           - !Dom { name: wday , at: 10, len: 3, 
                    items: [ Sun, Mon, Tue, Wed, Thu, Fri, Sat ] }
 \end{yamlcode}
-\caption{esempio definizione campi dominio}
+\caption{example of definition of domain fields}
 \label{lst:xmplDom}
 \end{elisting}
-\fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Un campo dominio è sostanzialmente un campo alfanumerico, che può assumere solo
-un limitato numero di valori.
+A domain field is substantially an alphanumeric field, which can assume only a 
+limited number of values.
 
 \begin{table}[!htb]
 \centering
@@ -2493,11 +2173,11 @@ un limitato numero di valori.
 \hline
 \multicolumn{5}{|c|}{\texttt{!Dom}: \hyperref[lst:DomModel]{DomModel}}\\
 \hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \hline
-offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
 \hline
 length     & len & int     & \ding{52} & \\
 \hline
@@ -2508,54 +2188,27 @@ override   & ovr & boolean & & \texttt{false} \\
 items      &     & array  & \ding{52} & \\
 \hline
 \end{tabular}
-\caption{Attributi impostabili per un campo dominio} \label{tab:attr.dom}
+\caption{Attributes that can be set for a domain field} \label{tab:attr.dom}
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.dom} sono mostrati tutti gli attributi previsti per 
-un campo dominio, i relativi nomi abbreviati, il corrispondente tipo-dati,
-se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
-default.
-Quando la classe-dati è creata col costruttore vuoto il campo viene 
-inizializzato con il primo valore tra quelli forniti della lista dei possibili
-valori.
+Table~\ref{tab:attr.dom} shows all the attributes expected for a domain field, 
+the related abbreviated names, the corresponding data-type, whether the 
+attribute is mandatory or optional, and any default value. 
+When the data-class is created with the empty constructor, the field is 
+initialized with the first value among those provided in the list of possible 
+values.
 
-
-
-\subsection{Campo Filler} \label{sub:yaml.fil}
+\subsection{Filler Field} \label{sub:yaml.fil}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo numerico riflette la struttura imposta dalla
-service interface, vedi~\ref{lst:FilModel}.
-Un campo filler è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!Fil}}\,, 
-un esempio di definizione di campi filler è mostrato nel 
-cod.~\ref{lst:xmplFil}, nell'\,esempio è mostrato anche il nodo del default
-globale per i campi filler, il valore impostato è quello di 
-default della \textsl{service provider interface}, quindi non è necessario 
-impostare esplicitamente il parametro se si vuole impostare questo valore.
+The yaml definition of the filler field reflects the structure imposed by the 
+service interface, see~\ref{lst:FilModel}. 
+A filler field is specified by indicating the 
+\fcolorbox{black}{yellow!75}{\texttt{!Fil}} \textsl{tag}, an example of 
+definition of filler fields is shown in the lst.~\ref{lst:xmplFil}, in the 
+example the global default node for the filler fields is also shown, the set 
+value is the default one of the service provider interface, therefore it is not 
+necessary to explicitly set the parameter if you want to set this value.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, 
-caption={esempio definizione campi filler}, 
-label=lst:xmplFil]
-defaults:
-  fil:
-    fill: 0             # \u0000
-packages:
-  - name: com.example.test
-    classes:
-      - name: Foo3116
-        length: 10
-        doc: No
-        fields:
-          - !Num { at: 1, len: 4, name: year }
-          - !Fil { at: 5, len: 1, fill: '-' }
-          - !Num { at: 6, len: 2, name: month }
-          - !Fil { at: 8, len: 1, fill: '-' }
-          - !Num { at: 9, len: 2, name: mday }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 defaults:
@@ -2574,16 +2227,14 @@ packages:
           - !Fil { at: 8, len: 1, fill: '-' }
           - !Num { at: 9, len: 2, name: mday }
 \end{yamlcode}
-\caption{esempio definizione campi filler}
+\caption{example of definition of filler fields}
 \label{lst:xmplFil}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Un campo filler non è un campo vero e proprio, non vengono generati i
-setter/getter, non viene fatto nessun controllo sul valore della stringa-dati
-corrispondente. Indica semplicemente un'\,area della stringa-dati a cui non 
-siamo interessati, ma che deve essere presente nella definizione della 
-struttura per non lasciare aree non definite.
+A filler field is not a real field, the setters/getters are not generated, no 
+check is made on the value of the corresponding data-string. It simply indicates 
+an area of the data-string that we are not interested in, but which must be 
+present in the definition of the structure in order not to leave undefined areas.
 
 \begin{table}[!htb]
 \centering
@@ -2591,11 +2242,11 @@ struttura per non lasciare aree non definite.
 \cline{2-6} \multicolumn{1}{c|}{}
 &\multicolumn{5}{c|}{\texttt{!Fil}: \hyperref[lst:FilModel]{FilModel}}\\
 \cline{2-6} \multicolumn{1}{c|}{}
-&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+&\multicolumn{1}{c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \cline{2-6} \multicolumn{1}{c|}{}
-&offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+&offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
 \cline{2-6} \multicolumn{1}{c|}{}
 &length     & len & int     & \ding{52} & \\
 \hline
@@ -2603,43 +2254,22 @@ struttura per non lasciare aree non definite.
 &fill       &     & char    & & \texttt{\$\{defaults.fil.fill:0\}}\\
 \hline
 \end{tabular}
-\caption{Attributi impostabili per un campo filler} \label{tab:attr.fil}
+\caption{Attributes that can be set for a filler field} \label{tab:attr.fil}
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.fil} sono mostrati tutti gli attributi previsti per 
-un campo filler, i relativi nomi abbreviati, il corrispondente tipo-dati,
-se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
-default.
+Table~\ref{tab:attr.fil} shows all the attributes expected for a filler field, 
+the relative abbreviated names, the corresponding data-type, whether the 
+attribute is mandatory or optional, and any default value.
 
 
-\subsection{Campo Costante} \label{sub:yaml.val}
+\subsection{Constant field} \label{sub:yaml.val}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo numerico riflette la struttura imposta dalla
-service interface, vedi~\ref{lst:ValModel}.
-Un campo costante è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!Val}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
-cod.~\ref{lst:xmplVal}, questo tipo di campo non prevede default globali.
+The yaml definition of the constant field reflects the structure imposed by the 
+service interface, see 19. A constant field is specified by indicating the 
+\fcolorbox{black}{yellow!75}{\texttt{!Val}} \textsl{tag}, an example of 
+definition of cotant fields is shown in the lst.~\ref{lst:xmplVal}, this type of 
+field has no global defaults.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, 
-caption={esempio definizione campi costanti}, 
-label=lst:xmplVal]
-packages:
-  - name: com.example.test
-    classes:
-      - name: Foo3117
-        length: 10
-        fields:
-          - !Num { at: 1, len: 4, name: year }
-          - !Val { at: 5, len: 1, val: "-" }
-          - !Num { at: 6, len: 2, name: month }
-          - !Val { at: 8, len: 1, val: "-" }
-          - !Num { at: 9, len: 2, name: mday }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
@@ -2654,16 +2284,15 @@ packages:
           - !Val { at: 8, len: 1, val: "-" }
           - !Num { at: 9, len: 2, name: mday }
 \end{yamlcode}
-\caption{esempio definizione campi costanti}
+\caption{example of definition of constant fields}
 \label{lst:xmplVal}
 \end{elisting}
-\fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Un campo costante può essere visto come una variante di un campo filler, o come
-un campo dominio con un solo valore. Per questo tipo di campo non vengono 
-generati i setter/getter, ma il campo viene controllato per verificare che la
-stringa-dati corrispondente al campo abbia il valore atteso.
+A constant field can be thought of as a variant of a filler field, or as a 
+domain field with only one value. Setters/getters are not generated for this 
+type of field, but the field is checked to verify that the data-string 
+corresponding to the field has the expected value.
 
 \begin{table}[!htb]
 \centering
@@ -2671,65 +2300,38 @@ stringa-dati corrispondente al campo abbia il valore atteso.
 \hline
 \multicolumn{5}{|c|}{\texttt{!Val}: \hyperref[lst:ValModel]{ValModel}}\\
 \hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \hline
-offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
 \hline
 length     & len & int     & \ding{52} & \\
 \hline
 value      & val & string  & \ding{52} & \\
 \hline
 \end{tabular}
-\caption{Attributi impostabili per un campo costante} \label{tab:attr.val}
+\caption{Attributes that can be set for a constant range} \label{tab:attr.val}
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.val} sono mostrati tutti gli attributi previsti per 
-un campo costante, i relativi nomi abbreviati, il corrispondente tipo-dati,
-se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
-default.
+Table~\ref{tab:attr.val} shows all the attributes required for a constant field, 
+the relative abbreviated names, the corresponding data-type, whether the 
+attribute is mandatory or optional, and any default value.
 
-
-\section{Campi multipli}
+\section{Manifold fields}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-In alcuni casi è utile raggruppare alcuni campi all'\,interno di un elemento
-contenitore di contesto. In questo modo è possibile usare lo stesso nome campo
-in contesti diversi. Un campo multiplo non ha default globali.
+In some cases it is useful to group some fields within a context containing 
+element. This way you can use the same field name in different contexts. 
+A manifold field has no global defaults.
 
-\subsection{Campo Gruppo} \label{sub:yaml.grp}
+\subsection{Field group of fields} \label{sub:yaml.grp}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo gruppo riflette la struttura imposta dalla
-service interface, vedi~\ref{lst:GrpModel}.
-Un campo gruppo è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!Grp}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
-cod.~\ref{lst:xmplGrp}.
+The yaml definition of the field group field reflects the structure imposed by 
+the service interface, see~\ref{lst:GrpModel}. 
+A field group field is specified by indicating the 
+\fcolorbox{black}{yellow!75}{\texttt{!Grp}} \textsl{tag}, an example of this 
+field definition is shown in the lst.~\ref{lst:xmplGrp}.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, 
-caption={esempio definizione gruppo di campi}, 
-label=lst:xmplGrp]
-packages:
-  - name: com.example.test
-    classes:
-      - name: Foo3118
-        length: 12
-        fields:
-          - !Grp { name: startTime, at: 1, len: 6, fields: [
-            !Num { name: hours  , at: 1, len: 2 }, 
-            !Num { name: minutes, at: 3, len: 2 }, 
-            !Num { name: seconds, at: 5, len: 2 }
-            ] }
-          - !Grp { name: stopTime , at: 7, len: 6, fields: [
-            !Num { name: hours  , at:  7, len: 2 }, 
-            !Num { name: minutes, at:  9, len: 2 }, 
-            !Num { name: seconds, at: 11, len: 2 }
-            ] }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
@@ -2749,10 +2351,9 @@ packages:
             !Num { name: seconds, at: 11, len: 2 }
             ] }
 \end{yamlcode}
-\caption{esempio definizione gruppo di campi}
+\caption{example definition group of fields}
 \label{lst:xmplGrp}
 \end{elisting}
-\fi
 
 \begin{table}[!htb]
 \centering
@@ -2760,11 +2361,11 @@ packages:
 \hline
 \multicolumn{5}{|c|}{\texttt{!Grp}: \hyperref[lst:GrpModel]{GrpModel}}\\
 \hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \hline
-offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
 \hline
 length     & len & int     & \ding{52} & \\
 \hline
@@ -2775,44 +2376,21 @@ override   & ovr & boolean & & \texttt{false} \\
 fields     &     & array  & \ding{52} & \\
 \hline
 \end{tabular}
-\caption{Attributi impostabili per un gruppo} \label{tab:attr.grp}
+\caption{Attributes that can be set for a group of fields} \label{tab:attr.grp}
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.grp} sono mostrati tutti gli attributi previsti per 
-un campo gruppo, i relativi nomi abbreviati, il corrispondente tipo-dati,
-se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
-default.
+Table~\ref{tab:attr.grp} shows all the attributes expected for a group of 
+fields, their abbreviated names, the corresponding data-type, whether the 
+attribute is mandatory or optional, and any default value.
 
-
-\subsection{Campo Gruppo ripetuto} \label{sub:yaml.occ}
+\subsection{Field group of repeating fields} \label{sub:yaml.occ}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo gruppo ripetuto riflette la struttura imposta 
-dalla service interface, vedi~\ref{lst:OccModel}.
-Un campo gruppo ripetuto è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!Occ}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
-cod.~\ref{lst:xmplOcc}.
+The yaml definition of the repeating field group field reflects the structure 
+imposed by the service interface, see~\ref{lst:OccModel}. 
+A repeating field group field is specified by indicating the 
+\fcolorbox{black}{yellow!75}{\texttt{!Occ}} \textsl{tag}, an example of this 
+field definition is shown in the lst.~\ref{lst:xmplOcc}.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, 
-caption={esempio definizione gruppo di campi ripetuto}, 
-label=lst:xmplOcc]
-packages:
-  - name: com.example.test
-    classes:
-      - name: Foo3119
-        length: 590
-        fields:
-          - !Num { name: nmErrors, at: 1, len: 2 }
-          - !Occ { name: tabError, at: 3, len: 49, x: 12, fields: [
-            !Abc { name: status  , at:  3, len:  5 },
-            !Num { name: code    , at:  8, len:  4 },
-            !Abc { name: message , at: 12, len: 40 }
-          ] }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
@@ -2828,10 +2406,9 @@ packages:
             !Abc { name: message , at: 12, len: 40 }
           ] }
 \end{yamlcode}
-\caption{esempio definizione gruppo di campi ripetuto}
+\caption{example definition group of repeated fields}
 \label{lst:xmplOcc}
 \end{elisting}
-\fi
 
 \begin{table}[!htb]
 \centering
@@ -2839,11 +2416,11 @@ packages:
 \hline
 \multicolumn{5}{|c|}{\texttt{!Occ}: \hyperref[lst:OccModel]{OccModel}}\\
 \hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \hline
-offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
 \hline
 length     & len & int     & \ding{52} & \\
 \hline
@@ -2856,49 +2433,22 @@ times      & x   & int     & \ding{52} & \\
 fields     &     & array  & \ding{52} & \\
 \hline
 \end{tabular}
-\caption{Attributi impostabili per un gruppo ripetuto} \label{tab:attr.occ}
+\caption{Attributes that can be set for a repeating field group} 
+\label{tab:attr.occ}
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.occ} sono mostrati tutti gli attributi previsti per 
-un campo gruppo ripetuto, i relativi nomi abbreviati, il corrispondente 
-tipo-dati, se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore 
-di default.
+Table~\ref{tab:attr.occ} shows all the attributes expected for a field group of 
+repeated fields, the related abbreviated names, the corresponding data-type, 
+whether the attribute is mandatory or optional, and any default value.
 
-\subsection{Campo gruppo incorporato da interfaccia} \label{sub:yaml.emb}
+\subsection{Fields embedded via interface} \label{sub:yaml.emb}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo incorporato riflette la struttura imposta dalla
-service interface, vedi~\ref{lst:EmbModel}.
-Un campo incorporato è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!Emb}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
-cod.~\ref{lst:xmplEmb}.
+The yaml definition of embedded fields via interface reflects the structure 
+imposed by the service interface, see~\ref{lst:EmbModel}. 
+An embedded field is specified by indicating the 
+\fcolorbox{black}{yellow!75}{\texttt{!Emb}} \textsl{tag}, an example of this 
+field definition is shown in the lst.~\ref{lst:xmplEmb}.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, 
-caption={esempio definizione di campi inclusi da interfaccia}, 
-label=lst:xmplEmp]
-packages:
-  - name: com.example.test
-    interfaces:
-      - &Time
-        name: ITime
-        len: 6
-        fields:
-          - !Num { name: hours  , len: 2 }
-          - !Num { name: minutes, len: 2 }
-          - !Num { name: seconds, len: 2 }
-    classes:
-      - name: Foo311a
-        length: 14
-        fields:
-          - !Num { name: year , at: 1, len: 4 }
-          - !Num { name: month, at: 5, len: 2 }
-          - !Num { name: mday , at: 7, len: 2 }
-          - !Emb { src: *Time , at: 9, len: 6 }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
@@ -2920,16 +2470,15 @@ packages:
           - !Num { name: mday , at: 7, len: 2 }
           - !Emb { src: *Time , at: 9, len: 6 }
 \end{yamlcode}
-\caption{esempio definizione gruppo di campi inclusi da interfaccia}
+\caption{example definition of embedded fields via interface}
 \label{lst:xmplEmb}
 \end{elisting}
-\fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Un campo gruppo da interfaccia a differenza degli altri campi multipli non 
-crea un elemento di contesto esplicito. I campi sono figli della struttura 
-corrente, non di un elemento di contesto. Ma, l'\,elemento corrente
-implementa l'\,interfaccia, e questo crea un contesto implicito.
+Interfacing embedded fields unlike other manifold fields does not create an 
+explicit context item. Fields are children of the current structure, not of a 
+context item. But the current element implements the interface and this creates 
+an implicit context.
 
 \begin{table}[!htb]
 \centering
@@ -2937,60 +2486,34 @@ implementa l'\,interfaccia, e questo crea un contesto implicito.
 \hline
 \multicolumn{5}{|c|}{\texttt{!Emb}: \hyperref[lst:EmbModel]{EmbModel}}\\
 \hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \hline
-offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato\\
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated\\
 \hline
 length     & len & int     & \ding{52} & \\
 \hline
 source     & src  & interface & \ding{52} & \\
 \hline
 \end{tabular}
-\caption{Attributi impostabili per un elenco di campi importato da una interfaccia}
+\caption{Attributes that can be set for embedded fields via interface}
 \label{tab:attr.emb}
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.emb} sono mostrati tutti gli attributi previsti per 
-un campo gruppo da interfaccia, i relativi nomi abbreviati, il corrispondente 
-tipo-dati, se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore 
-di default.
+Table~\ref{tab:attr.emb} shows all the attributes expected for an embedded 
+fields via interface, the relative abbreviated names, the 
+corresponding data-type, whether the attribute is mandatory or optional, and 
+any default value.
 
-
-\subsection{Campo Gruppo da interfaccia} \label{sub:yaml.igrp}
+\subsection{Field group of fields via interface} \label{sub:yaml.igrp}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo gruppo/interfaccia riflette la struttura imposta 
-dalla service interface, vedi~\ref{lst:GrpTraitModel}.
-Un campo gruppo/interfaccia è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!GRP}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
-cod.~\ref{lst:xmplIGrp}.
+The yaml definition of the interface-group field reflects the structure imposed 
+by the service interface, see~\ref{lst:GrpTraitModel}. 
+A group/interface field is specified by indicating the 
+\fcolorbox{black}{yellow!75}{\texttt{!GRP}} \textsl{tag}, an example of a 
+definition of this field is shown in the lst.~\ref{lst:xmplIGrp}.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, 
-caption={esempio definizione gruppo di campi da interfaccia}, 
-label=lst:xmplIGrp]
-packages:
-  - name: com.example.test
-    interfaces:
-      - &Time
-        name: ITime
-        len: 6
-        fields:
-          - !Num { name: hours  , len: 2 }
-          - !Num { name: minutes, len: 2 }
-          - !Num { name: seconds, len: 2 }
-    classes:
-      - name: Foo311b
-        length: 12
-        fields:
-          - !GRP { name: startTime, at: 1, len: 6, as: *Time }
-          - !GRP { name: stopTime , at: 7, len: 6, as: *Time }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
@@ -3010,14 +2533,13 @@ packages:
           - !GRP { name: startTime, at: 1, len: 6, as: *Time }
           - !GRP { name: stopTime , at: 7, len: 6, as: *Time }
 \end{yamlcode}
-\caption{esempio definizione gruppo di campi da interfaccia}
+\caption{example definition of interface-group fields}
 \label{lst:xmplIGrp}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Un campo gruppo/interfaccia è simile al campo gruppo, la differenza è che i
-campi del gruppo non sono definiti singolarmente, ma tutti insieme importandoli
-dalla interfaccia. Il gruppo implementerà l'\,interfaccia.
+An interface-group field is similar to a group of fields, the difference is that 
+the fields of the group are not defined individually, but all together by 
+importing them from the interface. The group will implement the interface.
 
 \begin{table}[!htb]
 \centering
@@ -3025,11 +2547,11 @@ dalla interfaccia. Il gruppo implementerà l'\,interfaccia.
 \hline
 \multicolumn{5}{|c|}{\texttt{!GRP}: \hyperref[lst:GrpTraitModel]{GrpTraitModel}}\\
 \hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \hline
-offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
 \hline
 length     & len & int     & \ding{52} & \\
 \hline
@@ -3043,44 +2565,18 @@ typedef    & as  & interface & \ding{52} & \\
 \caption{Attributi impostabili per un gruppo da interfaccia} \label{tab:attr.igrp}
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.igrp} sono mostrati tutti gli attributi previsti per 
-un campo gruppo da interfaccia, i relativi nomi abbreviati, il corrispondente 
-tipo-dati, se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore 
-di default.
+Table~\ref{tab:attr.igrp} shows all the attributes expected for an 
+interface-group field, the relative abbreviated names, the corresponding 
+data-type, whether the attribute is mandatory or optional, and any default value.
 
-\subsection{Campo Gruppo ripetuto da interfaccia} \label{sub:yaml.iocc}
+\subsection{Field group of repeating fields via interface} \label{sub:yaml.iocc}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione yaml del campo gruppo/interfaccia ripetuto riflette la struttura 
-imposta dalla service interface, vedi~\ref{lst:OccTraitModel}.
-Un campo gruppo/interfaccia ripetuto è specificato indicando il \textsl{tag} 
-\fcolorbox{black}{yellow!75}{\texttt{!OCC}}\,, 
-un esempio di definizione di campi cotanti è mostrato nel 
-cod.~\ref{lst:xmplIOcc}.
+The yaml definition of the repeating interface-group field reflects the 
+structure imposed by the service interface, see~\ref{lst:OccTraitModel}. 
+A repeating interface-group field is specified by indicating the 
+\fcolorbox{black}{yellow!75}{\texttt{!OCC}} \textsl{tag}, an example definition 
+of this field is shown in the lst.~\ref{lst:xmplIOcc}.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=yaml, 
-caption={esempio definizione gruppo di campi ripetuto da interfaccia}, 
-label=lst:xmplIOcc]
-packages:
-  - name: com.example.test
-    interfaces:
-      - &Error
-        name: IError
-        len: 49
-        fields:
-          - !Abc { name: status  , at:  1, len:  5 }
-          - !Num { name: code    , at:  6, len:  4 }
-          - !Abc { name: message , at: 10, len: 40 }
-    classes:
-      - name: Foo311c
-        length: 590
-        fields:
-          - !Num { name: nmErrors, at: 1, len: 2}
-          - !OCC { name: tabError, at: 3, len: 49, x: 12, as: *Error }
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{yamlcode}
 packages:
@@ -3100,14 +2596,14 @@ packages:
           - !Num { name: nmErrors, at: 1, len: 2}
           - !OCC { name: tabError, at: 3, len: 49, x: 12, as: *Error }
 \end{yamlcode}
-\caption{esempio definizione gruppo di campi ripetuto da interfaccia}
+\caption{example definition of the repeated interface-group field}
 \label{lst:xmplIOcc}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Un campo gruppo/interfaccia ripetuto è simile al campo gruppo ripetuto, la 
-differenza è che i campi del gruppo non sono definiti singolarmente, ma tutti 
-insieme importandoli dalla interfaccia. Il gruppo implementerà l'\,interfaccia.
+A repeating interface-group field is similar to a repeating field group field, 
+the difference is that the fields of the group are not defined individually, but 
+all together by importing them from the interface. The group will implement the 
+interface.
 
 \begin{table}[!htb]
 \centering
@@ -3115,11 +2611,11 @@ insieme importandoli dalla interfaccia. Il gruppo implementerà l'\,interfaccia.
 \hline
 \multicolumn{5}{|c|}{\texttt{!OCC}: \hyperref[lst:OccTraitModel]{OccTraitModel}}\\
 \hline
-\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
-	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+\multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
 	& \multicolumn{1}{c|}{default} \\
 \hline
-offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+offset     & at  & int     & {\color{lightgray}\ding{52}} & self-calculated \\
 \hline
 length     & len & int     & \ding{52} & \\
 \hline
@@ -3132,44 +2628,28 @@ times      & x   & int     & \ding{52} & \\
 typedef    & as  & interface & \ding{52} & \\
 \hline
 \end{tabular}
-\caption{Attributi impostabili per un gruppo ripetuto da interfaccia} 
+\caption{Attributes that can be set for a repeating interface-group} 
 \label{tab:attr.iocc}
 \end{table}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nella tabella~\ref{tab:attr.iocc} sono mostrati tutti gli attributi previsti per 
-un campo gruppo ripetuto da interfaccia, i relativi nomi abbreviati, il 
-corrispondente tipo-dati, se l'\,attributo è obbligatorio o facoltativo, e 
-l'\,eventuale valore di default.
+Table~\ref{tab:attr.iocc} shows all the attributes expected for a group field 
+repeated by the interface, the relative abbreviated names, the corresponding 
+data-type, whether the attribute is mandatory or optional, and any default 
+value.
 
 \chapter{Gradle plugin}\label{sec:gradle}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Il gradle plugin \verb!recfm-gradle-plugin! permette di creare più classi e 
-interfacce usando uno più file di configurazione in formato yaml.
-Le librerie esterne utilizzate richiedono il java 8, quindi per eseguire questo 
-plugin è necessario almeno il java 8.
+The gradle plugin \verb!recfm-gradle-plugin! allows you to create multiple 
+classes and interfaces using one or more configuration files in yaml format. 
+The external libraries used require java 8, so you need at least java 8 to run 
+this plugin.
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Il gradle plugin \verb!recfm-gradle-plugin! è semplicemente l'\,adattamento del 
-\verb!recfm-gradle-plugin! per essere usato in un progetto \textsl{gradle}.
-Se si esclude il modo in cui vengono passati i parametri di input, e come viene
-attivato il plugin, il codice è la copia della versione per maven.
+The \verb!recfm-gradle-plugin! gradle plugin is simply an adaptation of the 
+\verb!recfm-maven-plugin! for use in a gradle project. 
+Apart from how the input parameters are passed, and how the plugin is activated, 
+the code is the copy of the maven version.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=java, caption=parametri impostabili del gradle plugin, 
-label=lst:gradle.conf]
-@Data
-public class RecordFormatExtension {
-    private String generateDirectory; // default: "${project.buildDir}/generated-sources/recfm"
-    private String settingsDirectory; // default: "${project.projectDir}/src/main/resources"
-    private String[] settings;
-    private boolean addCompileSourceRoot = true;
-    private boolean addTestCompileSourceRoot = false;
-    private String codeProviderClassName;
-}
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{javacode}
 @Data
@@ -3182,14 +2662,13 @@ public class RecordFormatExtension {
     private String codeProviderClassName;
 }
 \end{javacode}
-\caption{parametri impostabili del gradle plugin}
+\caption{settable parameters of the gradle plugin}
 \label{lst:gradle.conf}
 \end{elisting}
-\fi
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Come si vede col confronto del cod.~\ref{lst:maven.conf} i parametri utilizzati
-sono gli stessi del maven-plugin, per la descrizione dei parametri rimando
-al \S~\ref{sec:maven}.
+As can be seen by comparing it with the lst.~\ref{lst:maven.conf} the parameters 
+used are the same as those of the maven-plugin, for the description of the 
+parameters refer to \S~\ref{sec:maven}.
 
 \begin{elisting}[!htb]
 \begin{minted}[frame=single,framesep=2mm,bgcolor=bg,fontsize=\footnotesize]{groovy}
@@ -3206,7 +2685,7 @@ recfm {
     settings  'recfm-foo.yaml'
 }
 \end{minted}
-\caption{esempio minimale di esecuzione del plugin}
+\caption{minimal example of plugin execution}
 \label{lst:grd-xmpl}
 \end{elisting}
 
@@ -3215,113 +2694,89 @@ recfm {
 
 \chapter{Service Provider}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nei capitoli precedenti abbiamo visto la \textsl{Service Provider Interface}, 
-che  definisce delle interfacce e delle classi che permettono di definire i 
-traccciati, e indicare alcuni comportamenti che dovranno essere usati in fase di
-utilizzazione dei tracciati; e alcuni esempi di \textsl{Service}, che
-semplicemente valorizza gli oggetti messi a disposizione della 
-\textsl{Service Provider Interface}, ma il vero lavoro di generazione del codice 
-è fatto dal \textsl{Service Provider}.
+In the previous chapters we have seen the \textsl{Service Provider Interface}, 
+which defines interfaces and classes that allow you to define the layouts, and 
+indicate some behaviors that must be used when using the layouts; 
+and some examples of \textsl{Service}, which simply values the objects made 
+available to the \textsl{Service Provider Interface}, but the real work of 
+generating the code is done by the \textsl{Service Provider}.
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La struttuta SPI consente di avere codice generato diverso, implementato in modo
-diverso, o addirittura generare sorgente in un linguaggio diverso.
+The SPI structure allows you to have code generated differently, implemented 
+differently, or even generate source in a different language.
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Qualunque sia il linguaggio generato e il dettaglio della implementazione il
-\textsl{Service Provider} dovrà fornire alcune funzionalità generali.
+Whatever the language generated and the detail of the implementation, the 
+\textsl{Service Provider} will have to provide some general functions.
 
-\begin{itemize}
+\begin{itemize}\setlength\itemsep{-0.5ex}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-\item \textbf{decode}: partendo dalla stringa-dati, deve instanziare la 
-    classe-dati;
-\item \textbf{setter, getter}: la classe-dati generata deve fornire i metodi di 
-    accesso ai singoli campi;
-\item \textbf{costruttore vuoto}: la classe-dati può essere instanziata con i 
-    valori di default dei campi;
-\item \textbf{encode}: la classe-dati può essere serializzata nella 
-    stringa-dati.
+\item \textbf{decode}: starting from the data-string, it must instantiate the 
+    data-class;
+\item \textbf{setter, getter}: the generated data-class must provide access 
+    methods to the individual fields;
+\item \textbf{empty constructor}: the data-class can be instantiated with the 
+    default values of the fields;
+\item \textbf{encode}: data-class can be serialized into data-string.
 \end{itemize}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Sarebbe gradita anche qualche funzionalià accessoria:
-\begin{itemize}
-\item \textbf{validate}: validare la stringa-dati prima della 
-    de-serializzazione, in modo da segnalare tutte le aree che non possono essere
-    assegnate ai relativi campi, tipicamente caratteri non numerici in campi di
-    tipo numerico;
-\item \textbf{cast}: se due stringhe-dati hanno la stessa lunghezza, poter 
-    passare da una classe-dati che le rappresenta all'\,altra;
-\item \textbf{toString}: fornire un metodo che mostra tutti i valori dei campi 
-    che compongono la classe-dati.
-\item (deep) \textbf{copy}: genera una copia della classe-dati;
+Some additional features would also be welcome:
+\begin{itemize}\setlength\itemsep{-0.5ex}
+\item \textbf{validate}: validate the data-string before de-serialization, in 
+    order to signal all the areas that cannot be assigned to the relative 
+    fields, typically non-numerical characters in numeric-type fields;
+\item \textbf{cast}: if two data-strings have the same length, being able to 
+    pass from one data-class that represents them to another;
+\item \textbf{toString}: provide a method that displays all the values of the 
+    fields that make up the data-class (in a human readable way, not the encode 
+    method);
+\item (deep) \textbf{copy}: generates a copy of the data-class;.
 \end{itemize}
 
-
-
-\section{Generazione sorgente java --- \texttt{java-addon}} 
+\section{Java source code generation --- \texttt{java-addon}} 
 \label{sec:java.addon}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Le classi generate dal \textsl{CodeProvider} java oltre ai setter e getter
-hanno una serie di metodi ausiliari, vedi cod.~\ref{lst:Foo312:java}.
+The classes generated by the java \textsl{CodeProvider} in addition to the 
+setters and getters have a series of auxiliary methods, see 
+lst.~\ref{lst:Foo312:java}.
 
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\begin{itemize}\setlength\itemsep{-0.5ex}
+\item a no-argument constructor is provided, which creates the class with 
+    default values;
+\item a cast-like constructor is provided, which takes any other class 
+    representing a data-class as an argument;
+\item a constructor is provided from string-data (deserializer);
+\item a \textit{deep-copy} method is provided to duplicate the data-class;
+\item a validation method is provided;
+\item a \texttt{toString} method is provided;
+\item a method is provided to generate the data-string (serializer);
+\item a method is provided to retrieve the length of the data-string.
+\end{itemize}
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=java, caption=esempio di classe generata (Foo312), 
-label=lst:Foo312:java]
-public class Foo312 extends FixRecord {
-    public static final int LRECL = 50;
-    public Foo312() { /* ... */ }
-    public static Foo312 of(FixRecord r) { /* ... */ }
-    public static Foo312 decode(String s) { /* ... */ }
-    public Foo312 copy() { /* ... */ }
-    // setter and getter ...
-    public boolean validateFails((*\hyperref[lst:FieldValidateHandler:java]{FieldValidateHandler}*) handler) { /* ... */ }
-    public String toString() { /* ... */ }
-    public String encode() { /* ... */ }    // from super class
-}
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{javacode}
 public class Foo312 extends FixRecord {
-    public static final int LRECL = 50;
     public Foo312() { /* ... */ }
     public static Foo312 of(FixRecord r) { /* ... */ }
     public static Foo312 decode(String s) { /* ... */ }
     public Foo312 copy() { /* ... */ }
     // setter and getter ...
     public boolean validateFails(|\hyperref[lst:FieldValidateHandler:java]{FieldValidateHandler}| handler) { /* ... */ }
+    public boolean validateAllFails(|\hyperref[lst:FieldValidateHandler:java]{FieldValidateHandler}| handler) { /* ... */ }
     public String toString() { /* ... */ }
     public String encode() { /* ... */ }    // from super class
+    public int length() { return LRECL; }   // string-data length
 }
 \end{javacode}
-\caption{esempio di classe generata (Foo312)}
+\caption{example of generated class (Foo312)}
 \label{lst:Foo312:java}
 \end{elisting}
-\fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-\begin{itemize}
-\item viene messa a disposizione una costante con la lunghezza della 
-    stringa-dati attesa
-\item viene fornito un costruttore senza argomenti, che crea la classe con i 
-    valori a default
-\item viene fornito un costruttore \textit{cast-like}, che prende come argomento
-    qualunque altra classe che rappresenta una classe-dati
-\item viene fornito un costruttore da stringa-dati (de-serializzatore)
-\item viene fornito un metodo \textit{deep-copy} per duplicare la classe-dati
-\item viene fornito un metodo di validazione
-\item viene fornito un metodo di \texttt{toString}
-\item viene fornito un metodo per generare la stringa-dati (serializzatore)
-\end{itemize}
-
-%--------1---------2---------3---------4---------5---------6---------7---------8
-Le classi generate dai file di configurazione ereditano delle classi generali
-con metodi comuni per la gestione dei setter/getter dei controlli e le 
-validazioni. Queste classi sono fornite come libreria esterna, 
-vedi~\ref{lst:mvn-j-deps}.
+Classes generated from configuration files inherit general classes with common 
+methods for handling control setter/getter and validations. These classes are 
+provided as an external library, see~\ref{lst:mvn-j-deps}.
 
 \begin{elisting}[!htb]
 \begin{xmlcode}
@@ -3333,91 +2788,45 @@ vedi~\ref{lst:mvn-j-deps}.
   </dependency>
 </dependencies>
 \end{xmlcode}
-\caption{dipendenze runtime dell'\,addon-java}
+\caption{addon-java runtime dependencies}
 \label{lst:mvn-j-deps}
 \end{elisting}
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Queste librerie sono compilate in compatibilità java-5, e contangono il
-\textsl{module-info} per poter essere correttamente gestite anche con java-9 e
-superiori.
+These libraries are compiled in java-5 compatibility, and contain the 
+\textsl{module-info} in order to be correctly managed also with java-9 and 
+higher.
 
-\subsection{Validazione}
+\subsection{Validation}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Come visto nel sorgente~\ref{lst:Foo312:java} per ogni classe viene generato
-un metodo di validazione. L'\,argomento è una interfaccia dedicata, ma questo è
-per compatibilità pre-java-8.
-L'\,argometo sarà una \textit{closure}, implementata con una classe anonima o 
-interna o una $\lambda$-function.
+As seen in the lst.~\ref{lst:Foo312:java} a validation method is generated for 
+each class. 
+The argument is a dedicated interface, but this is for pre-java-8 compatibility. 
+The argument will be a \textit{closure}, implemented with an anonymous or 
+internal class or a $\lambda$-function.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=java, 
-caption={gestore errori \texttt{FieldValidateHandler}}, 
-label=lst:FieldValidateHandler:java]
-public interface FieldValidateHandler {
-    void error((|hyperref[lst:FieldValidateError:java]{FieldValidateError}| fieldValidateError);
-}
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{javacode}
 public interface FieldValidateHandler {
     void error(|\hyperref[lst:FieldValidateError:java]{FieldValidateError}| fieldValidateError);
 }
 \end{javacode}
-\caption{gestore errori \texttt{FieldValidateHandler}}
+\caption{error handler \texttt{FieldValidateHandler}}
 \label{lst:FieldValidateHandler:java}
 \end{elisting}
-\fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Il metodo \texttt{validateFails} indica se la validzione della stringa-dati
-acquisita con il costruttore statico \texttt{decode} ha superato la validazione
-richiesta dalla definizione dei campi oppure no, ma ogni volta che viene 
-rilevato un errore di validazione viene chiamato il metodo \texttt{error}
-dell'\,interfaccia fornita come argomento con i dettagli dell'\,errore.
-In questo modo è possibile accumulare tutti gli errori di validazione rilevati.
-
-
-\begin{elisting}[!htb]
-\begin{javacode}
-public class FixError {
-    public static synchronized void failFirst() { /* ... */ }
-    public static synchronized void failAll() { /* ... */ }
-    /* ... */
-}
-\end{javacode}
-\caption{Impostazione comportamento in caso di errore multipli sullo stesso campo}
-\label{lst:failFirst.failAll}
-\end{elisting}
-
+The validation methods indicate whether the data-string acquired with the 
+\texttt{decode} static constructor has passed the validation required by the 
+definition of the fields or not, but every time a validation error is detected 
+the \texttt{error} method of the interface supplied as an argument is called 
+with the details of the error. In this way it is possible to accumulate all the 
+validation errors detected. 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Nel caso che un campo abbia più caratteri in errore è possibile segnalare solo
-il primo carattere in errore, o tutti i caratteri in errore.
-La scelta è discrezionale, la classe \texttt{FixError} mette a disposizione due 
-metodi per impostare in modo globale questa scelta. Se non viene impostato
-esplicitamente viene segnalato solo il primo carattere in errore del campo.
+The difference between the two methods is that the first \texttt{validateFails} 
+in case of multiple wrong characters on the same field, signals only the first, 
+while the second \texttt{validateAllFails} signals all the characters in error.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=java, 
-caption={dettaglio errore \texttt{FieldValidateError}}, 
-label=lst:FieldValidateError:java]
-public interface FieldValidateError {
-    String name();          // field name in error
-    int offset();           // field offset in error
-    int length();           // field length in error
-    String value();         // field value in error
-    Integer column();       // column of the record with the wrong character
-    (*\hyperref[lst:ValidateError:java]{ValidateError}*) code();   // error category
-    Character wrong();      // wrong character
-    String message();       // field message error
-}
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{javacode}
 public interface FieldValidateError {
@@ -3431,100 +2840,84 @@ public interface FieldValidateError {
     String message();       // field message error
 }
 \end{javacode}
-\caption{dettaglio errore \texttt{FieldValidateError}}
+\caption{error detail \texttt{FieldValidateError}}
 \label{lst:FieldValidateError:java}
 \end{elisting}
-\fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,argomento del metodo \texttt{error} è l'\,interfaccia
-\texttt{FieldValidateError}, che sostanzialmente è una java-bean che espone solo
-i getter in formato \textit{fluente}.
+The argument to the \texttt{error} method is the \texttt{FieldValidateError} 
+interface, which is basically a java-bean that only exposes getters in 
+\textit{fluent} format. 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Segnaliamo che alcuni valori possono essere \texttt{null}.
-Un campo di tipo costante non ha un nome (\texttt{name}). 
-Un campo di tipo costante o dominio o custom con un controllo impostato con 
-espressione regolare non ha un carattere sbagliato (\texttt{wrong})
-ad una ben precisa colonna (\texttt{column}).
-Nel messaggio di errore, se è possibile identificare il carattere in
-errore, viene mostrata la posizione del carattere relativa al campo (non alla 
-stringa-dati), il carattere (se è un carattere di controllo viene mostrata la
-codifica unicode), il \textit{nome} del carattere, e il tipo di errore; 
-altrimenti viene mostrato il valore del campo e il tipo di errore.
+Please note that some values may be \texttt{null}. A field of type constant has 
+no name. A field of type constant or domain or custom with a control set with a 
+regular expression does not have a wrong character in a precise column. 
+In the error message, if it is possible to identify the character in error, the 
+position of the character relative to the field (not to the data-string) is 
+shown, the character (if it is a control character the unicode encoding is 
+shown), the \textit{name} of the character, and type of error; otherwise the 
+value of the field and the type of error are shown.
 
-\ifesource
-\begin{figure*}[!htb]
-\begin{lstlisting}[language=java, 
-caption={categoria errore \texttt{ValidateError}}, 
-label=lst:ValidateError:java]
-public enum ValidateError {
-    NotNumber, NotAscii, NotLatin, NotValid, NotDomain, NotBlank, NotEqual, NotMatch, NotDigitBlank
-}
-\end{lstlisting}
-\end{figure*}
-\else
 \begin{elisting}[!htb]
 \begin{javacode}
 public enum ValidateError {
     NotNumber, NotAscii, NotLatin, NotValid, NotDomain, NotBlank, NotEqual, NotMatch, NotDigitBlank
 }
 \end{javacode}
-\caption{categoria errore \texttt{ValidateError}}
+\caption{error category \texttt{ValidateError}}
 \label{lst:ValidateError:java}
 \end{elisting}
-\fi
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-I possibili tipi di errore sono mostrati nel 
-sorgente~\ref{lst:ValidateError:java}, il significato è evidente dal nome.
+Possible error types are shown in lst.~\ref{lst:ValidateError:java}, the meaning 
+is evident from the name.
 
-\subsection{Setter e getter}
+\subsection{Setters and getters}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-L'\,implementazione della classe-dati usata da questa libreria, in realtà non 
-genera dei campi de-serializzati. 
-Quando la classe viene creata dalla stringa-dati, il costruttore statico si 
-limita a salvare internamente la stringa-dati come vettore di caratteri. 
-Il getter di un campo accede all'\,intervallo di caratteri corrispondenti al 
-campo e li de-serializza. 
-Analogamente il setter serializza il valore fornito e lo copia 
-nell'\,intervallo di caratteri corrispondenti al campo. 
-In questo modo è banale fare un \textsl{override} di un campo, e il 
-costruttore \textit{cast-like} e \textit{deep-copy} sono quasi a costo zero.
-Anche i metodi \textsl{encode} e \textsl{decode} sono sostanzialmente a costo 
-zero perché le operazioni di serializzazione/deserializzazione sono in realtà 
-eseguite dai setter/getter.
+The data-class implementation used by this library does not actually generate 
+deserialized fields. When the class is created from the data-string, the static 
+constructor just internally saves the data-string as an array of characters. 
+The getter of a field accesses the range of characters corresponding to the 
+field and deserializes them on the fly. 
+Similarly the setter serializes the supplied value and copies it in the range of 
+characters corresponding to the field. 
+In this way it is trivial to \textsl{override} a field, the \textit{cast-like} 
+constructor and \textit{deep-copy} are almost free of cost. 
+The \textsl{encode} and \textsl{decode} methods are also basically free of cost 
+because the serialization/deserialization operations are actually performed by 
+the setters/getters.
 
-\subsection{Campi Singoli}
-\subsubsection*{Gestione valore \texttt{null}}
+\subsection{Single fields}
+\subsubsection*{\texttt{null} value handling}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-In una stringa-dati non è rappresentabile un valore nullo, a meno che 
-convenzionalmente si assegni ad una particolare stringa tale valore, come nei 
-campi di tipo numerico-nullabile.
-Quando un setter formalmente imposta il valore \texttt{null}, nella 
-rappresentazione della stringa-dati in realtà verrà assegnato il valore di
-default del campo: spazio per un tipo alfanumerico, zero per un tipo numerico,
-lo \texttt{initChar} per un tipo custom, e il primo valore tra quelli definiti 
-come possibili per un campo dominio.
+A null value cannot be represented in a data-string, unless conventionally this 
+value is assigned to a particular string, as in fields of the numeric-nullable 
+type. 
+When a setter formally sets the \texttt{null} value, in the data-string 
+representation it will actually be assigned the default value of the field: 
+space for an alphanumeric type, zero for a numeric type, the \texttt{initChar} 
+for a custom type, and the first value between those defined as possible for a 
+domain field.
 
 \begin{elisting}[!htb]
 \begin{javacode}
     String getValue() { /* ... */ }   // string getter
     int intValue() { /* ... */ }      // int getter
 \end{javacode}
-\caption{Accesso a volori numerici come stringe e numeri primitivi}
+\caption{Access to numeric values such as strings and primitive numbers}
 \label{lst:num.acc.both}
 \end{elisting}
 
-\subsubsection*{Accesso \texttt{Both} per campi numerici}
+\subsubsection*{\texttt{Both} access for numeric fields}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-I campi numerici possono essere gestiti come stringhe di caratteri numerici o
-come oggetti numerici primitivi. È possibile configurare i campi per avere 
-getter/setter di tipo stringa o numerico primitivo o entrambi.
-Nel caso venga scelto ``entrambi'' non è possibile definire il getter con il
-nome canonico per entrambi i tipi.
-In questi casi il nome canonico viene usato per il getter di tipo stringa,
-il getter con il tipo primitivo ha come nome il tipo primitivo e il nome del 
-campo, vedi~\ref{lst:num.acc.both}.
+Numeric fields can be handled as strings of numeric characters or as primitive 
+numeric objects. Fields can be configured to have getters/setters of type string 
+or primitive numeric or both. 
+If ``both'' is chosen, it is not possible to define the getter with the 
+canonical name for both types. 
+In this case the canonical name is used for the getter of type string, 
+the getter with the primitive type has as its name the primitive type and the 
+field name, see~\ref{lst:num.acc.both}.
 
 \begin{elisting}[!htb]
 \begin{quote}
@@ -3542,15 +2935,15 @@ io.github.epi155.recfm.java.NotDomainException: com.example.BarDom.setCur, offen
 	at com.example.test.TestBar.testDomain(TestBar.java:203)
 	...
 \end{javacode}
-\caption{Eccezione sul setter}
+\caption{Exception on the setter}
 \label{lst:set.throw}
 \end{elisting}
 
-\subsubsection*{Controlli sui setter e getter}
+\subsubsection*{Controls on setters and getters}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Se sono attivi i controlli sui setter e viene impostato un valore non permesso 
-viene lanciata una eccezione che segnala la violazione del controllo.
-L'\,eccezione posiziona lo stacktrace sulla istruzione del setter.
+If the checks on the setters are active and an illegal value is set, an 
+exception is thrown which signals the violation of the check. The exception 
+places the stacktrace on the setter instruction.
 
 \begin{elisting}[!htb]
 \begin{quote}
@@ -3568,25 +2961,25 @@ io.github.epi155.recfm.java.NotDomainException: com.example.BarDom.getCur, offen
 	at com.example.test.TestBar.testDomain(TestBar.java:303)
 	...
 \end{javacode}
-\caption{Eccezione sul getter}
+\caption{Exception on the getter}
 \label{lst:get.throw}
 \end{elisting}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Analogamente sui getter. Se la stringa-dati contiene nella zona corrispondente 
-a un campo un valore non valido per il campo, non viene fatta la validazione 
-della struttura, che avrebbe segnalato il problema, e il codice continua fino 
-al getter, viene lanciata una eccezione.
-L'\,eccezione posiziona lo stacktrace sulla istruzione del getter.
+Similarly on getters. If the data-string contains an invalid value for the field 
+in the area corresponding to a field, the validation of the structure, which 
+would have signaled the problem, is not performed, and the code continues until 
+the getter, an exception is thrown. The exception places the stacktrace on the 
+getter instruction.
 
-\subsection{Campi Multipli}
+\subsection{Manifold Fields}
 %--------1---------2---------3---------4---------5---------6---------7---------8
-In questo contesto considereremo campi multipli solo i campi di tipo gruppo o
-gruppo ripetuto, definiti direttamente o tramite interfaccia.
-Questo tipo di campi genera un elemento intermedio.
-Come si vede dal sorgente~\ref{lst:grp.indef}, generato per un gruppo definito
-da interfaccia, viene creata una classe interna per gestire l'\,elemento 
-intermedio, un campo privato con una istanza dell'\,elemento intermedio, un
-\textit{getter fluente} del campo, e un \textit{Consumer} del campo.
+n this context we will consider repeating fields only those fields of type group 
+or repeated group, defined directly or through an interface. 
+This type of fields generates an intermediate element. 
+As seen from lst.~\ref{lst:grp.indef}, generated for a group defined via an 
+interface, an internal class is created to manage the intermediate element, a 
+private field with an instance of the intermediate element, a fluent getter of 
+the field, and a \textit{Consumer} of the field.
 
 \begin{elisting}[!htb]
 \begin{javacode}
@@ -3595,36 +2988,35 @@ intermedio, un campo privato con una istanza dell'\,elemento intermedio, un
     public StopTime stopTime() { return this.stopTime; }
     public void withStopTime(WithAction<StopTime> action) { action.accept(this.stopTime); }
 \end{javacode}
-\caption{Definizione di un gruppo interno alla classe-dati}
+\caption{Implementation of a group inside the data-class}
 \label{lst:grp.indef}
 \end{elisting}
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La classe interna implementerà l'\,interfaccia di validazione, e, se definito
-tramite interfaccia, l'\,interfaccia con la definizione del dettaglio dei campi
-della classe interna.
-Ogni gruppo è validabile singolarmente come se fosse una classe-dati.
-L'\,interfaccia di validazione, \texttt{Validable}, richiede il metodo
-\texttt{validateFails} che abbiamo già incontrato nella validazione della
-classe-dati. Anche tutte le classi-dati implementano l'\,interfaccia 
-\texttt{Validable}.
+The inner class will implement the validation interface, and, if defined via 
+interface, the interface with the detail definition of the fields of the inner 
+class. Each group can be validated individually as if it were a data-class.
+The validation interface, \texttt{Validable}, requires the 
+\texttt{validateFails} and \texttt{validateAllFails} method that we have already 
+encountered in data-class validation. 
+All data-classes also implement the \texttt{Validable} interface.
 
 \begin{elisting}[!htb]
 \begin{javacode}
 public interface Validable {
     boolean validateFails(FieldValidateHandler handler);
+    boolean validateAllFails(FieldValidateHandler handler);
 }
 \end{javacode}
-\caption{Interfaccia di validazione, a livello classe-dati e gruppo}
+\caption{Validation interface, at class-data and group level}
 \label{lst:if.validable}
 \end{elisting}
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-La definizione di un gruppo ripetuto è simile a qullo di un gruppo.
-Viene creata una classe interna per gestire l'\,elemento 
-intermedio ripetuto, un campo privato con $n$ istanze dell'\,elemento 
-intermedio, un \textit{getter fluente} con un indice del campo, 
-e un \textit{Consumer} con indice del campo.
+Defining a repeating group is similar to defining a group. An inner class is 
+created to handle the repeating intermediate element, a private field with $n$ 
+instances of the intermediate element, a fluent getter with an index of the 
+field, and a \textit{Consumer} with index of the field.
 
 \begin{elisting}[!htb]
 \begin{javacode}
@@ -3636,84 +3028,20 @@ e un \textit{Consumer} con indice del campo.
     public TabError tabError(int k) { return this.tabError[k-1]; }
     public void withTabError(int k, WithAction<TabError> action) { action.accept(this.tabError[k-1]); }
 \end{javacode}
-\caption{Definizione di un gruppo ripetuto interno alla classe-dati}
+\caption{Implementation of a repeating group inside the data-class}
 \label{lst:occ.indef}
 \end{elisting}
 
 %--------1---------2---------3---------4---------5---------6---------7---------8
-Anche in questo caso la classe interna che definisce l'\,elemento intermedio 
-implementa l'\,interfaccia di validazione, e, se definito tramite interfaccia, 
-l'\,interfaccia con la definizione del dettaglio dei campi della classe interna.
+Also in this case the inner class that defines the intermediate element 
+implements the validation interface, and, if defined through an interface, the 
+interface with the definition of the detail of the fields of the inner class.
 
-
-
-\iffalse
-\begin{elisting}[!htb]
-\begin{javacode}
-    Foo311b foo = new Foo311b();
-    foo.stopTime().setHours("01");
-\end{javacode}
-\caption{Setter di un campo all'\,interno di un gruppo}
-\label{lst:grp.set}
-\end{elisting}
-
-\begin{elisting}[!htb]
-\begin{javacode}
-    Foo311b foo = new Foo311b();
-    foo.withStopTime(stop -> {
-        stop.setHours("01");
-    });
-\end{javacode}
-\caption{Setter di un campo all'\,interno di un gruppo usando $\lambda$-function}
-\label{lst:grp.withLambda}
-\end{elisting}
-
-\begin{elisting}[!htb]
-\begin{javacode}
-    Foo311b foo = new Foo311b();
-    foo.withStopTime(new WithAction<Foo311b.StopTime>() {
-        @Override
-        public void call(Foo311b.StopTime stop) {
-            stop.setHours("01");
-        }
-    });
-\end{javacode}
-\caption{Setter di un campo all'\,interno di un gruppo usando una funzione anonima}
-\label{lst:grp.withAnonym}
-\end{elisting}
-
-\begin{elisting}[!htb]
-\begin{javacode}
-    Foo311b foo = new Foo311b();
-    String hours = foo.stopTime().getHours();
-\end{javacode}
-\caption{Getter di un campo all'\,interno di un gruppo}
-\label{lst:grp.get}
-\end{elisting}
-
-\begin{elisting}[!htb]
-\begin{javacode}
-    Foo311b foo = new Foo311b();
-    boolean test = foo.validateFails(x -> System.out.println(x.message()));
-\end{javacode}
-\caption{Validazione di un gruppo}
-\label{lst:grp.validate}
-\end{elisting}
-\fi
-
-%\appendix
-%\input{appe01.tex}
 
 \clearpage
 \listoffigures
 \listoftables
-
-\ifesource
-\lstlistoflistings
-\else
 \listoflistings
-\fi
-
 \printindex
 
 \end{document}
