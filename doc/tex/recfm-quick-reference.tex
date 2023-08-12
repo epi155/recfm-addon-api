@@ -77,6 +77,8 @@
 
 \section*{RECFM Quick reference \quad \texttt{0.7.0}}
 
+\vspace*{-10pt}
+
 \begin{elisting}%[!htb]
 \begin{xmlcode}
 <plugin>
@@ -107,10 +109,13 @@
 \caption{\texttt{pom.xml}: plugin usage example}
 \end{elisting}
 
-\vspace*{-20pt}
+\vspace*{-25pt}
 
 \begin{elisting}%[!htb]
 \begin{yamlcode}
+defaults:
+  abc:
+    normalize: Trim
 packages:
   - name: com.example.test
     classes:
@@ -126,7 +131,7 @@ packages:
 \caption{configuration yaml example}
 \end{elisting}
 
-\vspace*{-20pt}
+\vspace*{-25pt}
 
 \begin{elisting}%[!htb]
 \begin{xmlcode}
@@ -269,7 +274,7 @@ fill       &     & char    & & \texttt{\$\{*:=0\}}\\
 
 \begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
 \hline
-\multicolumn{5}{|c|}{\texttt{!Dom}: domain field}\\
+\multicolumn{5}{|c|}{\textbf{\texttt{!Dom}}: domain field}\\
 \hline
 \multicolumn{1}{|c|}{attribute} & \multicolumn{1}{c|}{alt} 
 	& \multicolumn{1}{c|}{type} & \multicolumn{1}{c|}{O}
