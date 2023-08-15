@@ -1,0 +1,44 @@
+\chapter{Service Provider}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nei capitoli precedenti abbiamo visto la \textsl{Service Provider Interface}, 
+che  definisce delle interfacce e delle classi che permettono di definire i 
+traccciati, e indicare alcuni comportamenti che dovranno essere usati in fase di
+utilizzazione dei tracciati; e alcuni esempi di \textsl{Service}, che
+semplicemente valorizza gli oggetti messi a disposizione della 
+\textsl{Service Provider Interface}, ma il vero lavoro di generazione del codice 
+è fatto dal \textsl{Service Provider}.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La struttuta SPI consente di avere codice generato diverso, implementato in modo
+diverso, o addirittura generare sorgente in un linguaggio diverso.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Qualunque sia il linguaggio generato e il dettaglio della implementazione il
+\textsl{Service Provider} dovrà fornire alcune funzionalità generali.
+
+\begin{itemize}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \textbf{decode}: partendo dalla stringa-dati, deve instanziare la 
+    classe-dati;
+\item \textbf{setter, getter}: la classe-dati generata deve fornire i metodi di 
+    accesso ai singoli campi;
+\item \textbf{costruttore vuoto}: la classe-dati può essere instanziata con i 
+    valori di default dei campi;
+\item \textbf{encode}: la classe-dati può essere serializzata nella 
+    stringa-dati.
+\end{itemize}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Sarebbe gradita anche qualche funzionalità accessoria:
+\begin{itemize}
+\item \textbf{validate}: validare la stringa-dati prima della 
+    de-serializzazione, in modo da segnalare tutte le aree che non possono essere
+    assegnate ai relativi campi, tipicamente caratteri non numerici in campi di
+    tipo numerico;
+\item \textbf{cast}: se due stringhe-dati hanno la stessa lunghezza, poter 
+    passare da una classe-dati che le rappresenta all'\,altra;
+\item \textbf{toString}: fornire un metodo che mostra tutti i valori dei campi 
+    che compongono la classe-dati.
+\item (deep) \textbf{copy}: genera una copia della classe-dati;
+\end{itemize}
+
+

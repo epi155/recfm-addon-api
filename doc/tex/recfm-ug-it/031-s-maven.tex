@@ -1,0 +1,183 @@
+\chapter{Maven plugin}\label{sec:maven}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Il maven plugin \verb!recfm-maven-plugin! permette di creare più classi e 
+interfacce usando uno più file di configurazione in formato yaml.
+Le librerie esterne utilizzate richiedono il java 8, quindi per eseguire questo 
+plugin è necessario almeno il java 8.
+
+Il plugin si aspetta come parametri di configurazione
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=java, caption=parametri impostabili del maven plugin, 
+label=lst:maven.conf]
+    @Parameter(defaultValue = "${project.build.directory}/generated-sources/recfm",
+        property = "maven.recfm.generateDirectory", required = true)
+    private File generateDirectory;
+
+    @Parameter(defaultValue = "${project.build.resources[0].directory}",
+        property = "maven.recfm.settingsDirectory", required = true)
+    private File settingsDirectory;
+    
+    @Parameter(required = true)
+    private String[] settings;
+
+    @Parameter(defaultValue = "true", property = "maven.recfm.addCompileSourceRoot")
+    private boolean addCompileSourceRoot = true;
+
+    @Parameter(defaultValue = "false", property = "maven.recfm.addTestCompileSourceRoot")
+    private boolean addTestCompileSourceRoot = false;
+    
+    @Parameter
+    private String codeProviderClassName;
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{javacode}
+    @Parameter(defaultValue = "${project.build.directory}/generated-sources/recfm",
+        property = "maven.recfm.generateDirectory", required = true)
+    private File generateDirectory;
+
+    @Parameter(defaultValue = "${project.build.resources[0].directory}",
+        property = "maven.recfm.settingsDirectory", required = true)
+    private File settingsDirectory;
+    
+    @Parameter(required = true)
+    private String[] settings;
+
+    @Parameter(defaultValue = "true", property = "maven.recfm.addCompileSourceRoot")
+    private boolean addCompileSourceRoot = true;
+
+    @Parameter(defaultValue = "false", property = "maven.recfm.addTestCompileSourceRoot")
+    private boolean addTestCompileSourceRoot = false;
+    
+    @Parameter
+    private String codeProviderClassName;
+\end{javacode}
+\caption{parametri impostabili del maven plugin}
+\label{lst:maven.conf}
+\end{elisting}
+\fi
+
+\begin{itemize}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!generateDirectory}
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{generateDirectory}} indica la 
+	directory root da utilizzare per la generazione dei sorgenti, viene usato 
+	per valorizzare il campo \verb!sourceDirectory! della classe 
+	\hyperref[lst:GenerateArgs]{\texttt{GenerateArgs}}, come si vede dalla 
+	definizione, se il parametro è omesso viene utilizzata la directory 
+	\verb!target/generated-sources/recfm!, 	normalmente può essere lasciato il 
+	valore di default.
+	Gli altri tre parametri di \texttt{GenerateArgs} sono un identificativo del
+	programma \textsl{service} e vengono valorizzati automaticamente.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!settingsDirectory}
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{settingsDirectory}} indica la 
+	directory che contiene i file	di configurazione, se il parametro è omesso 
+	viene usato il valore \verb!src/main/resources!, normalmente può essere 
+	lasciato il valore di default.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!settings}
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{settings}} indica l'elenco dei 
+	file di configurazione da utilizzare per generare le classi/interfacce; il 
+	parametro deve essere fornito al plugin.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!addCompileSourceRoot}
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{addCompileSourceRoot}} è un 
+	campo tecnico, indica a maven che la directory dove sono stati generati i 
+	sorgenti deve essere inclusa tra quelle utilizzate per la compilazione 
+	principale, se il parametro è omesso viene utilizzato il valore 
+	\verb!true!; il valore \verb!true! è opportuno quando viene usata una 
+	directory di generazione del codice diversa da \verb!src/main/java!, 
+	altrimenti è necessario usare plugin aggiuntivi per aggiungere il nuovo path 
+	a quello di compilazione di maven.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!addTestCompileSourceRoot}
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{addTestCompileSourceRoot}} è 
+	analogo al campo precedente, ma aggiunge la directory di generazione al path 
+	di compilazione dei test, se omesso viene utilizzato il valore \verb!false!, 
+	tranne in casi particolari può essere lasciato il valore di default.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!codeProviderClassName}
+	Il campo \fcolorbox{black}{yellow!75}{\texttt{codeProviderClassName}} indica 
+	quale è la classe concreata che implementa la \textsl{Service Interface}, se 
+	omesso viene utilizzata la ``prima'' implementazione recuperata del 
+	\textsl{ServiceLoader}; se in classpath è presente una sola implementazione, 
+	non è necessario valorizzare il parametro. 
+\end{itemize}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=XML, caption=esempio minimale di esecuzione del 
+plugin, label=lst:mvn-xmpl]
+<plugin>
+    <groupId>io.github.epi155</groupId>
+    <artifactId>recfm-maven-plugin</artifactId>
+    <version>0.7.0</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+            <configuration>
+                <settings>
+                    <setting>foo.yaml</setting>
+                    <setting>bar.yaml</setting>
+                </settings>
+            </configuration>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.epi155</groupId>
+            <artifactId>recfm-java-addon</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+    </dependencies>
+</plugin>
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{xmlcode}
+<plugin>
+    <groupId>io.github.epi155</groupId>
+    <artifactId>recfm-maven-plugin</artifactId>
+    <version>0.7.0</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+            <configuration>
+                <settings>
+                    <setting>foo.yaml</setting>
+                    <setting>bar.yaml</setting>
+                </settings>
+            </configuration>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.epi155</groupId>
+            <artifactId>recfm-java-addon</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+    </dependencies>
+</plugin>
+\end{xmlcode}
+\caption{esempio minimale di esecuzione del plugin}
+\label{lst:mvn-xmpl}
+\end{elisting}
+\fi
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Un esempio di esecuzione del plugin è mostrato nel cod.~\ref{lst:mvn-xmpl},
+il plugin per essere eseguito deve avere come dipendenza una libreria che 
+fornisca l'\,implementazione dell'\,inter\-fac\-cia, altrimenti il 
+\verb!ServiceLoader! non trova nulla ed il plugin termina in errore.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Tutti gli altri parametri sono forniti nei file di configurazione.

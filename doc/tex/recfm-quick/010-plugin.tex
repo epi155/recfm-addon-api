@@ -1,0 +1,70 @@
+\section*{RECFM Quick reference \quad \texttt{0.7.0}}
+
+\vspace*{-10pt}
+
+\begin{elisting}%[!htb]
+\begin{xmlcode}
+<plugin>
+    <groupId>io.github.epi155</groupId>
+    <artifactId>recfm-maven-plugin</artifactId>  <!-- the plugin -->
+    <version>0.7.0</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+            <configuration>
+                <settings>
+                    <setting>foo.yaml</setting>
+                </settings>
+            </configuration>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.epi155</groupId>
+            <artifactId>recfm-java-addon</artifactId>  <!-- java generate dependency -->
+            <version>0.7.0</version>
+        </dependency>
+    </dependencies>
+</plugin>
+\end{xmlcode}
+\caption{\texttt{pom.xml}: plugin usage example}
+\end{elisting}
+
+\vspace*{-25pt}
+
+\begin{elisting}%[!htb]
+\begin{yamlcode}
+defaults:
+  abc:
+    normalize: Trim
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo
+        length: 55
+        fields:
+          - !Abc { name: firstName   , at:  1, len: 15 }
+          - !Abc { name: lastName    , at: 16, len: 15 }
+          - !Num { name: birthDate   , at: 31, len:  8 }
+          - !Abc { name: birthPlace  , at: 39, len: 14 }
+          - !Abc { name: birthCountry, at: 53, len:  3 }
+\end{yamlcode}
+\caption{configuration yaml example}
+\end{elisting}
+
+\vspace*{-25pt}
+
+\begin{elisting}%[!htb]
+\begin{xmlcode}
+<dependencies>
+  <dependency>
+    <groupId>io.github.epi155</groupId>
+    <artifactId>recfm-java-lib</artifactId>  <!-- java runtime dependency -->
+    <version>0.7.0</version>
+  </dependency>
+</dependencies>
+\end{xmlcode}
+\caption{addon-java runtime dependencies}
+\end{elisting}

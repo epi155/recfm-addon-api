@@ -1,0 +1,428 @@
+\section{Generazione sorgente java --- \texttt{java-addon}} 
+\label{sec:java.addon}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Le classi generate dal \textsl{CodeProvider} java oltre ai setter e getter
+hanno una serie di metodi ausiliari, vedi cod.~\ref{lst:Foo312:java}.
+
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=java, caption=esempio di classe generata (Foo312), 
+label=lst:Foo312:java]
+public class Foo312 extends FixRecord {
+    public Foo312() { /* ... */ }
+    public static Foo312 of(FixRecord r) { /* ... */ }
+    public static Foo312 decode(String s) { /* ... */ }
+    public Foo312 copy() { /* ... */ }
+    // setter and getter ...
+    public boolean validateFails((*\hyperref[lst:FieldValidateHandler:java]{FieldValidateHandler}*) handler) { /* ... */ }
+    public boolean validateAllFails((*\hyperref[lst:FieldValidateHandler:java]{FieldValidateHandler}*) handler) { /* ... */ }
+    public String toString() { /* ... */ }
+    public String encode() { /* ... */ }    // from super class
+    public int length() { return LRECL; }   // string-data length
+}
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{javacode}
+public class Foo312 extends FixRecord {
+    public Foo312() { /* ... */ }
+    public static Foo312 of(FixRecord r) { /* ... */ }
+    public static Foo312 decode(String s) { /* ... */ }
+    public Foo312 copy() { /* ... */ }
+    // setter and getter ...
+    public boolean validateFails(|\hyperref[lst:FieldValidateHandler:java]{FieldValidateHandler}| handler) { /* ... */ }
+    public boolean validateAllFails(|\hyperref[lst:FieldValidateHandler:java]{FieldValidateHandler}| handler) { /* ... */ }
+    public String toString() { /* ... */ }
+    public String encode() { /* ... */ }    // from super class
+    public int length() { return LRECL; }   // string-data length
+}
+\end{javacode}
+\caption{esempio di classe generata (Foo312)}
+\label{lst:Foo312:java}
+\end{elisting}
+\fi
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\begin{itemize}
+\item viene fornito un costruttore senza argomenti, che crea la classe con i 
+    valori a default
+\item viene fornito un costruttore \textit{cast-like}, che prende come argomento
+    qualunque altra classe che rappresenta una classe-dati
+\item viene fornito un costruttore da stringa-dati (de-serializzatore)
+\item viene fornito un metodo \textit{deep-copy} per duplicare la classe-dati
+\item vengono forniti due metodo di validazione
+\item viene fornito un metodo di \texttt{toString}
+\item viene fornito un metodo per generare la stringa-dati (serializzatore)
+\item viene fornito un metodo per recuperare la lunghezza della stringa-dati
+\end{itemize}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Le classi generate dai file di configurazione ereditano delle classi generali
+con metodi comuni per la gestione dei setter/getter dei controlli e le 
+validazioni. Queste classi sono fornite come libreria esterna, 
+vedi~\ref{lst:mvn-j-deps}.
+
+\begin{elisting}[!htb]
+\begin{xmlcode}
+<dependencies>
+  <dependency>
+    <groupId>io.github.epi155</groupId>
+    <artifactId>recfm-java-lib</artifactId>
+    <version>0.7.0</version>
+  </dependency>
+</dependencies>
+\end{xmlcode}
+\caption{dipendenze runtime dell'\,addon-java}
+\label{lst:mvn-j-deps}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Queste librerie sono compilate in compatibilità java-5, e contangono il
+\textsl{module-info} per poter essere correttamente gestite anche con java-9 e
+superiori.
+
+\subsection{Validazione}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Come visto nel sorgente~\ref{lst:Foo312:java} per ogni classe vengono generati
+due metodi di validazione. Per entrambi l'\,argo\-men\-to è una interfaccia 
+dedicata, ma questo è per compatibilità pre-java-8.
+L'\,argometo sarà una \textit{closure}, implementata con una classe anonima o 
+interna o una $\lambda$-function.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=java, 
+caption={gestore errori \texttt{FieldValidateHandler}}, 
+label=lst:FieldValidateHandler:java]
+public interface FieldValidateHandler {
+    void error((|hyperref[lst:FieldValidateError:java]{FieldValidateError}| fieldValidateError);
+}
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface FieldValidateHandler {
+    void error(|\hyperref[lst:FieldValidateError:java]{FieldValidateError}| fieldValidateError);
+}
+\end{javacode}
+\caption{gestore errori \texttt{FieldValidateHandler}}
+\label{lst:FieldValidateHandler:java}
+\end{elisting}
+\fi
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+I metodi di validazione indicano se la stringa-dati
+acquisita con il costruttore statico \texttt{decode} ha superato la validazione
+richiesta dalla definizione dei campi oppure no, ma ogni volta che viene 
+rilevato un errore di validazione viene chiamato il metodo \texttt{error}
+dell'\,interfaccia fornita come argomento con i dettagli dell'\,errore.
+In questo modo è possibile accumulare tutti gli errori di validazione rilevati.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La differenza tra i due metodi è che il primo \texttt{validateFails} in caso di
+più caratteri errati sullo stesso campo, segnala solo il primo, mentre il 
+secondo \texttt{validateAllFails} segnala tutti i caratteri in errore.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=java, 
+caption={dettaglio errore \texttt{FieldValidateError}}, 
+label=lst:FieldValidateError:java]
+public interface FieldValidateError {
+    String name();          // field name in error
+    int offset();           // field offset in error
+    int length();           // field length in error
+    String value();         // field value in error
+    Integer column();       // column of the record with the wrong character
+    (*\hyperref[lst:ValidateError:java]{ValidateError}*) code();   // error category
+    Character wrong();      // wrong character
+    String message();       // field message error
+}
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface FieldValidateError {
+    String name();          // field name in error
+    int offset();           // field offset in error
+    int length();           // field length in error
+    String value();         // field value in error
+    Integer column();       // column of the record with the wrong character
+    |\hyperref[lst:ValidateError:java]{ValidateError}| code();   // error category
+    Character wrong();      // wrong character
+    String message();       // field message error
+}
+\end{javacode}
+\caption{dettaglio errore \texttt{FieldValidateError}}
+\label{lst:FieldValidateError:java}
+\end{elisting}
+\fi
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+L'\,argomento del metodo \texttt{error} è l'\,interfaccia
+\texttt{FieldValidateError}, che sostanzialmente è una java-bean che espone solo
+i getter in formato \textit{fluente}.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Segnaliamo che alcuni valori possono essere \texttt{null}.
+Un campo di tipo costante non ha un nome (\texttt{name}). 
+Un campo di tipo costante o dominio o custom con un controllo impostato con 
+espressione regolare non ha un carattere sbagliato (\texttt{wrong})
+ad una ben precisa colonna (\texttt{column}).
+Nel messaggio di errore, se è possibile identificare il carattere in
+errore, viene mostrata la posizione del carattere relativa al campo (non alla 
+stringa-dati), il carattere (se è un carattere di controllo viene mostrata la
+codifica unicode), il \textit{nome} del carattere, e il tipo di errore; 
+altrimenti viene mostrato il valore del campo e il tipo di errore.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=java, 
+caption={categoria errore \texttt{ValidateError}}, 
+label=lst:ValidateError:java]
+public enum ValidateError {
+    NotNumber, NotAscii, NotLatin, NotValid, NotDomain, NotBlank, NotEqual, NotMatch, NotDigitBlank
+}
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{javacode}
+public enum ValidateError {
+    NotNumber, NotAscii, NotLatin, NotValid, NotDomain, NotBlank, NotEqual, NotMatch, NotDigitBlank
+}
+\end{javacode}
+\caption{categoria errore \texttt{ValidateError}}
+\label{lst:ValidateError:java}
+\end{elisting}
+\fi
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+I possibili tipi di errore sono mostrati nel 
+sorgente~\ref{lst:ValidateError:java}, il significato è evidente dal nome.
+
+\subsection{Setter e getter}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+L'\,implementazione della classe-dati usata da questa libreria, in realtà non 
+genera dei campi de-serializzati. 
+Quando la classe viene creata dalla stringa-dati, il costruttore statico si 
+limita a salvare internamente la stringa-dati come vettore di caratteri. 
+Il getter di un campo accede all'\,intervallo di caratteri corrispondenti al 
+campo e li de-serializza. 
+Analogamente il setter serializza il valore fornito e lo copia 
+nell'\,intervallo di caratteri corrispondenti al campo. 
+In questo modo è banale fare un \textsl{override} di un campo, e il 
+costruttore \textit{cast-like} e \textit{deep-copy} sono quasi a costo zero.
+Anche i metodi \textsl{encode} e \textsl{decode} sono sostanzialmente a costo 
+zero perché le operazioni di serializzazione/deserializzazione sono in realtà 
+eseguite dai setter/getter.
+
+\subsection{Campi Singoli}
+\subsubsection*{Gestione valore \texttt{null}}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In una stringa-dati non è rappresentabile un valore nullo, a meno che 
+convenzionalmente si assegni ad una particolare stringa tale valore, come nei 
+campi di tipo numerico-nullabile.
+Quando un setter formalmente imposta il valore \texttt{null}, nella 
+rappresentazione della stringa-dati in realtà verrà assegnato il valore di
+default del campo: spazio per un tipo alfanumerico, zero per un tipo numerico,
+lo \texttt{initChar} per un tipo custom, e il primo valore tra quelli definiti 
+come possibili per un campo dominio.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+    String getValue() { /* ... */ }   // string getter
+    int intValue() { /* ... */ }      // int getter
+\end{javacode}
+\caption{Accesso a volori numerici come stringe e numeri primitivi}
+\label{lst:num.acc.both}
+\end{elisting}
+
+\subsubsection*{Accesso \texttt{Both} per campi numerici}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+I campi numerici possono essere gestiti come stringhe di caratteri numerici o
+come oggetti numerici primitivi. È possibile configurare i campi per avere 
+getter/setter di tipo stringa o numerico primitivo o entrambi.
+Nel caso venga scelto ``entrambi'' non è possibile definire il getter con il
+nome canonico per entrambi i tipi.
+In questi casi il nome canonico viene usato per il getter di tipo stringa,
+il getter con il tipo primitivo ha come nome il tipo primitivo e il nome del 
+campo, vedi~\ref{lst:num.acc.both}.
+
+\begin{elisting}[!htb]
+\begin{quote}
+\begin{minted}[frame=single,framesep=2mm,bgcolor=bg,fontsize=\footnotesize,linenos,firstnumber=200]{java}
+    @Test
+    void testDomain() {
+        BarDom dom = new BarDom();
+        dom.setCur("AAA");
+    }
+\end{minted}
+\end{quote}
+\vspace*{-1cm}
+\begin{javacode}
+io.github.epi155.recfm.java.NotDomainException: com.example.BarDom.setCur, offending value "AAA"
+	at com.example.test.TestBar.testDomain(TestBar.java:203)
+	...
+\end{javacode}
+\caption{Eccezione sul setter}
+\label{lst:set.throw}
+\end{elisting}
+
+\subsubsection*{Controlli sui setter e getter}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Se sono attivi i controlli sui setter e viene impostato un valore non permesso 
+viene lanciata una eccezione che segnala la violazione del controllo.
+L'\,eccezione posiziona lo stacktrace sulla istruzione del setter.
+
+\begin{elisting}[!htb]
+\begin{quote}
+\begin{minted}[frame=single,framesep=2mm,bgcolor=bg,fontsize=\footnotesize,linenos,firstnumber=300]{java}
+    @Test
+    void testDomain() {
+        BarDom d1 = BarDom.decode("AAA");
+        String cur = d1.getCur();
+    }
+\end{minted}
+\end{quote}
+\vspace*{-1cm}
+\begin{javacode}
+io.github.epi155.recfm.java.NotDomainException: com.example.BarDom.getCur, offending value "AAA" @1+3
+	at com.example.test.TestBar.testDomain(TestBar.java:303)
+	...
+\end{javacode}
+\caption{Eccezione sul getter}
+\label{lst:get.throw}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Analogamente sui getter. Se la stringa-dati contiene nella zona corrispondente 
+a un campo un valore non valido per il campo, non viene fatta la validazione 
+della struttura, che avrebbe segnalato il problema, e il codice continua fino 
+al getter, viene lanciata una eccezione.
+L'\,eccezione posiziona lo stacktrace sulla istruzione del getter.
+
+\subsection{Campi Multipli}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In questo contesto considereremo campi multipli solo i campi di tipo gruppo o
+gruppo ripetuto, definiti direttamente o tramite interfaccia.
+Questo tipo di campi genera un elemento intermedio.
+Come si vede dal sorgente~\ref{lst:grp.indef}, generato per un gruppo definito
+da interfaccia, viene creata una classe interna per gestire l'\,elemento 
+intermedio, un campo privato con una istanza dell'\,elemento intermedio, un
+\textit{getter fluente} del campo, e un \textit{Consumer} del campo.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+    public class StopTime implements Validable, ITime {/* ... */}
+    private final StopTime stopTime = this.new StopTime();
+    public StopTime stopTime() { return this.stopTime; }
+    public void withStopTime(WithAction<StopTime> action) { action.accept(this.stopTime); }
+\end{javacode}
+\caption{Definizione di un gruppo interno alla classe-dati}
+\label{lst:grp.indef}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La classe interna implementerà l'\,interfaccia di validazione, e, se definito
+tramite interfaccia, l'\,interfaccia con la definizione del dettaglio dei campi
+della classe interna.
+Ogni gruppo è validabile singolarmente come se fosse una classe-dati.
+L'\,interfaccia di validazione, \texttt{Validable}, richiede il metodo
+\texttt{validateFails} che abbiamo già incontrato nella validazione della
+classe-dati. Anche tutte le classi-dati implementano l'\,interfaccia 
+\texttt{Validable}.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface Validable {
+    boolean validateFails(FieldValidateHandler handler);
+    boolean validateAllFails(FieldValidateHandler handler);
+}
+\end{javacode}
+\caption{Interfaccia di validazione, a livello classe-dati e gruppo}
+\label{lst:if.validable}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione di un gruppo ripetuto è simile a qullo di un gruppo.
+Viene creata una classe interna per gestire l'\,elemento 
+intermedio ripetuto, un campo privato con $n$ istanze dell'\,elemento 
+intermedio, un \textit{getter fluente} con un indice del campo, 
+e un \textit{Consumer} con indice del campo.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+    public class TabError implements Validable, IError {/* ... */}
+    private final TabError[] tabError = new TabError[] {
+        this.new TabError(0),
+        /* ... */
+    };
+    public TabError tabError(int k) { return this.tabError[k-1]; }
+    public void withTabError(int k, WithAction<TabError> action) { action.accept(this.tabError[k-1]); }
+\end{javacode}
+\caption{Definizione di un gruppo ripetuto interno alla classe-dati}
+\label{lst:occ.indef}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Anche in questo caso la classe interna che definisce l'\,elemento intermedio 
+implementa l'\,interfaccia di validazione, e, se definito tramite interfaccia, 
+l'\,interfaccia con la definizione del dettaglio dei campi della classe interna.
+
+
+
+\iffalse
+\begin{elisting}[!htb]
+\begin{javacode}
+    Foo311b foo = new Foo311b();
+    foo.stopTime().setHours("01");
+\end{javacode}
+\caption{Setter di un campo all'\,interno di un gruppo}
+\label{lst:grp.set}
+\end{elisting}
+
+\begin{elisting}[!htb]
+\begin{javacode}
+    Foo311b foo = new Foo311b();
+    foo.withStopTime(stop -> {
+        stop.setHours("01");
+    });
+\end{javacode}
+\caption{Setter di un campo all'\,interno di un gruppo usando $\lambda$-function}
+\label{lst:grp.withLambda}
+\end{elisting}
+
+\begin{elisting}[!htb]
+\begin{javacode}
+    Foo311b foo = new Foo311b();
+    foo.withStopTime(new WithAction<Foo311b.StopTime>() {
+        @Override
+        public void call(Foo311b.StopTime stop) {
+            stop.setHours("01");
+        }
+    });
+\end{javacode}
+\caption{Setter di un campo all'\,interno di un gruppo usando una funzione anonima}
+\label{lst:grp.withAnonym}
+\end{elisting}
+
+\begin{elisting}[!htb]
+\begin{javacode}
+    Foo311b foo = new Foo311b();
+    String hours = foo.stopTime().getHours();
+\end{javacode}
+\caption{Getter di un campo all'\,interno di un gruppo}
+\label{lst:grp.get}
+\end{elisting}
+
+\begin{elisting}[!htb]
+\begin{javacode}
+    Foo311b foo = new Foo311b();
+    boolean test = foo.validateFails(x -> System.out.println(x.message()));
+\end{javacode}
+\caption{Validazione di un gruppo}
+\label{lst:grp.validate}
+\end{elisting}
+\fi

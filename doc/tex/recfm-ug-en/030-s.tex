@@ -1,0 +1,43 @@
+%  ____                  _          
+% / ___|  ___ _ ____   _(_) ___ ___ 
+% \___ \ / _ \ '__\ \ / / |/ __/ _ \
+%  ___) |  __/ |   \ V /| | (_|  __/
+% |____/ \___|_|    \_/ |_|\___\___|
+%                                  
+
+\chapter*{Service}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \textsl{Service Provider Interface} simply fixes the general structure, but 
+contains only interfaces and java-beans.
+The \textsl{Service} is the application that allows the user to provide the 
+input required by the \textsl{Service Provider Interface}. 
+To produce the output, the \textsl{Service} will use the \textsl{ServiceLoader} 
+to search the classpath for a \textsl{Service Provider} that implements the 
+\textsl{Service Provider Interface}, and the \textsl{Service Provider} will 
+generate the output from the input.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The heart of the \textsl{Service Provider Interface}, \verb!recfm-addon-api!, is 
+the \textsl{CodeProvider} interface. The implementation of the interface is 
+searched with the ServiceLoader mechanism, lst.~\ref{lst:getCodeProvider}.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+        ServiceLoader<CodeProvider> loader = ServiceLoader.load(CodeProvider.class);
+        |\hyperref[lst:CodeProvider]{CodeProvider}| codeProvider = loader.iterator().next();
+        |\hyperref[lst:CodeFactory]{CodeFactory}| factory = codeProvider.getInstance();
+\end{javacode}
+\caption{retrieve of the CodeProvider}
+\label{lst:getCodeProvider}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Once an instance of \textsl{CodeFactory} has been retrieved, it is possible to 
+create the definitions of the data-strings and generate the sources of the 
+data-classes.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Two \textsl{clients} have been developed, one in the form of a maven plugin 
+(\verb!recfm-maven-plugin!), and the other in the form of a gradle plugin 
+(\verb!recfm-gradle-plugin!). 
+The code is largely identical, only the trigger mechanism changes.

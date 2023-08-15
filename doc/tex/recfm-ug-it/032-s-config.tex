@@ -1,0 +1,1452 @@
+\section{Struttura del file di configurazione}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Per gestire la configurazione dei tracciati il plugin definisce la classe
+\textsl{MasterBook}, vedi cod.~\ref{lst:MasterBook}, è divisa in due componenti,
+la prima \texttt{defaults} è semplicemente il java-bean \textsl{FieldDefault}
+(vedi~\ref{lst:FieldDefault}) messo a disposizione dalla 
+\textsl{Service Provider Interface} per fornire i valori di default dei 
+parametri ``poco variabili'' delle classi e dei campi.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=java, caption=classe di configurazione MasterBook, 
+label=lst:MasterBook]
+@Data
+public class MasterBook {
+    private (*\hyperref[lst:FieldDefault]{FieldDefault}*) defaults = new FieldDefault();
+    private List<(*\hyperref[lst:ClassPackage]{ClassPackage}*)> packages = new ArrayList<>();
+}
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{javacode}
+@Data
+public class MasterBook {
+    private |\hyperref[lst:FieldDefault]{FieldDefault}| defaults = new FieldDefault();
+    private List<|\hyperref[lst:ClassPackage]{ClassPackage}|> packages = new ArrayList<>();
+}
+\end{javacode}
+\caption{classe di configurazione MasterBook}
+\label{lst:MasterBook}
+\end{elisting}
+\fi
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Per semplificare la valorizzazione del file di configurazione yaml, viene usata
+un funzionalità delle librerie yaml, che permette di definire nomi abbreviati o
+alternativi dei parametri e dei valori dei campi di tipo enum.
+I dettagli della componenti del campo \texttt{defaults} sarà mostrato insieme al
+campo a cui fornisce il default del valore dei parametri.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=java, caption=classe di configurazione ClassPackage, 
+label=lst:ClassPackage]
+@Data
+public class ClassPackage {
+    private String name;     // package name
+    private List<(*\hyperref[lst:TraitModel]{TraitModel}*)> interfaces = new ArrayList<>();
+    private List<(*\hyperref[lst:ClassModel]{ClassModel}*)> classes = new ArrayList<>();
+}
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{javacode}
+@Data
+public class ClassPackage {
+    private String name;     // package name
+    private List<|\hyperref[lst:TraitModel]{TraitModel}|> interfaces = new ArrayList<>();
+    private List<|\hyperref[lst:ClassModel]{ClassModel}|> classes = new ArrayList<>();
+}
+\end{javacode}
+\caption{classe di configurazione ClassPackage}
+\label{lst:ClassPackage}
+\end{elisting}
+\fi
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La seconda componente di \textsl{MasterBook}, \texttt{packages}, è una lista di
+\textsl{ClassPackage} (\ref{lst:ClassPackage}), cioè di package all'\,in\-ter\-no
+dei quali vengono definiti un elenco di interfacce e classi.
+Espandendo un esempio di questo oggetto in formato yaml (con il default 
+relativo) abbiamo:
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, 
+caption={configurazione, area packages / interfaces / classes}, 
+label=lst:pakg-conf]
+defaults:
+  cls:
+    onOverflow: Trunc   # :ovf: Error, Trunc
+    onUnderflow: Pad    # :unf: Error, Pad
+    doc: true
+packages:
+  - name: com.example.test  # package name
+    interfaces:
+      - &IFoo         (*\color{purple}{\# interface reference}*)
+        name: IFoo    # interface name
+        length: 12    # :len: interface length
+        fields:
+          - ...
+    classes:
+      - name: Foo           # class name
+        length: 10          # :len: class length
+        onOverflow: Trunc   # :ovf: Error, Trunc
+        onUnderflow: Pad    # :unf: Error, Pad
+        fields:
+          - ...
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+defaults:
+  cls:
+    onOverflow: Trunc   # :ovf: Error, Trunc
+    onUnderflow: Pad    # :unf: Error, Pad
+    doc: true
+packages:
+  - name: com.example.test  # package name
+    interfaces:
+      - &IFoo         # interface reference
+        name: IFoo    # interface name
+        length: 12    # :len: interface length
+        fields:
+          - ...
+    classes:
+      - name: Foo           # class name
+        length: 10          # :len: class length
+        onOverflow: Trunc   # :ovf: Error, Trunc
+        onUnderflow: Pad    # :unf: Error, Pad
+        fields:
+          - ...
+\end{yamlcode}
+\caption{configurazione, area packages / interfaces / classes}
+\label{lst:pakg-conf}
+\end{elisting}
+\fi
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nei commenti vengono mostrati gli eventuali nomi alternativi dei campi e 
+l'\,elenco dei valori \textsl{enum} permessi.
+Se non vengono usate interfacce, il nodo \texttt{interfaces} può essere omesso.
+Sia per le classi che le interfacce il nome e la lunghezza del tracciato da 
+associare devono essere impostate dall'\,utente, nella definizione della classe
+può anche essere impostato il comportamento nel caso che venga fornita in fase
+di de-serializzazione una struttura con una dimensione maggiore o minore di 
+quella attesa.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|c|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{5}{c|}{interfaces \quad \hyperref[lst:TraitModel]{TraitModel}}\\
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&name     &     & String  & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&length     & len & int     & \ding{52} & \\
+\hline
+\hyperref[lst:ClsDefault]{ClsDefault}
+&doc        &     & boolean & & \texttt{\$\{defaults.cls.doc:true\}}\\
+\hline \multicolumn{1}{c|}{} 
+&fields     &     & array & \ding{52} & \\
+\cline{2-6}
+\end{tabular}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\caption{Attributi impostabili per la definizione di una interfaccia} 
+\label{tab:attr.trait}
+\end{table}
+
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Anche se tutti i tipi di campo hanno una posizione di inizio e una lunghezza,
+il dettaglio dei parametri di configurazione varia da campo a campo ed è 
+necessario introdurre i parametri di configurazione campo per campo.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|c|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{5}{c|}{classes \quad \hyperref[lst:ClassModel]{ClassModel}}\\
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&name     &     & String  & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&length     & len & int     & \ding{52} & \\
+\hline
+\parbox[t]{15mm}{\multirow{3}{*}{\rotatebox[origin=c]{45}{\hyperref[lst:ClsDefault]{ClsDefault}}}}
+%\multirow{3}{*}{\hyperref[lst:ClsDefault]{ClsDefault}}
+&onOverflow & ovf & \hyperref[lst:LoadOverflowAction]{enum} & & \texttt{\$\{defaults.cls.onOverflow:Trunc\}}\\
+\cline{2-6} 
+&onUnderlow & unf & \hyperref[lst:LoadUnderflowAction]{enum} & & \texttt{\$\{defaults.cls.onUnderflow:Pad\}}\\
+\cline{2-6} 
+&doc        &     & boolean & & \texttt{\$\{defaults.cls.doc:true\}}\\
+\hline \multicolumn{1}{c|}{}
+&fields     &     & array & \ding{52} & \\
+\cline{2-6}
+\end{tabular}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\caption{Attributi impostabili per la definizione di una classe} 
+\label{tab:attr.class}
+\end{table}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Per indicare esplicitamente il tipo di campo utilizzato vengono introdotti dei
+\textsl{tag} da associare ad ogni campo, nella tabella~\ref{tab:tag.class} sono
+mostrati i \textsl{tag} associati a ogni tipo di campo.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}l|l|}
+\hline
+\multicolumn{3}{|c|}{Tag definizione campo}\\
+\hline
+\multicolumn{1}{|c|}{tag} & \multicolumn{1}{c|}{classe} 
+	& \multicolumn{1}{c|}{note} \\
+\hline
+\hline
+\hyperref[sub:yaml.abc]{!Abc} & \hyperref[lst:AbcModel]{AbcModel} & campo alfanumerico \\
+\hline
+\hyperref[sub:yaml.num]{!Num} & \hyperref[lst:NumModel]{NumModel} & campo numerico \\
+\hline
+\hyperref[sub:yaml.cus]{!Cus} & \hyperref[lst:CusModel]{CusModel} & campo custom \\
+\hline
+\hyperref[sub:yaml.nux]{!Nux} & \hyperref[lst:NuxModel]{NuxModel} & campo numerico nullabile \\
+\hline
+\hyperref[sub:yaml.dom]{!Dom} & \hyperref[lst:DomModel]{DomModel} & campo dominio \\
+\hline
+\hyperref[sub:yaml.fil]{!Fil} & \hyperref[lst:FilModel]{FilModel} & campo filler \\
+\hline
+\hyperref[sub:yaml.val]{!Val} & \hyperref[lst:ValModel]{ValModel} & campo costante \\
+\hline
+\hyperref[sub:yaml.grp]{!Grp} & \hyperref[lst:GrpModel]{GrpModel} & gruppo di campi \\
+\hline
+\hyperref[sub:yaml.occ]{!Occ} & \hyperref[lst:OccModel]{OccModel} & gruppo di campi ripetuti \\
+\hline
+\hyperref[sub:yaml.emb]{!Emb} & \hyperref[lst:EmbModel]{EmbModel} & campi inclusi da interfaccia \\
+\hline
+\hyperref[sub:yaml.igrp]{!GRP} & \hyperref[lst:GrpTraitModel]{GrpTraitModel} & gruppo di campi inclusi da interfaccia \\
+\hline
+\hyperref[sub:yaml.iocc]{!OCC} & \hyperref[lst:OccTraitModel]{OccTraitModel} & gruppo di campi ripetuti inclusi da interfaccia\\
+\hline
+\end{tabular}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\caption{Tag yaml per la identificazione del campo} 
+\label{tab:tag.class}
+\end{table}
+
+\begin{quote}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Riguardo all'\,offeset dei campi, va segnalato, che alcune caratteristiche non 
+dipendono dal \textsl{Service}, ma dal \textsl{Service Provider}:
+l'\,offset minimo può essere zero o uno, l'\,impostazione dell'\,offset può
+essere obbligatoria, o facoltativa (l'\,offset può essere calcolato 
+automaticamente usando l'\,offset e la lunghezza del campo precedente), 
+o non permessa.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Il \textsl{Service Provider} descritto nella sezione~\ref{sec:java.addon}
+utilizza un offset minimo 1 e l'\,impostazione dell'\,offset è facoltativa.
+Se si omette l'\,offset in un campo definito con \textsl{override}, si assume 
+che  il campo ridefinisce il campo che lo precede nella definizione della 
+struttura.
+Nella definizione delle interfacce l'\,uso dell'\,offset è opzionale, ma a 
+differenza delle classi, che richiedono un offset minimo 1, per le interfacce
+può essere usato qualunque valore iniziale, l'\,offset effettivo viene corretto
+quando l'\,interfaccia viene applicata alla classe.
+\end{quote}
+
+
+\section{Campi Singoli}
+
+\subsection{Campo Alfanumerico} \label{sub:yaml.abc}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo alfanumerico riflette la struttura imposta dalla
+service provider interface, vedi~\ref{lst:AbcModel}.
+Un campo alfanumerico è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!Abc}}\,, 
+un esempio di definizione di campi alfanumerici è mostrato nel 
+cod.~\ref{lst:xmplAbc}, nell'\,esempio è mostrato anche il nodo del default
+globale per i campi alfanumerici, i valori impostati sono quelli di default
+della \textsl{service provider interface}, quindi non è necessario impostare
+esplicitamente i parametri se si vuole impostare questi valori.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, caption={esempio definizione campi alfanumerici}, 
+label=lst:xmplAbc]
+defaults:
+  abc:
+    check: Ascii        # :chk: None, Ascii, Latin1, Valid
+    onOverflow: Trunc   # :ovf: Error, Trunc
+    onUnderflow: Pad    # :unf: Error, Pad
+    normalize: None     # :nrm: None, Trim, Trim1
+    checkGetter: true   # :get:
+    checkSetter: true   # :set:
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3111
+        length: 50
+        fields:
+          - !Abc { name: cognome    , at:   1, len:    25 }
+          - !Abc { name: nome       , at:  26, len:    20 }
+          - !Abc { name: stCivile   , at:  46, len:     1 }
+          - !Abc { name: nazionalita, at:  47, len:     3 }
+          - !Abc { name: sesso      , at:  50, len:     1 }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+defaults:
+  abc:
+    check: Ascii        # :chk: None, Ascii, Latin1, Valid
+    onOverflow: Trunc   # :ovf: Error, Trunc
+    onUnderflow: Pad    # :unf: Error, Pad
+    normalize: None     # :nrm: None, Trim, Trim1
+    checkGetter: true   # :get:
+    checkSetter: true   # :set:
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3111
+        length: 55
+        fields:
+          - !Abc { name: firstName   , at:  1, len: 15 }
+          - !Abc { name: lastName    , at: 16, len: 15 }
+          - !Num { name: birthDate   , at: 31, len:  8 }
+          - !Abc { name: birthPlace  , at: 39, len: 14 }
+          - !Abc { name: birthCountry, at: 53, len:  3 }
+\end{yamlcode}
+\caption{esempio definizione campi alfanumerici}
+\label{lst:xmplAbc}
+\end{elisting}
+\fi
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nell'\,esempio, il nodo di default dei campi alfanumerici, è impostato usando
+i nomi canonici dei parametri. Il \textit{plugin} usa una funzionalità 
+disponibile della libreria per leggere il file yaml, e definisce dei nomi
+abbreviati dei parametri, che possono essere utilizzati come alternativa ai
+nomi canonici.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|c|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{5}{c|}{\texttt{!Abc}: \hyperref[lst:AbcModel]{AbcModel}}\\
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&length     & len & int     & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&name       &     & String  & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&override   & ovr & boolean & & \texttt{false} \\
+\hline
+\parbox[t]{2.5mm}{\multirow{6}{*}{\rotatebox[origin=c]{90}{\hyperref[lst:AbcDefault]{AbcDefault}}}}
+&onOverflow & ovf & \hyperref[lst:OverflowAction]{enum} & & \texttt{\$\{defaults.abc.onOverflow:Trunc\}}\\
+\cline{2-6}
+&onUnderlow & unf & \hyperref[lst:UnderflowAction]{enum} & & \texttt{\$\{defaults.abc.onUnderflow:Pad\}}\\
+\cline{2-6}
+&check      & chk & \hyperref[lst:CheckAbc]{enum} & & \texttt{\$\{defaults.abc.check:Ascii\}}\\
+\cline{2-6}
+&normalize  & nrm & \hyperref[lst:NormalizeAbcMode]{enum} & & \texttt{\$\{defaults.abc.normalize:None\}}\\
+\cline{2-6}
+&checkGetter & get & boolean & & \texttt{\$\{defaults.abc.checkGetter:true\}}\\
+\cline{2-6}
+&checkSetter & set & boolean & & \texttt{\$\{defaults.abc.checkSetter:true\}}\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo alfanumerico} \label{tab:attr.abc}
+\end{table}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.abc} sono mostrati tutti gli attributi previsti per 
+un campo alfanumerico, i relativi nomi abbreviati, il corrispondente tipo-dati,
+se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
+default.
+
+\subsection{Campo Numerico} \label{sub:yaml.num}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico riflette la struttura imposta dalla
+service interface, vedi~\ref{lst:NumModel}
+Un campo numerico è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!Num}}\,, 
+un esempio di definizione di campi numerici è mostrato nel 
+cod.~\ref{lst:xmplNum}, nell'\,esempio è mostrato anche il nodo del default
+globale per i campi numerici, i valori impostati sono quelli di default
+della \textsl{service provider interface}, quindi non è necessario impostare
+esplicitamente i parametri se si vuole impostare questi valori.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, caption={esempio definizione campi numerici}, 
+label=lst:xmplNum]
+defaults:
+  num:
+    onOverflow: Trunc   # :ovf: Error, Trunc
+    onUnderflow: Pad    # :unf: Error, Pad
+    normalize: None     # :nrm: None, Trim
+    wordWidth: Int      # :wid: Byte(1,byte), Short(2,short), Int(4,int), Long(8,long)
+    access: String      # :acc: String(Str), Numeric(Num), Both(All)
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3112
+        length: 8
+        doc: No
+        fields:
+          - !Num { name: year , at: 1, len: 4 }
+          - !Num { name: month, at: 5, len: 2 }
+          - !Num { name: mday , at: 7, len: 2 }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+defaults:
+  num:
+    onOverflow: Trunc   # :ovf: Error, Trunc
+    onUnderflow: Pad    # :unf: Error, Pad
+    normalize: None     # :nrm: None, Trim
+    wordWidth: Int      # :wid: Byte(1,byte), Short(2,short), Int(4,int), Long(8,long)
+    access: String      # :acc: String(Str), Numeric(Num), Both(All)
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3112
+        length: 8
+        doc: No
+        fields:
+          - !Num { name: year , at: 1, len: 4 }
+          - !Num { name: month, at: 5, len: 2 }
+          - !Num { name: mday , at: 7, len: 2 }
+\end{yamlcode}
+\caption{esempio definizione campi numerici}
+\label{lst:xmplNum}
+\end{elisting}
+\fi
+
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|c|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{5}{c|}{\texttt{!Num}: \hyperref[lst:NumModel]{NumModel}}\\
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&length     & len & int     & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&name       &     & String  & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&override   & ovr & boolean & & \texttt{false} \\
+\hline
+\parbox[t]{2.5mm}{\multirow{5}{*}{\rotatebox[origin=c]{90}{\hyperref[lst:NumDefault]{NumDefault}}}}
+&onOverflow & ovf & \hyperref[lst:OverflowAction]{enum} & & \texttt{\$\{defaults.num.onOverflow:Trunc\}}\\
+\cline{2-6}
+&onUnderlow & unf & \hyperref[lst:UnderflowAction]{enum} & & \texttt{\$\{defaults.num.onUnderflow:Pad\}}\\
+\cline{2-6}
+&access     & acc & \hyperref[lst:AccesMode]{enum} & & \texttt{\$\{defaults.num.access:String\}}\\
+\cline{2-6}
+&wordWidth  & wid & \hyperref[lst:WordWidth]{enum} & & \texttt{\$\{defaults.num.wordWidth:Int\}}\\
+\cline{2-6}
+&normalize  & nrm & \hyperref[lst:NormalizeNumMode]{enum} & & \texttt{\$\{defaults.num.normalize:None\}}\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo numerico} \label{tab:attr.num}
+\end{table}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.num} sono mostrati tutti gli attributi previsti per 
+un campo numerico, i relativi nomi abbreviati, il corrispondente tipo-dati,
+se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
+default.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Anche se i parametri \texttt{acccess} e \texttt{wordWidth} sono stati introdotti
+nella \S~\ref{sec:spi.num}, ricordo che un campo ``numerico'' può essere 
+gestito come una stringa (dove sono ammessi solo caratteri numerici), o 
+convertito in un formato numerico nativo, o entrambi. Il parametro 
+\texttt{access} indica se creare soltanto i setter/getter stringa, creare 
+soltanto i setter/getter numerici o entrambi.
+%come mostrato nei commenti nel default del cod.~\ref{lst:xmplNum} i valori
+%dell'\,enum \textsl{String, Numeric, Both} possono essere abbreviati nei 
+%corrispondenti \textsl{Str, Num, All}.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nel caso che venga utilizzata una rappresentazione numerica nativa, il parametro
+\texttt{wordWidth} indica la rappresentazione nativa di dimensione minima da 
+usare.
+In generale il \textsl{Service Provider} selezionerà la dimensione della
+rappresentazione nativa in base alla dimensione della stringa-dati che finirà 
+con rappresentare il valore del campo.
+
+
+\subsection{Campo Custom (alfanumerico)} \label{sub:yaml.cus}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo custom riflette la struttura imposta 
+dalla service provider interface, vedi~\ref{lst:CusModel}.
+Un campo alfanumerico è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!Cus}}\,, 
+un esempio di definizione di campi custom è mostrato nel 
+cod.~\ref{lst:xmplCus}, nell'\,esempio è mostrato anche il nodo del default
+globale per i campi custom, i valori impostati sono quelli di default
+della \textsl{service provider interface}, quindi non è necessario impostare
+esplicitamente i parametri se si vuole impostare questi valori.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Un campo custom è una estensione di un campo alfanumerico. Un campo alfanumerico
+è necessariamente allineato a sinistra, troncato, trim-ato a destra, pad-dato a
+destra con spazi, inizializzato a spazi. In un campo custom è possibile 
+scegliere l'\,allineamento del campo, il carattere di  pad-ding e di 
+inizializzazione; ha un \texttt{check} esteso rispetto a quello alfanumerico,
+infine, l'\,attributo \texttt{regex} può essere usato per validare i valori
+ammessi per il campo (al posto di quello definito con \texttt{check}).
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, caption={esempio definizione campi custom}, 
+label=lst:xmplCus]
+defaults:
+  cus:
+    padChar: ' '        # :pad:
+    initChar: ' '       # :ini:
+    check: Ascii        # :chk: None, Ascii, Latin1, Valid, Digit, DigitOrBlank
+    align: LFT          # LFT, RGT
+    onOverflow: Trunc   # :ovf: Error, Trunc
+    onUnderflow: Pad    # :unf: Error, Pad
+    normalize: None     # :nrm: None, Trim, Trim1
+    checkGetter: true   # :get:
+    checkSetter: true   # :set:
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3113
+        length: 8
+        doc: No
+        fields:
+          - !Cus { name: year , at: 1, len: 4 }
+          - !Cus { name: month, at: 5, len: 2 }
+          - !Cus { name: mday , at: 7, len: 2 }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+defaults:
+  cus:
+    padChar: ' '        # :pad:
+    initChar: ' '       # :ini:
+    check: Ascii        # :chk: None, Ascii, Latin1, Valid, Digit, DigitOrBlank
+    align: LFT          # LFT, RGT
+    onOverflow: Trunc   # :ovf: Error, Trunc
+    onUnderflow: Pad    # :unf: Error, Pad
+    normalize: None     # :nrm: None, Trim, Trim1
+    checkGetter: true   # :get:
+    checkSetter: true   # :set:
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3113
+        length: 8
+        doc: No
+        fields:
+          - !Cus { name: year , at: 1, len: 4 }
+          - !Cus { name: month, at: 5, len: 2 }
+          - !Cus { name: mday , at: 7, len: 2 }
+\end{yamlcode}
+\caption{esempio definizione campi custom}
+\label{lst:xmplCus}
+\end{elisting}
+\fi
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|c|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{5}{c|}{\texttt{!Cus}: \hyperref[lst:CusModel]{CusModel}}\\
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&length     & len & int     & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&name       &     & String  & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&override   & ovr & boolean & & \texttt{false} \\
+\hline
+\parbox[t]{2.5mm}{\multirow{9}{*}{\rotatebox[origin=c]{90}{\hyperref[lst:CusDefault]{CusDefault}}}}
+&onOverflow & ovf & \hyperref[lst:OverflowAction]{enum} & & \texttt{\$\{defaults.cus.onOverflow:Trunc\}}\\
+\cline{2-6}
+&onUnderlow & unf & \hyperref[lst:UnderflowAction]{enum} & & \texttt{\$\{defaults.cus.onUnderflow:Pad\}}\\
+\cline{2-6}
+&padChar    & pad & char    & & \texttt{\$\{defaults.cus.pad:' '\}}\\
+\cline{2-6}
+&initChar   & ini & char    & & \texttt{\$\{defaults.cus.ini:' '\}}\\
+\cline{2-6}
+&check      & chk & \hyperref[lst:CheckCus]{enum} & & \texttt{\$\{defaults.cus.check:Ascii\}}\\
+\cline{2-6}
+&align      &     & \hyperref[lst:AlignMode]{enum} & & \texttt{\$\{defaults.cus.align:LFT\}}\\
+\cline{2-6}
+&normalize  & nrm & \hyperref[lst:NormalizeAbcMode]{enum} & & \texttt{\$\{defaults.cus.normalize:None\}}\\
+\cline{2-6}
+&checkGetter & get & boolean & & \texttt{\$\{defaults.cus.checkGetter:true\}}\\
+\cline{2-6}
+&checkSetter & set & boolean & & \texttt{\$\{defaults.cus.checkSetter:true\}}\\
+\hline \multicolumn{1}{c|}{}
+&regex      &     & String  & & \texttt{null} \\
+\cline{2-6}
+\end{tabular}
+\caption{Attributi impostabili per un campo custom} \label{tab:attr.cus}
+\end{table}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.cus} sono mostrati tutti gli attributi previsti per 
+un campo custom, i relativi nomi abbreviati, il corrispondente 
+tipo-dati, se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore 
+di default.
+
+
+
+\subsection{Campo Numerico nullabile} \label{sub:yaml.nux}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo numerico nullabile riflette la struttura imposta 
+dalla service interface, vedi~\ref{lst:NuxModel}.
+Un campo numerico nullabile è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!Nux}}\,, 
+un esempio di definizione di campi numerici nullabili è mostrato nel 
+cod.~\ref{lst:xmplNux}, nell'\,esempio è mostrato anche il nodo del default
+globale per i campi numerici nullabili, i valori impostati sono quelli di 
+default della \textsl{service provider interface}, quindi non è necessario 
+impostare esplicitamente i parametri se si vuole impostare questi valori.
+
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, 
+caption={esempio definizione campi numerici nullabili}, 
+label=lst:xmplNux]
+defaults:
+  nux:
+    onOverflow: Trunc   # :ovf: Error, Trunc
+    onUnderflow: Pad    # :unf: Error, Pad
+    normalize: None     # :nrm: None, Trim
+    wordWidth: Int      # :wid: Byte(1,byte), Short(2,short), Int(4,int), Long(8,long)
+    access: String      # :acc: String(Str), Numeric(Num), Both(All)
+    initialize: Spaces  # :ini: Spaces(Space), Zeroes(Zero)
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3114
+        length: 8
+        doc: No
+        fields:
+          - !Nux { name: year , at: 1, len: 4 }
+          - !Nux { name: month, at: 5, len: 2 }
+          - !Nux { name: mday , at: 7, len: 2 }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+defaults:
+  nux:
+    onOverflow: Trunc   # :ovf: Error, Trunc
+    onUnderflow: Pad    # :unf: Error, Pad
+    normalize: None     # :nrm: None, Trim
+    wordWidth: Int      # :wid: Byte(1,byte), Short(2,short), Int(4,int), Long(8,long)
+    access: String      # :acc: String(Str), Numeric(Num), Both(All)
+    initialize: Spaces  # :ini: Spaces(Space), Zeroes(Zero)
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3114
+        length: 8
+        doc: No
+        fields:
+          - !Nux { name: year , at: 1, len: 4 }
+          - !Nux { name: month, at: 5, len: 2 }
+          - !Nux { name: mday , at: 7, len: 2 }
+\end{yamlcode}
+\caption{esempio definizione campi numerici nullabili}
+\label{lst:xmplNux}
+\end{elisting}
+\fi
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Un campo numerico nullabile è una estensione di un campo numerico ordinario,
+la differenza è che nella rappresentazione stringa-dati può assumere il valore
+spazio (tutti spazi), che corrisponde nella classe dati al valore \texttt{null}.
+Conseguentemente nella definizione del campo è presente un parametro aggiuntivo 
+per indicare se il campo deve essere inizializzato a \texttt{null} o a zero 
+quando la classe-dati viene creata col costruttore vuoto.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|c|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{5}{c|}{\texttt{!Nux}: \hyperref[lst:NuxModel]{NuxModel}}\\
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&length     & len & int     & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&name       &     & String  & \ding{52} & \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&override   & ovr & boolean & & \texttt{false} \\
+\hline
+\parbox[t]{2.5mm}{\multirow{6}{*}{\rotatebox[origin=c]{90}{\hyperref[lst:NuxDefault]{NuxDefault}}}}
+&onOverflow & ovf & \hyperref[lst:OverflowAction]{enum} & & \texttt{\$\{defaults.nux.onOverflow:Trunc\}}\\
+\cline{2-6}
+&onUnderlow & unf & \hyperref[lst:UnderflowAction]{enum} & & \texttt{\$\{defaults.nux.onUnderflow:Pad\}}\\
+\cline{2-6}
+&access     & acc & \hyperref[lst:AccesMode]{enum} & & \texttt{\$\{defaults.nux.access:String\}}\\
+\cline{2-6}
+&wordWidth  & wid & \hyperref[lst:WordWidth]{enum} & & \texttt{\$\{defaults.nux.wordWidth:Int\}}\\
+\cline{2-6}
+&normalize  & nrm & \hyperref[lst:NormalizeNumMode]{enum} & & \texttt{\$\{defaults.nux.normalize:None\}}\\
+\cline{2-6}
+&initialize & ini & \hyperref[lst:InitializeNuxMode]{enum} & & \texttt{\$\{defaults.nux.initialize:Space\}}\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo numerico nullabile} \label{tab:attr.nux}
+\end{table}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.nux} sono mostrati tutti gli attributi previsti per 
+un campo numerico, i relativi nomi abbreviati, il corrispondente tipo-dati,
+se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
+default.
+
+\subsection{Campo Dominio} \label{sub:yaml.dom}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo dominio riflette la struttura imposta dalla
+service interface, vedi~\ref{lst:DomModel}.
+Un campo dominio è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!Dom}}\,, 
+un esempio di definizione di campi dominio è mostrato nel 
+cod.~\ref{lst:xmplDom}, questo tipo di campo non ha nessun default globale.
+
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, caption={esempio definizione campi dominio}, 
+label=lst:xmplDom]
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3115
+        length: 12
+        doc: No
+        fields:
+          - !Num { name: year , at: 1, len: 4 }
+          - !Dom { name: month, at: 5, len: 3, 
+                   items: [ Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec ] }
+          - !Num { name: mday , at: 8, len: 2 }
+          - !Dom { name: wday , at: 10, len: 3, 
+                   items: [ Sun, Mon, Tue, Wed, Thu, Fri, Sat ] }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3115
+        length: 12
+        doc: No
+        fields:
+          - !Num { name: year , at: 1, len: 4 }
+          - !Dom { name: month, at: 5, len: 3, 
+                   items: [ Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec ] }
+          - !Num { name: mday , at: 8, len: 2 }
+          - !Dom { name: wday , at: 10, len: 3, 
+                   items: [ Sun, Mon, Tue, Wed, Thu, Fri, Sat ] }
+\end{yamlcode}
+\caption{esempio definizione campi dominio}
+\label{lst:xmplDom}
+\end{elisting}
+\fi
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Un campo dominio è sostanzialmente un campo alfanumerico, che può assumere solo
+un limitato numero di valori.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\texttt{!Dom}: \hyperref[lst:DomModel]{DomModel}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+items      &     & array  & \ding{52} & \\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo dominio} \label{tab:attr.dom}
+\end{table}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.dom} sono mostrati tutti gli attributi previsti per 
+un campo dominio, i relativi nomi abbreviati, il corrispondente tipo-dati,
+se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
+default.
+Quando la classe-dati è creata col costruttore vuoto il campo viene 
+inizializzato con il primo valore tra quelli forniti della lista dei possibili
+valori.
+
+
+
+\subsection{Campo Filler} \label{sub:yaml.fil}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo filler riflette la struttura imposta dalla
+service interface, vedi~\ref{lst:FilModel}.
+Un campo filler è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!Fil}}\,, 
+un esempio di definizione di campi filler è mostrato nel 
+cod.~\ref{lst:xmplFil}, nell'\,esempio è mostrato anche il nodo del default
+globale per i campi filler, il valore impostato è quello di 
+default della \textsl{service provider interface}, quindi non è necessario 
+impostare esplicitamente il parametro se si vuole impostare questo valore.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, 
+caption={esempio definizione campi filler}, 
+label=lst:xmplFil]
+defaults:
+  fil:
+    fill: 0             # \u0000
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3116
+        length: 10
+        doc: No
+        fields:
+          - !Num { at: 1, len: 4, name: year }
+          - !Fil { at: 5, len: 1, fill: '-' }
+          - !Num { at: 6, len: 2, name: month }
+          - !Fil { at: 8, len: 1, fill: '-' }
+          - !Num { at: 9, len: 2, name: mday }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+defaults:
+  fil:
+    fill: 0             # \u0000
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3116
+        length: 10
+        doc: No
+        fields:
+          - !Num { at: 1, len: 4, name: year }
+          - !Fil { at: 5, len: 1, fill: '-' }
+          - !Num { at: 6, len: 2, name: month }
+          - !Fil { at: 8, len: 1, fill: '-' }
+          - !Num { at: 9, len: 2, name: mday }
+\end{yamlcode}
+\caption{esempio definizione campi filler}
+\label{lst:xmplFil}
+\end{elisting}
+\fi
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Un campo filler non è un campo vero e proprio, non vengono generati i
+setter/getter, non viene fatto nessun controllo sul valore della stringa-dati
+corrispondente. Indica semplicemente un'\,area della stringa-dati a cui non 
+siamo interessati, ma che deve essere presente nella definizione della 
+struttura per non lasciare aree non definite.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|c|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{5}{c|}{\texttt{!Fil}: \hyperref[lst:FilModel]{FilModel}}\\
+\cline{2-6} \multicolumn{1}{c|}{}
+&\multicolumn{1}{c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+\cline{2-6} \multicolumn{1}{c|}{}
+&length     & len & int     & \ding{52} & \\
+\hline
+\hyperref[lst:FilDefault]{FilDefault}
+&fill       &     & char    & & \texttt{\$\{defaults.fil.fill:0\}}\\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo filler} \label{tab:attr.fil}
+\end{table}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.fil} sono mostrati tutti gli attributi previsti per 
+un campo filler, i relativi nomi abbreviati, il corrispondente tipo-dati,
+se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
+default.
+
+
+\subsection{Campo Costante} \label{sub:yaml.val}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo costante riflette la struttura imposta dalla
+service interface, vedi~\ref{lst:ValModel}.
+Un campo costante è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!Val}}\,, 
+un esempio di definizione di campi costanti è mostrato nel 
+cod.~\ref{lst:xmplVal}, questo tipo di campo non prevede default globali.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, 
+caption={esempio definizione campi costanti}, 
+label=lst:xmplVal]
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3117
+        length: 10
+        fields:
+          - !Num { at: 1, len: 4, name: year }
+          - !Val { at: 5, len: 1, val: "-" }
+          - !Num { at: 6, len: 2, name: month }
+          - !Val { at: 8, len: 1, val: "-" }
+          - !Num { at: 9, len: 2, name: mday }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3117
+        length: 10
+        fields:
+          - !Num { at: 1, len: 4, name: year }
+          - !Val { at: 5, len: 1, val: "-" }
+          - !Num { at: 6, len: 2, name: month }
+          - !Val { at: 8, len: 1, val: "-" }
+          - !Num { at: 9, len: 2, name: mday }
+\end{yamlcode}
+\caption{esempio definizione campi costanti}
+\label{lst:xmplVal}
+\end{elisting}
+\fi
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Un campo costante può essere visto come una variante di un campo filler, o come
+un campo dominio con un solo valore. Per questo tipo di campo non vengono 
+generati i setter/getter, ma il campo viene controllato per verificare che la
+stringa-dati corrispondente al campo abbia il valore atteso.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\texttt{!Val}: \hyperref[lst:ValModel]{ValModel}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+value      & val & string  & \ding{52} & \\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un campo costante} \label{tab:attr.val}
+\end{table}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.val} sono mostrati tutti gli attributi previsti per 
+un campo costante, i relativi nomi abbreviati, il corrispondente tipo-dati,
+se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
+default.
+
+
+\section{Campi multipli}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In alcuni casi è utile raggruppare alcuni campi all'\,interno di un elemento
+contenitore di contesto. In questo modo è possibile usare lo stesso nome campo
+in contesti diversi. Un campo multiplo non ha default globali.
+
+\subsection{Campo Gruppo} \label{sub:yaml.grp}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo gruppo riflette la struttura imposta dalla
+service interface, vedi~\ref{lst:GrpModel}.
+Un campo gruppo è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!Grp}}\,, 
+un esempio di definizione di campi gruppo è mostrato nel 
+cod.~\ref{lst:xmplGrp}.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, 
+caption={esempio definizione gruppo di campi}, 
+label=lst:xmplGrp]
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3118
+        length: 12
+        fields:
+          - !Grp { name: startTime, at: 1, len: 6, fields: [
+            !Num { name: hours  , at: 1, len: 2 }, 
+            !Num { name: minutes, at: 3, len: 2 }, 
+            !Num { name: seconds, at: 5, len: 2 }
+            ] }
+          - !Grp { name: stopTime , at: 7, len: 6, fields: [
+            !Num { name: hours  , at:  7, len: 2 }, 
+            !Num { name: minutes, at:  9, len: 2 }, 
+            !Num { name: seconds, at: 11, len: 2 }
+            ] }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3118
+        length: 12
+        fields:
+          - !Grp { name: startTime, at: 1, len: 6, fields: [
+            !Num { name: hours  , at: 1, len: 2 }, 
+            !Num { name: minutes, at: 3, len: 2 }, 
+            !Num { name: seconds, at: 5, len: 2 }
+            ] }
+          - !Grp { name: stopTime , at: 7, len: 6, fields: [
+            !Num { name: hours  , at:  7, len: 2 }, 
+            !Num { name: minutes, at:  9, len: 2 }, 
+            !Num { name: seconds, at: 11, len: 2 }
+            ] }
+\end{yamlcode}
+\caption{esempio definizione gruppo di campi}
+\label{lst:xmplGrp}
+\end{elisting}
+\fi
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\texttt{!Grp}: \hyperref[lst:GrpModel]{GrpModel}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+fields     &     & array  & \ding{52} & \\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un gruppo} \label{tab:attr.grp}
+\end{table}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.grp} sono mostrati tutti gli attributi previsti per 
+un campo gruppo, i relativi nomi abbreviati, il corrispondente tipo-dati,
+se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore di 
+default.
+
+
+\subsection{Campo Gruppo ripetuto} \label{sub:yaml.occ}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo gruppo ripetuto riflette la struttura imposta 
+dalla service interface, vedi~\ref{lst:OccModel}.
+Un campo gruppo ripetuto è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!Occ}}\,, 
+un esempio di definizione di campo gruppo ripetuto è mostrato nel 
+cod.~\ref{lst:xmplOcc}.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, 
+caption={esempio definizione gruppo di campi ripetuto}, 
+label=lst:xmplOcc]
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3119
+        length: 590
+        fields:
+          - !Num { name: nmErrors, at: 1, len: 2 }
+          - !Occ { name: tabError, at: 3, len: 49, x: 12, fields: [
+            !Abc { name: status  , at:  3, len:  5 },
+            !Num { name: code    , at:  8, len:  4 },
+            !Abc { name: message , at: 12, len: 40 }
+          ] }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+packages:
+  - name: com.example.test
+    classes:
+      - name: Foo3119
+        length: 590
+        fields:
+          - !Num { name: nmErrors, at: 1, len: 2 }
+          - !Occ { name: tabError, at: 3, len: 49, x: 12, fields: [
+            !Abc { name: status  , at:  3, len:  5 },
+            !Num { name: code    , at:  8, len:  4 },
+            !Abc { name: message , at: 12, len: 40 }
+          ] }
+\end{yamlcode}
+\caption{esempio definizione gruppo di campi ripetuto}
+\label{lst:xmplOcc}
+\end{elisting}
+\fi
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\texttt{!Occ}: \hyperref[lst:OccModel]{OccModel}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+times      & x   & int     & \ding{52} & \\
+\hline
+fields     &     & array  & \ding{52} & \\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un gruppo ripetuto} \label{tab:attr.occ}
+\end{table}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.occ} sono mostrati tutti gli attributi previsti per 
+un campo gruppo ripetuto, i relativi nomi abbreviati, il corrispondente 
+tipo-dati, se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore 
+di default.
+
+\subsection{Campo gruppo incorporato da interfaccia} \label{sub:yaml.emb}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo incorporato riflette la struttura imposta dalla
+service interface, vedi~\ref{lst:EmbModel}.
+Un campo incorporato è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!Emb}}\,, 
+un esempio di definizione di campo incorporato è mostrato nel 
+cod.~\ref{lst:xmplEmb}.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, 
+caption={esempio definizione di campi inclusi da interfaccia}, 
+label=lst:xmplEmp]
+packages:
+  - name: com.example.test
+    interfaces:
+      - &Time
+        name: ITime
+        len: 6
+        fields:
+          - !Num { name: hours  , len: 2 }
+          - !Num { name: minutes, len: 2 }
+          - !Num { name: seconds, len: 2 }
+    classes:
+      - name: Foo311a
+        length: 14
+        fields:
+          - !Num { name: year , at: 1, len: 4 }
+          - !Num { name: month, at: 5, len: 2 }
+          - !Num { name: mday , at: 7, len: 2 }
+          - !Emb { src: *Time , at: 9, len: 6 }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+packages:
+  - name: com.example.test
+    interfaces:
+      - &Time
+        name: ITime
+        len: 6
+        fields:
+          - !Num { name: hours  , len: 2 }
+          - !Num { name: minutes, len: 2 }
+          - !Num { name: seconds, len: 2 }
+    classes:
+      - name: Foo311a
+        length: 14
+        fields:
+          - !Num { name: year , at: 1, len: 4 }
+          - !Num { name: month, at: 5, len: 2 }
+          - !Num { name: mday , at: 7, len: 2 }
+          - !Emb { src: *Time , at: 9, len: 6 }
+\end{yamlcode}
+\caption{esempio definizione gruppo di campi inclusi da interfaccia}
+\label{lst:xmplEmb}
+\end{elisting}
+\fi
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Un campo gruppo da interfaccia a differenza degli altri campi multipli non 
+crea un elemento di contesto esplicito. I campi sono figli della struttura 
+corrente, non di un elemento di contesto. Ma, l'\,elemento corrente
+implementa l'\,interfaccia, e questo crea un contesto implicito.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\texttt{!Emb}: \hyperref[lst:EmbModel]{EmbModel}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato\\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+source     & src  & interface & \ding{52} & \\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un elenco di campi importato da una interfaccia}
+\label{tab:attr.emb}
+\end{table}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.emb} sono mostrati tutti gli attributi previsti per 
+un campo gruppo da interfaccia, i relativi nomi abbreviati, il corrispondente 
+tipo-dati, se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore 
+di default.
+
+
+\subsection{Campo Gruppo da interfaccia} \label{sub:yaml.igrp}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo gruppo/interfaccia riflette la struttura imposta 
+dalla service interface, vedi~\ref{lst:GrpTraitModel}.
+Un campo gruppo/interfaccia è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!GRP}}\,, 
+un esempio di definizione di campi gruppo/interfaccia è mostrato nel 
+cod.~\ref{lst:xmplIGrp}.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, 
+caption={esempio definizione gruppo di campi da interfaccia}, 
+label=lst:xmplIGrp]
+packages:
+  - name: com.example.test
+    interfaces:
+      - &Time
+        name: ITime
+        len: 6
+        fields:
+          - !Num { name: hours  , len: 2 }
+          - !Num { name: minutes, len: 2 }
+          - !Num { name: seconds, len: 2 }
+    classes:
+      - name: Foo311b
+        length: 12
+        fields:
+          - !GRP { name: startTime, at: 1, len: 6, as: *Time }
+          - !GRP { name: stopTime , at: 7, len: 6, as: *Time }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+packages:
+  - name: com.example.test
+    interfaces:
+      - &Time
+        name: ITime
+        len: 6
+        fields:
+          - !Num { name: hours  , len: 2 }
+          - !Num { name: minutes, len: 2 }
+          - !Num { name: seconds, len: 2 }
+    classes:
+      - name: Foo311b
+        length: 12
+        fields:
+          - !GRP { name: startTime, at: 1, len: 6, as: *Time }
+          - !GRP { name: stopTime , at: 7, len: 6, as: *Time }
+\end{yamlcode}
+\caption{esempio definizione gruppo di campi da interfaccia}
+\label{lst:xmplIGrp}
+\end{elisting}
+\fi
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Un campo gruppo/interfaccia è simile al campo gruppo, la differenza è che i
+campi del gruppo non sono definiti singolarmente, ma tutti insieme importandoli
+dalla interfaccia. Il gruppo implementerà l'\,interfaccia.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\texttt{!GRP}: \hyperref[lst:GrpTraitModel]{GrpTraitModel}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+typedef    & as  & interface & \ding{52} & \\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un gruppo da interfaccia} \label{tab:attr.igrp}
+\end{table}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.igrp} sono mostrati tutti gli attributi previsti per 
+un campo gruppo da interfaccia, i relativi nomi abbreviati, il corrispondente 
+tipo-dati, se l'\,attributo è obbligatorio o facoltativo, e l'\,eventuale valore 
+di default.
+
+\subsection{Campo Gruppo ripetuto da interfaccia} \label{sub:yaml.iocc}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La definizione yaml del campo gruppo/interfaccia ripetuto riflette la struttura 
+imposta dalla service interface, vedi~\ref{lst:OccTraitModel}.
+Un campo gruppo/interfaccia ripetuto è specificato indicando il \textsl{tag} 
+\fcolorbox{black}{yellow!75}{\texttt{!OCC}}\,, 
+un esempio di definizione di campi gruppo/interfaccia ripetuto è mostrato nel 
+cod.~\ref{lst:xmplIOcc}.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=yaml, 
+caption={esempio definizione gruppo di campi ripetuto da interfaccia}, 
+label=lst:xmplIOcc]
+packages:
+  - name: com.example.test
+    interfaces:
+      - &Error
+        name: IError
+        len: 49
+        fields:
+          - !Abc { name: status  , at:  1, len:  5 }
+          - !Num { name: code    , at:  6, len:  4 }
+          - !Abc { name: message , at: 10, len: 40 }
+    classes:
+      - name: Foo311c
+        length: 590
+        fields:
+          - !Num { name: nmErrors, at: 1, len: 2}
+          - !OCC { name: tabError, at: 3, len: 49, x: 12, as: *Error }
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{yamlcode}
+packages:
+  - name: com.example.test
+    interfaces:
+      - &Error
+        name: IError
+        len: 49
+        fileds:
+          - !Abc { name: status  , at:  1, len:  5}
+          - !Num { name: code    , at:  6, len:  4}
+          - !Abc { name: message , at: 10, len: 40}
+    classes:
+      - name: Foo311c
+        length: 590
+        fields:
+          - !Num { name: nmErrors, at: 1, len: 2}
+          - !OCC { name: tabError, at: 3, len: 49, x: 12, as: *Error }
+\end{yamlcode}
+\caption{esempio definizione gruppo di campi ripetuto da interfaccia}
+\label{lst:xmplIOcc}
+\end{elisting}
+\fi
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Un campo gruppo/interfaccia ripetuto è simile al campo gruppo ripetuto, la 
+differenza è che i campi del gruppo non sono definiti singolarmente, ma tutti 
+insieme importandoli dalla interfaccia. Il gruppo implementerà l'\,interfaccia.
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{|>{\tt}l|>{\tt}c|>{\tt}c|c|l|}
+\hline
+\multicolumn{5}{|c|}{\texttt{!OCC}: \hyperref[lst:OccTraitModel]{OccTraitModel}}\\
+\hline
+\multicolumn{1}{|c|}{attributo} & \multicolumn{1}{c|}{alt} 
+	& \multicolumn{1}{c|}{tipo} & \multicolumn{1}{c|}{O}
+	& \multicolumn{1}{c|}{default} \\
+\hline
+offset     & at  & int     & {\color{lightgray}\ding{52}} & auto-calcolato \\
+\hline
+length     & len & int     & \ding{52} & \\
+\hline
+name       &     & String  & \ding{52} & \\
+\hline
+override   & ovr & boolean & & \texttt{false} \\
+\hline
+times      & x   & int     & \ding{52} & \\
+\hline
+typedef    & as  & interface & \ding{52} & \\
+\hline
+\end{tabular}
+\caption{Attributi impostabili per un gruppo ripetuto da interfaccia} 
+\label{tab:attr.iocc}
+\end{table}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Nella tabella~\ref{tab:attr.iocc} sono mostrati tutti gli attributi previsti per 
+un campo gruppo ripetuto da interfaccia, i relativi nomi abbreviati, il 
+corrispondente tipo-dati, se l'\,attributo è obbligatorio o facoltativo, e 
+l'\,eventuale valore di default.
+

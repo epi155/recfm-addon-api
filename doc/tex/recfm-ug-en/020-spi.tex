@@ -1,0 +1,988 @@
+%  ___       _             __                
+% |_ _|_ __ | |_ ___ _ __ / _| __ _  ___ ___ 
+%  | || '_ \| __/ _ \ '__| |_ / _` |/ __/ _ \
+%  | || | | | ||  __/ |  |  _| (_| | (_|  __/
+% |___|_| |_|\__\___|_|  |_|  \__,_|\___\___|
+%                                           
+
+\chapter{Service Provider Interface}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \verb!recfm-addon-api! artifact provides a series of interfaces, some enums 
+and java-beans to allow the client module to define the paths. 
+The code is compiled so that it is compatible with java 5, but it provides the 
+\verb!module-info! to be usable properly even with java 9 and above.
+
+\section{CodeProvider}\index{CodeProvider}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The starting point is the \textsl{CodeProvider} interface, retrieved from the 
+\textsl{ServiceLoader}, see lst.~\ref{lst:CodeProvider}, this interface
+provides the instance of the \textsl{CodeFactory} interface.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+      ServiceLoader<CodeProvider> loader = ServiceLoader.load(CodeProvider.class);
+      CodeProvider codeProvider = loader.iterator().next();
+\end{javacode}
+\vspace*{-1cm}
+\begin{javacode}
+public interface CodeProvider {
+     |\hyperref[lst:CodeFactory]{CodeFactory}| getInstance();
+}
+\end{javacode}
+\caption{CodeProvider interface and retrieving the CodeProvider from the ServiceLoader}
+\label{lst:CodeProvider}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+
+\section{CodeFactory}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \textsl{CodeFactory} interface, see lst.~\ref{lst:CodeFactory}, provides 
+methods for defining all elements of the structure.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface CodeFactory {
+    |\hyperref[lst:ClassModel]{ClassModel}| newClassModel();
+    |\hyperref[lst:TraitModel]{TraitModel}| newTraitModel();
+
+    |\hyperref[lst:AbcModel]{AbcModel}| newAbcModel();
+    |\hyperref[lst:NumModel]{NumModel}| newNumModel();
+    |\hyperref[lst:NuxModel]{NuxModel}| newNuxModel();
+    |\hyperref[lst:CusModel]{CusModel}| newCusModel();
+    |\hyperref[lst:DomModel]{DomModel}| newDomModel();
+    |\hyperref[lst:FilModel]{FilModel}| newFilModel();
+    |\hyperref[lst:ValModel]{ValModel}| newValModel();
+    |\hyperref[lst:GrpModel]{GrpModel}| newGrpModel();
+    |\hyperref[lst:OccModel]{OccModel}| newOccModel();
+    |\hyperref[lst:EmbModel]{EmbModel}| newEmbModel();
+    |\hyperref[lst:GrpTraitModel]{GrpTraitModel}| newGrpTraitModel();
+    |\hyperref[lst:OccTraitModel]{OccTraitModel}| newOccTraitModel();
+}
+\end{javacode}
+\caption{CodeFactory interface}
+\label{lst:CodeFactory}\index{CodeFactory}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\section{Classes / Interfaces}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The first method of the \textsl{CodeFactory} interface supplies the definition 
+for a class, see lst.~\ref{lst:ClassModel}, and the second interface method 
+\textsl{CodeFactory} provides the definition for an interface, see 
+lst.~\ref{lst:TraitModel}.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface ClassModel {
+    void setName(String name);
+    void setLength(int length);
+    void setOnOverflow(|\hyperref[lst:LoadOverflowAction]{LoadOverflowAction}| onOverflow);
+    void setOnUnderflow(|\hyperref[lst:LoadUnderflowAction]{LoadUnderflowAction}| onUnderflow);
+    void setDoc(Boolean doc);
+    void setFields(List<FieldModel> fields);
+
+    void create(String namespace, |\hyperref[lst:GenerateArgs]{GenerateArgs}| ga, |\hyperref[lst:FieldDefault]{FieldDefault}| defaults);
+}
+\end{javacode}
+\caption{ClassModel interface}
+\label{lst:ClassModel}\index{ClassModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Both definitions require the name of the structure, its length, whether to 
+generate or not the automatic documentation for the class, the list of fields 
+that compose it and make available a method for generating the source code.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface TraitModel {
+    void setName(String name);
+    void setLength(int length);
+    void setDoc(Boolean doc);
+    void setFields(List<FieldModel> fields);
+
+    void create(String namespace, |\hyperref[lst:GenerateArgs]{GenerateArgs}| ga, |\hyperref[lst:FieldDefault]{FieldDefault}| defaults);
+}
+\end{javacode}
+\caption{TraitModel interface}
+\label{lst:TraitModel}\index{TraitModel}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The class definition also takes two additional parameters to indicate how to 
+behave if the size of the data provided was higher or lower than expected.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Before seeing the detail of the definition of the various fields, let's see the 
+content of the other two parameters required for source code generation.
+
+\subsection{Global Arguments --- GenerateArgs}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \textsl{GenerateArgs} class, see lst.~\ref{lst:GenerateArgs}, allows you to 
+define some general parameters, common to all classes generate. 
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \texttt{sourceDirectory} parameter indicates the root source directory where
+to generate the sources, the three subsequent parameters identify the program 
+(or plugin) that provided the definition of the layout, these parameters are 
+shown as a comment at the beginning of the generated files.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+@Builder
+public class GenerateArgs {
+    @NonNull public final String sourceDirectory;
+    public final String group;
+    public final String artifact;
+    public final String version;
+}
+\end{javacode}
+\caption{GenerateArgs class}
+\label{lst:GenerateArgs}\index{GenerateArgs}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+\subsection{Field Defaults --- FieldDefault}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In the definition of classes and fields, some parameters available in their 
+definition change necessarily (the name of the field), others are almost always 
+the same for the same type of field (such as are valid characters in an 
+alphanumeric field).
+To simplify the definition of the classes, and related fields, it is possible to
+omit the ``slightly variable'' parameters in the definition, however it is 
+necessary to indicate which value to use for these parameters when they are 
+omitted. 
+The \textsl{FieldDefault} class, lst.~\ref{lst:FieldDefault}, provides some 
+classes dedicated to set the default of the ``slightly variable'' parameters.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+@Data
+public class FieldDefault {
+    private |\hyperref[lst:ClsDefault]{ClsDefault}| cls = new ClsDefault();
+    private |\hyperref[lst:AbcDefault]{AbcDefault}| abc = new AbcDefault();
+    private |\hyperref[lst:NumDefault]{NumDefault}| num = new NumDefault();
+    private |\hyperref[lst:NuxDefault]{NuxDefault}| nux = new NuxDefault();
+    private |\hyperref[lst:FilDefault]{FilDefault}| fil = new FilDefault();
+    private |\hyperref[lst:CusDefault]{CusDefault}| cus = new CusDefault();
+}
+\end{javacode}
+\caption{FieldDefault class}
+\label{lst:FieldDefault}\index{FieldDefault}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The first default concerns the default behavior of the class when it is created 
+starting from a structure (string), and this has a dimension different from the 
+expected one; if the length of the supplied structure is greater than the 
+expected one, it is possible to throw an exception and ignore the excess 
+content, if the length of the supplied structure is less than the expected one, 
+it is possible to throw an exception or complete the missing part with the 
+default values of the missing part.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+@Data
+public static class ClsDefault {
+    private |\hyperref[lst:LoadOverflowAction]{LoadOverflowAction}| onOverflow = LoadOverflowAction.Trunc;   // enum {Error, Trunc}
+    private |\hyperref[lst:LoadUnderflowAction]{LoadUnderflowAction}| onUnderflow = LoadUnderflowAction.Pad;  // enum {Error, Pad}
+    private boolean doc = true;
+}
+\end{javacode}
+\caption{ClsDefault class}\index{ClsDefault}
+\label{lst:ClsDefault}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The other defaults allow you to set the default values of some parameters for 
+five types of fields. Not having shown the details of the definition of the 
+various types of field, it is not appropriate to introduce the content of the 
+default classes at this point, they will be shown together with the 
+corresponding field.
+
+\chapter{Definition of single fields}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In the definition of the class, and of the interface, the list of fields is set 
+as \verb!List<FieldModel>!, but the \verb!FieldModel! interface is an empty box, 
+it is only used to connect all the field definitions to it.
+In general all fields have an initial position (offset) and a dimension 
+(length); many fields are referable by a name, but not all are necessarily 
+named; when the fields have a name they can be primary or over-define (override) 
+primary fields, in the initialization phase of the fields of a class only 
+primary field definitions are considered.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In the field definitions, the initial position of the field (offset) is set as 
+an \texttt{Integer}, ie in general it is not mandatory to set it, it can be 
+calculated automatically by the \textsl{Service Provider}.
+
+\section{Alphanumeric field}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+An alphanumeric field has 4 basic parameters: \verb!offset!, \verb!length!, 
+\verb!name! and \verb!override!.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \verb!onOverflow! and \verb!onUnderflow! parameters indicate how the setter 
+should behave when a value with a size greater or less than that foreseen for 
+that field is supplied. 
+The \hypertarget{abc:ovf}{\texttt{onOverflow}} parameter can assume the values 
+\verb!Error! and \verb!Trunc!, in the first case the code is expected to 
+generate an exception, in the second case the value is found (on the right) 
+ignoring the characters in excess of the expected size. 
+The \hypertarget{abc:unf}{\texttt{onUnderflow}} parameter can assume the values 
+\verb!Error! and \verb!Pad!, in the first case the code is expected to generate 
+an exception, in the second case spaces are added (on the right) to reach the 
+expected size.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hypertarget{abc:chk}{\texttt{check}} parameter allows you to specify checks 
+to restrict the set of characters allowed for the value. This control is 
+activated during the validation of the data string, calling the setters and 
+getters. 
+Possible values are \verb!None!, \verb!Ascii!, \verb!Latin1!, \verb!Valid!, in 
+the first case no check is done, in the second case only ASCII characters are 
+accepted, in the third case only ISO-8859-1\footnote{%
+more precisely the unicode characters from \texttt{\textbackslash u0020} to 
+\texttt{\textbackslash u007e} and from \texttt{\textbackslash u00a0} to 
+\texttt{\textbackslash u00ff}
+} characters are accepted, and in the last case valid UTF-8 characters are 
+accepted.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface AbcModel extends FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    void setName(String name);
+
+    void setOverride(boolean override);
+
+    void setOnOverflow(|\hyperref[lst:OverflowAction]{OverflowAction}| onOverflow);
+    void setOnUnderflow(|\hyperref[lst:UnderflowAction]{UnderflowAction}| onUnderflow);
+    void setCheck(|\hyperref[lst:CheckAbc]{CheckAbc}| check);
+    void setNormalize(|\hyperref[lst:NormalizeAbcMode]{NormalizeAbcMode}| normalize);
+    void setCheckGetter(Boolean checkGetter);
+    void setCheckSetter(Boolean checkSetter);
+}
+\end{javacode}
+\caption{interface AbcModel (alphanumeric field)}
+\label{lst:AbcModel}\index{AbcModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hypertarget{abc:nrm}{\texttt{normalize}} parameter allows you to indicate 
+how to normalize the value of the field in the getter phase. 
+The \verb!normalize! parameter can take on 3 values \verb!None!, \verb!Trim! 
+and \verb!Trim1!. The first value indicates not to perform any modification of 
+the data, the second value indicates to remove all spaces on the right until a 
+character other than space is found, if the value is composed only of spaces an 
+empty string is produced, the last value, similarly to the previous value, 
+removes the spaces on the right until a character other than a space is found, 
+but if the value is composed only of spaces, it returns a string composed of a 
+space.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hypertarget{abc:get}{\texttt{checkGetter}} parameter indicates whether or 
+not to activate the control indicated with the \verb!check! parameter when the 
+getter is called; if the data-string is previously validated, this check can be 
+deactivated. 
+The \hypertarget{abc:set}{\texttt{checkSetter}} parameter indicates whether or 
+not to activate the control indicated with the \verb!check! parameter when 
+called the setter.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+@Data
+public class AbcDefault {
+    private |\hyperref[lst:OverflowAction]{OverflowAction}| onOverflow = OverflowAction.Trunc;
+    private |\hyperref[lst:UnderflowAction]{UnderflowAction}| onUnderflow = UnderflowAction.Pad;
+    private |\hyperref[lst:CheckAbc]{CheckAbc}| check = CheckAbc.Ascii;
+    private |\hyperref[lst:NormalizeAbcMode]{NormalizeAbcMode}| normalize = NormalizeAbcMode.None;
+    private boolean checkGetter = true;
+    private boolean checkSetter = true;
+}
+\end{javacode}
+\caption{class AbcDefault (default campo alfanumerico)}
+\label{lst:AbcDefault}\index{AbcDefault}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \textsl{AbcDefault} class, see lst.~\ref{lst:AbcDefault}, set the default 
+values for the parameters \verb!onOverflow!, \verb!onUnderflow!, \verb!check!, 
+\verb!normalize!, \verb!checkGetter!, \verb!checkSetter!, in case they are not 
+set by the client.
+
+\section{Numeric field}\label{sec:spi.num}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Even a numeric field has 4 basic parameters: \verb!offset!, \verb!length!,
+\verb!name! and \verb!override!.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \verb!access! parameter indicates how to generate the setters and getters. 
+In the data-string the numeric field has a representation in string format, in 
+the generated code it is possible to choose whether the setters and getters 
+manage the value as a string (with numeric characters) or to convert 
+the data-string fragment, corresponding to the field, into a native numeric 
+representation (\verb!byte!, \verb!short!, \verb!int!, \verb!long!) or 
+handle both.
+%
+The \verb!access! parameter can take on the values \verb!String!, \verb!Number! 
+and \verb!Both!. In the first case, setters and getters are generated that 
+handle the value as a (numeric) string, in the second case as a native numeric, 
+and in the last case both are generated (it will be indicated by the provider 
+how to distinguish the string getter from the numeric one). 
+If an access is used that provides string type setter/getter, it is checked in 
+the setter phase that the supplied string is numeric, and in the getter phase 
+that the returned string is numeric.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface NumModel extends FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    void setName(String name);
+
+    void setOverride(boolean override);
+
+    void setAccess(|\hyperref[lst:AccesMode]{AccesMode}| access);
+    void setWordWidth(|\hyperref[lst:WordWidth]{WordWidth}| width);
+    void setOnOverflow(|\hyperref[lst:OverflowAction]{OverflowAction}| onOverflow);
+    void setOnUnderflow(|\hyperref[lst:UnderflowAction]{UnderflowAction}| onUnderflow);
+    void setNormalize(|\hyperref[lst:NormalizeNumMode]{NormalizeNumMode}| normalize);
+}
+\end{javacode}
+\caption{NumModel interface (numeric field)}
+\label{lst:NumModel}\index{NumModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \verb!wordWidth! parameter makes sense only if an access mode has been 
+chosen that generates numeric setters/getters, it basically indicates the 
+minimum size to be used in numeric representations. 
+The \verb!wordWidth! parameter can assume the values \verb!Byte!, \verb!Short!, 
+\verb!Int! and \verb!Long!, the values correspond to the use of the 
+corresponding native types. 
+For example, if a numeric field is represented by a 4-character string, it can 
+be converted into numeric format as \verb!short!, if the \verb!wordWidth! 
+parameter is set to \verb!Int!, \verb!int! type setters/getters are generated; 
+if the parameter value had been \verb!Byte! or \verb!Short!, \verb!short!-type 
+setters/getters would have been generated.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \verb!onOverflow! and \verb!onUnderflow! parameters indicate how the setter 
+should behave when a value larger or smaller than that expected for that field 
+is supplied. 
+The \verb!onOverflow! parameter can assume the values \verb!Error! and 
+\verb!Trunc!, in the first case the code is expected to generate an exception, 
+in the second case the value is truncated (on the left) ignoring the digits in 
+excess of the expected size. 
+The \verb!onUnderflow! parameter can assume the values \verb!Error! and 
+\verb!Pad!, in the first case the code is expected to generate an exception, in 
+the second case zeros are added (on the left) to reach the expected size.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \verb!normalize! parameter makes sense only if an access mode has been 
+chosen that generates string setters/getters, it allows you to indicate how to 
+normalize the value of the field in the getter phase. 
+The \verb!normalize! parameter can take on 2 values \verb!None! and \verb!Trim!. 
+The first value indicates not to perform any modification of the data, the 
+other indicates to remove all the zeros on the left until a digit other than 
+zero is found, if the value is composed only of zeros a string composed of a 
+zero is produced .
+
+\begin{elisting}[!htb]
+\begin{javacode}
+@Data
+public class NumDefault {
+    private |\hyperref[lst:AccesMode]{AccesMode}| access = AccesMode.String;
+    private |\hyperref[lst:WordWidth]{WordWidth}| wordWidth = WordWidth.Int;
+    private |\hyperref[lst:OverflowAction]{OverflowAction}| onOverflow = OverflowAction.Trunc;
+    private |\hyperref[lst:UnderflowAction]{UnderflowAction}| onUnderflow = UnderflowAction.Pad;
+    private |\hyperref[lst:NormalizeNumMode]{NormalizeNumMode}| normalize = NormalizeNumMode.None;
+}
+\end{javacode}
+\caption{class NumDefault (default numeric field)}
+\label{lst:NumDefault}\index{NumDefault}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \textsl{NumDefault} class, see lst.~\ref{lst:NumDefault}, sets the default 
+values for the \verb!access!, \verb!wordWidth!, \verb!onOverflow!, 
+\texttt{onUnder\-flow} and \verb!normalize! parameters if they are not set by the 
+client.
+
+\section{Custom field (alphanumeric)}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Even a custom field has the 4 basic parameters: \verb!offset!, \verb!length!,
+\verb!name! and \verb!override!.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+A custom field is a generalization of an alphanumeric field, and can be 
+configured to emulate a numeric or nullable numeric field. 
+The first sensitive parameter to consider is \verb!align!, the parameter 
+indicates how the \texttt{onUnderflow = Pad} field must be aligned. 
+The parameter can assume 2 values \verb!LFT! and \verb!RGT!, the first value 
+indicates that the field must be aligned to the left, the second value must be 
+aligned to the right.
+The value of this parameter not only affects the \verb!onUnderflow! parameter 
+(indicating from which direction the padding characters must be added), but 
+also on \verb!onOverflow! (indicating from which direction the excess characters 
+must be removed) and \verb!normalize! (indicating from which direction the 
+padding characters be removed).
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \verb!padChar! parameter indicates the padding character to add (in case of 
+\texttt{onUnderflow = Pad}) or remove (in case of \texttt{normalize = Trim}). 
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \verb!initChar! parameter indicates the character to use to initialize the 
+field.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface CusModel extends FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    
+    void setAlign(|\hyperref[lst:AlignMode]{AlignMode}| align);
+    void setPadChar(Character padChar);
+    void setInitChar(Character initChar);
+    void setCheck(|\hyperref[lst:CheckCus]{CheckCus}| check);
+    void setRegex(String regex);
+    void setOnOverflow(|\hyperref[lst:OverflowAction]{OverflowAction}| onOverflow);
+    void setOnUnderflow(|\hyperref[lst:UnderflowAction]{UnderflowAction}| onUnderflow);
+    void setNormalize(|\hyperref[lst:NormalizeAbcMode]{NormalizeAbcMode}| normalize);
+    void setCheckGetter(Boolean checkGetter);
+    void setCheckSetter(Boolean checkSetter);
+}
+\end{javacode}
+\caption{CusModel interface (custom field)}
+\label{lst:CusModel}\index{CusModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+For the \verb!check! parameter the same considerations apply as for the 
+corresponding parameter in the \hyperlink{abc:chk}{alphanumeric case}. 
+In this case the possible values are \verb!None!, \verb!Ascii!, \verb!Latin1!, 
+\verb!Valid!, \verb!Digit! and \verb!DigitOrBlank!. 
+The first four values are identical to the alphanumeric case, the \verb!Digit! 
+value limits the accepted characters to numeric ones (from 0 to 9), as for a 
+numeric field; the \verb!DigitOrBlank! value requires that the characters be 
+numeric or all spaces, such as for a nullable numeric field.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \verb!regex! parameter can be valued with a regular expression that must be 
+satisfied by the value of the field. If this parameter is present, the 
+\verb!check! parameter is ignored.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+@Data
+public class CusDefault {
+    private |\hyperref[lst:AlignMode]{AlignMode}| align = AlignMode.LFT;
+    private char padChar = ' ';
+    private char initChar = ' ';
+    private |\hyperref[lst:CheckCus]{CheckCus}| check = CheckCus.Ascii;
+    private |\hyperref[lst:OverflowAction]{OverflowAction}| onOverflow = OverflowAction.Trunc;
+    private |\hyperref[lst:UnderflowAction]{UnderflowAction}| onUnderflow = UnderflowAction.Pad;
+    private |\hyperref[lst:NormalizeAbcMode]{NormalizeAbcMode}| normalize = NormalizeAbcMode.None;
+    private boolean checkGetter = true;
+    private boolean checkSetter = true;
+}
+\end{javacode}
+\caption{class CusDefault (custom field default)}
+\label{lst:CusDefault}\index{CusDefault}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+For the parameters 
+\hyperlink{abc:unf}{\texttt{onUnderflow}}, 
+\hyperlink{abc:nrm}{\texttt{normalize}},
+\hyperlink{abc:get}{\texttt{checkGetter}},
+\hyperlink{abc:get}{\texttt{checkSetter}}
+the same considerations apply as for the corresponding fields in the 
+alphanumeric case. Be careful because the action of the \verb!onOverflow!, 
+\verb!onUnderflow! and \verb!normalize! parameters also depends on the value of 
+the \verb!align! and \verb!initChar! parameters.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \textsl{CusDefault} class, see lst.~\ref{lst:CusDefault}, sets the default 
+values for the \verb!align!, \verb!padChar!, \verb!initChar!, 
+\verb!check!, \texttt{onOver\-flow}, \verb!onUnderflow!, \verb!normalize!, 
+\verb!checkGetter! and \verb!checkSetter! parameters if they are not set by the 
+client.
+
+\section{Nullable numeric field}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+A nullable numeric field is an extension of an ordinary numeric field. 
+The difference is that the space value (all space characters) is allowed in the 
+data-string, this value corresponds to the \verb!null! value in the data-class 
+field.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface NuxModel extends FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    void setName(String name);
+
+    void setOverride(boolean override);
+
+    void setAccess(|\hyperref[lst:AccesMode]{AccesMode}| access);
+    void setWordWidth(|\hyperref[lst:WordWidth]{WordWidth}| width);
+    void setOnOverflow(|\hyperref[lst:OverflowAction]{OverflowAction}| onOverflow);
+    void setOnUnderflow(|\hyperref[lst:UnderflowAction]{UnderflowAction}| onUnderflow);
+    void setNormalize(|\hyperref[lst:NormalizeNumMode]{NormalizeNumMode}| normalize);
+    void setInitialize(|\hyperref[lst:InitializeNuxMode]{InitializeNuxMode}| initialize);
+}
+\end{javacode}
+\caption{NuxModel interface (nullable numeric field)}
+\label{lst:NuxModel}\index{NuxModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+As can be seen from the definition, lst.~\ref{lst:NuxModel} there are the same 
+parameters of a numeric field (lst.~\ref{lst:NumModel}), with the same meanings, 
+plus one: the \verb!initialize! parameter. 
+This parameter indicates how to initialize the field when the class is created 
+with an empty constructor, with the value spaces (i.e. \verb!null!) or zero.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+@Data
+public class NuxDefault {
+    private |\hyperref[lst:AccesMode]{AccesMode}| access = AccesMode.String;
+    private |\hyperref[lst:WordWidth]{WordWidth}| wordWidth = WordWidth.Int;
+    private |\hyperref[lst:OverflowAction]{OverflowAction}| onOverflow = OverflowAction.Trunc;
+    private |\hyperref[lst:UnderflowAction]{UnderflowAction}| onUnderflow = UnderflowAction.Pad;
+    private |\hyperref[lst:NormalizeNumMode]{NormalizeNumMode}| normalize = NormalizeNumMode.None;
+    private |\hyperref[lst:InitializeNuxMode]{InitializeNuxMode}| initialize = InitializeNuxMode.Spaces;
+}
+\end{javacode}
+\caption{NuxDefault (default nullable numeric field)}
+\label{lst:NuxDefault}\index{NuxDefault}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+To manage the default at a general level for this type of field, a dedicated 
+default class is used, which is the copy of the corresponding one for the 
+ordinary numeric case, plus the initialization default.
+
+\section{Domain field}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+A domain-type field is an alphanumeric field that can only assume predefined 
+constant values. 
+The domain type field, lst.~\ref{lst:DomModel}, has the 4 basic parameters: 
+\verb!offset!, \verb!length!, \verb!name! and \verb!override!, plus the 
+\verb!items! parameter which will have to provide the list of allowed constant 
+values.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface DomModel extends FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    
+    void setItems(String[] items);
+}
+\end{javacode}
+\caption{DomModel interface (domain field)}
+\label{lst:DomModel}\index{DomModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+For this type of field, no global default makes sense as seen for alphanumeric 
+and numeric fields. The allowed values are those supplied in the \verb!items! 
+parameter, any other value will cause an exception.
+
+\section{Filler field}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+A field of type \textsl{Filler} is not a real field, has no associated name, 
+does not generate any setter or getter in the data-class, and no control 
+methods. It is a way to indicate that in the data-string there is an area to 
+which no value is associated, or that we are not interested in that area of 
+the data-string.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface FilModel extends FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    
+    void setFill(Character fill);
+}
+\end{javacode}
+\caption{FilModel interface (filler field)}
+\label{lst:FilModel}\index{FilModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The filler field has only the 2 basic parameters: \verb!offset! and 
+\verb!length!. It then has the \verb!fill! parameter to indicate with which 
+character to value the field when the data-class is created with the empty 
+constructor.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+@Data
+public class FilDefault {
+    private char fill = 0;
+}
+\end{javacode}
+\caption{class FilDefault (default filler field)}
+\label{lst:FilDefault}\index{FilDefault}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The filler field has a default class dedicated to indicate the filler character 
+at a general level.
+
+\section{Field Constant value}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+A field of type \textsl{Constant} is similar to a filler field. As for the 
+filler field, setters and getters are not generated in the data-class, but in 
+the validation of the data-string it is verified that the area corresponding to 
+the field has the indicated constant value.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface ValModel extends FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    
+    void setValue(String value);
+}
+\end{javacode}
+\caption{ValModel interface (constant range)}
+\label{lst:ValModel}\index{ValModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Even the constant field has only the 2 basic parameters: \verb!offset! and 
+\verb!length!. It then has the \verb!value! parameter to indicate the expected 
+constant value. The supplied value is used to set the value when the data-class 
+is instantiated with the empty constructor.
+
+
+\chapter{Definition of a group of fields}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In some cases it may be useful to group some fields within a container element. 
+This allows you to have within the definition of the string-data structure two 
+fields with the same name within different container elements.
+
+\section{Field group}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+A field of type \textsl{Group} is not a real field, it is actually a container 
+of other fields.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface GrpModel extends FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    
+    void setFields(List<FieldModel> fields);
+}
+\end{javacode}
+\caption{interfaccia GrpModel (campo gruppo)}
+\label{lst:GrpModel}\index{GrpModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+A group field has 4 basic parameters: \verb!offset!, \verb!length!, \verb!name! 
+and \verb!override!. 
+In addition to this, it provides the \verb!fields! parameter to provide the list 
+of child fields. 
+The string-data area selected by \verb!offset! and \verb!length! will need to be 
+completely defined by the child fields. 
+It is possible for a child field to use the same name as a field defined at the 
+same level as the parent field.
+
+\section{Repeating field group}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+A field of type \textsl{Repeating Group} is similar to a group field, except 
+that there are $n$ occurrences of the group. 
+In addition to the parameters used by the group field, there is the \verb!times! 
+parameter, which indicates the number of times the group is repeated.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface OccModel extends  FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    
+    void setFields(List<FieldModel> fields);
+    void setTimes(int times);
+}
+\end{javacode}
+\caption{OccModel interface (repeating group field)}
+\label{lst:OccModel}\index{OccModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In this case the area of the data-string defined by \verb!offset! and 
+\verb!length! is that of the first occurrence of the group. 
+The dimension actually used is \verb!length! $\times$ \verb!times!.
+
+\section{Fields embedded via interface}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+An interface (lst.~\ref{lst:TraitModel}) can be defined in the same way as a 
+class (lst.~\ref{lst:ClassModel}). 
+The \textsl{Embedded} field is not a real field, it doesn't have a name. 
+Used to indicate that a certain area of the data-string must be interpreted with 
+the fields defined by the indicated interface.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface EmbModel extends FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    
+    void setSource(|\hyperref[lst:TraitModel]{TraitModel}| source);
+}
+\end{javacode}
+\caption{EmbModel interface (embedded field)}
+\label{lst:EmbModel}\index{EmbModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The embedded field has only the 2 basic parameters: \verb!offset! and 
+\verb!length!. 
+It then has the \verb!source! parameter to indicate which interface to use to 
+define the fields. The interface must have the same size (\verb!length!) of the 
+embedded field, the initial position of the interface will be translated to 
+adapt it to the value indicated by the embedded field. 
+The generated class will obviously implement the indicated interface.
+
+\section{Field group defined via interface} 
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \textsl{Group/Interface} field is similar to the embedded field. 
+In this case the fields defined by the interface are not incorporated at the 
+current level, but a group containing them is defined.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface GrpTraitModel extends FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    
+    void setTypedef(|\hyperref[lst:TraitModel]{TraitModel}| typedef);
+}
+\end{javacode}
+\caption{GrpTraitModel interface (group/interface field)}
+\label{lst:GrpTraitModel}\index{GrpTraitModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+A group/interface field has 4 basic parameters: \verb!offset!, \verb!length!, 
+\verb!name! and \verb!override!. It then has the \verb!typedef! parameter to 
+indicate which interface to use to define the fields of the group. 
+The interface must have the same size (\verb!length!) of the group/interface 
+field, the initial position of the interface will be translated to adapt it to 
+the value indicated by the group/interface field. 
+In this case it is the group that implements the indicated interface.
+
+
+\section{Repeating field group defined via interface}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \textsl{Repeating Group/Interface} field is similar to the group/interface 
+field, except that there are $n$ occurrences of the group. 
+In addition to the parameters used by the group/interface field, there is the 
+\verb!times! parameter, which indicates the number of times the group is 
+repeated.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+public interface OccTraitModel extends FieldModel {
+    void setOffset(Integer offset);
+    void setLength(int length);
+    void setName(String name);
+    
+    void setOverride(boolean override);
+    
+    void setTypedef(|\hyperref[lst:TraitModel]{TraitModel}| typedef);
+    void setTimes(int times);
+}
+\end{javacode}
+\caption{interface OccTraitModel (repeating group/interface field)}
+\label{lst:OccTraitModel}\index{OccTraitModel}
+\end{elisting}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+As in the case of the repeated group, the area of the data-string defined by 
+\verb!offset! and \verb!length! is that of the first occurrence of the group. 
+The dimension actually used is \verb!length! $\times$ \verb!times!.
+
+\vspace*{5cm}
+
+\chapter{Used enums}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Many of the configuration classes or interfaces have fields with values that are 
+limited to some value expressed by \texttt{enum}. 
+Let's see them one by one.
+
+\begin{elisting}
+\begin{javacode}
+public enum LoadOverflowAction { Error, Trunc }
+\end{javacode}
+\caption{enum LoadOverflowAction}\label{lst:LoadOverflowAction}\index{LoadOverflowAction}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:LoadOverflowAction]{\texttt{LoadOverflowAction}} enum is used 
+by the \hyperref[lst:ClassModel]{\texttt{ClassModel}} class to indicate how to 
+behave when the class is deserialized and the data-string is larger than 
+expected by the data-class.
+
+\begin{elisting}
+\begin{javacode}
+public enum LoadUnderflowAction { Error, Pad }
+\end{javacode}
+\caption{enum LoadUnderflowAction}\label{lst:LoadUnderflowAction}\index{LoadUnderflowAction}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:LoadUnderflowAction]{\texttt{LoadUnderflowAction}} enum is 
+used by the \hyperref[lst:ClassModel]{\texttt{ClassModel}} class to indicate how 
+to behave when the class is deserialized and the data-string has a smaller size 
+than expected by the data-class.
+
+\begin{elisting}
+\begin{javacode}
+public enum CheckAbc { None, Ascii, Latin1, Valid }
+\end{javacode}
+\caption{enum CheckAbc}\label{lst:CheckAbc}\index{CheckAbc}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:CheckAbc]{\texttt{CheckAbc}} enum is used by the 
+\hyperref[lst:AbcModel]{\texttt{AbcModel}} class to indicate which characters 
+are considered valid.
+
+\begin{elisting}
+\begin{javacode}
+public enum OverflowAction { Error, Trunc }
+\end{javacode}
+\caption{enum OverflowAction}\label{lst:OverflowAction}\index{OverflowAction}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:OverflowAction]{\texttt{OverflowAction}} enum is used by the 
+class to manage numeric and alphanumeric fields 
+(\hyperref[lst:AbcModel]{\texttt{AbcModel}},
+\hyperref[lst:NumModel]{\texttt{NumModel}},
+\hyperref[lst:CusModel]{\texttt{CusModel}},
+\hyperref[lst:NuxModel]{\texttt{NuxModel}}), to indicate how to behave when the 
+setter proposes a value that has a size greater than the one expected for that 
+field.
+
+\begin{elisting}
+\begin{javacode}
+public enum UnderflowAction { Error, Pad }
+\end{javacode}
+\caption{enum UnderflowAction}\label{lst:UnderflowAction}\index{UnderflowAction}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:UnderflowAction]{\texttt{UnderflowAction}} enum is used by the 
+class to manage numeric and alphanumeric fields 
+(\hyperref[lst:AbcModel]{\texttt{AbcModel}},
+\hyperref[lst:NumModel]{\texttt{NumModel}},
+\hyperref[lst:CusModel]{\texttt{CusModel}},
+\hyperref[lst:NuxModel]{\texttt{NuxModel}}), to indicate how to behave when the 
+setter proposes a value that has a size smaller than the one expected for that 
+field.
+
+\begin{elisting}
+\begin{javacode}
+public enum NormalizeAbcMode { None, Trim, Trim1 }
+\end{javacode}
+\caption{enum NormalizeAbcMode}\label{lst:NormalizeAbcMode}\index{NormalizeAbcMode}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:NormalizeAbcMode]{\texttt{NormalizeAbcMode}} enum is used by 
+the class to manage alphanumeric fields 
+(\hyperref[lst:AbcModel]{\texttt{AbcModel}},
+\hyperref[lst:CusModel]{\texttt{CusModel}}), to indicate how to normalize the 
+value returned by the getter.
+
+\begin{elisting}
+\begin{javacode}
+public enum NormalizeNumMode { None, Trim }
+\end{javacode}
+\caption{enum NormalizeNumMode}\label{lst:NormalizeNumMode}\index{NormalizeNumMode}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:NormalizeNumMode]{\texttt{NormalizeNumMode}} enum is used by 
+the class to manage numeric fields (\hyperref[lst:NumModel]{\texttt{NumModel}},
+\hyperref[lst:NuxModel]{\texttt{NuxModel}}), to indicate how to normalize the 
+value returned by the getter.
+
+\begin{elisting}
+\begin{javacode}
+public enum WordWidth { Byte, Short, Int, Long }
+\end{javacode}
+\caption{enum WordWidth}\label{lst:WordWidth}\index{WordWidth}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:WordWidth]{\texttt{WordWidth}} enum is used by the class to 
+handle numeric fields (\hyperref[lst:NumModel]{\texttt{NumModel}},
+\hyperref[lst:NuxModel]{\texttt{NuxModel}}), to indicate the primitive numeric 
+data type of minimum size to use when creating numeric setters and getters.
+
+\begin{elisting}
+\begin{javacode}
+public enum AccesMode { String, Number, Both }
+\end{javacode}
+\caption{enum AccesMode}\label{lst:AccesMode}\index{AccesMode}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:AccesMode]{\texttt{AccesMode}} enum is used by the class to 
+handle numeric fields (\hyperref[lst:NumModel]{\texttt{NumModel}},
+\hyperref[lst:NuxModel]{\texttt{NuxModel}}), to indicate whether to create 
+alphanumeric, numeric, or both setters and getters.
+
+\begin{elisting}
+\begin{javacode}
+public enum InitializeNuxMode { Spaces, Zeroes }
+\end{javacode}
+\caption{enum InitializeNuxMode}\label{lst:InitializeNuxMode}\index{InitializeNuxMode}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:InitializeNuxMode]{\texttt{InitializeNuxMode}} enum is used 
+by the \hyperref[lst:NuxModel]{\texttt{NuxModel}} class, to indicate how to 
+initialize the field when the data-class is created with the constructor with 
+no arguments.
+
+\begin{elisting}
+\begin{javacode}
+public enum CheckCus { None, Ascii, Latin1, Valid, Digit, DigitOrBlank }
+\end{javacode}
+\caption{enum CheckCus}\label{lst:CheckCus}\index{CheckCus}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:CheckCus]{\texttt{CheckCus}} enum is used by the 
+\hyperref[lst:CusModel]{\texttt{CusModel}} class to indicate which characters 
+are considered valid.
+
+\begin{elisting}
+\begin{javacode}
+public enum AlignMode { LFT, RGT }
+\end{javacode}
+\caption{enum AlignMode}\label{lst:AlignMode}\index{AlignMode}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \hyperref[lst:CheckCus]{\texttt{CheckCus}} enum is used by the 
+\hyperref[lst:CusModel]{\texttt{CusModel}} class to indicate how to align the 
+field.
+
+\vfill

@@ -1,0 +1,68 @@
+\chapter{Gradle plugin}\label{sec:gradle}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Il gradle plugin \verb!recfm-gradle-plugin! permette di creare più classi e 
+interfacce usando uno più file di configurazione in formato yaml.
+Le librerie esterne utilizzate richiedono il java 8, quindi per eseguire questo 
+plugin è necessario almeno il java 8.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Il gradle plugin \verb!recfm-gradle-plugin! è semplicemente l'\,adattamento del 
+\verb!recfm-maven-plugin! per essere usato in un progetto \textsl{gradle}.
+Se si esclude il modo in cui vengono passati i parametri di input, e come viene
+attivato il plugin, il codice è la copia della versione per maven.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=java, caption=parametri impostabili del gradle plugin, 
+label=lst:gradle.conf]
+@Data
+public class RecordFormatExtension {
+    private String generateDirectory; // default: "${project.buildDir}/generated-sources/recfm"
+    private String settingsDirectory; // default: "${project.projectDir}/src/main/resources"
+    private String[] settings;
+    private boolean addCompileSourceRoot = true;
+    private boolean addTestCompileSourceRoot = false;
+    private String codeProviderClassName;
+}
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{javacode}
+@Data
+public class RecordFormatExtension {
+    private String generateDirectory; // default: "${project.buildDir}/generated-sources/recfm"
+    private String settingsDirectory; // default: "${project.projectDir}/src/main/resources"
+    private String[] settings;
+    private boolean addCompileSourceRoot = true;
+    private boolean addTestCompileSourceRoot = false;
+    private String codeProviderClassName;
+}
+\end{javacode}
+\caption{parametri impostabili del gradle plugin}
+\label{lst:gradle.conf}
+\end{elisting}
+\fi
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Come si vede col confronto del cod.~\ref{lst:maven.conf} i parametri utilizzati
+sono gli stessi del maven-plugin, per la descrizione dei parametri rimando
+al \S~\ref{sec:maven}.
+
+\begin{elisting}[!htb]
+\begin{minted}[frame=single,framesep=2mm,bgcolor=bg,fontsize=\footnotesize]{groovy}
+buildscript {
+    dependencies {
+        // plugin
+        classpath 'io.github.epi155:recfm-gradle-plugin:0.7.0'
+        // addon for java code generation
+        classpath 'io.github.epi155:recfm-java-addon:0.7.0'
+    }
+}
+apply plugin: 'io.github.epi155.recfm-gradle-plugin'
+recfm {
+    settings = [ 'refcm-foo.yaml', 'refcm-bar.yaml' ]
+}
+\end{minted}
+\caption{esempio minimale di esecuzione del plugin}
+\label{lst:grd-xmpl}
+\end{elisting}

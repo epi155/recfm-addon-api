@@ -1,0 +1,265 @@
+\section*{Introduction}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Sometimes it may happen that you have to deal with positional files (or memory 
+areas), see fig.~\ref{fig:str.data}, in these cases you need to waste a lot of 
+time to make a class dedicated to each string-data with the setters and getters
+to read and write values\footnote{%
+there is \texttt{com.ancientprogramming.fixedformat4j:fixedformat4j} 
+which provides some basic functionality, but in most situations it is not 
+flexible enough.}.
+
+\begin{figure}[!htb]
+\centering\small
+\scalebox{0.7}[1]{
+\texttt{%
+\fbox[lb]{S}%01
+\fbox[lb]{C}%02
+\fbox[lb]{A}%03
+\fbox[lb]{R}%04
+\fbox[lb]{L}%05
+\fbox[lb]{E}%06
+\fbox[lb]{T}%07
+\fbox[lb]{T}%08
+\fbox[lb]{ }%09
+\fbox[lb]{ }%10
+\fbox[lb]{ }%11
+\fbox[lb]{ }%12
+\fbox[lb]{ }%13
+\fbox[lb]{ }%14
+\fbox[lb]{ }%15
+\fbox[lb]{J}%16
+\fbox[lb]{O}%17
+\fbox[lb]{H}%18
+\fbox[lb]{A}%19
+\fbox[lb]{N}%20
+\fbox[lb]{S}%21
+\fbox[lb]{S}%22
+\fbox[lb]{O}%23
+\fbox[lb]{N}%24
+\fbox[lb]{ }%25
+\fbox[lb]{ }%26
+\fbox[lb]{ }%27
+\fbox[lb]{ }%28
+\fbox[lb]{ }%29
+\fbox[lb]{ }%30
+\fbox[lb]{1}%31
+\fbox[lb]{9}%32
+\fbox[lb]{8}%33
+\fbox[lb]{4}%34
+\fbox[lb]{1}%35
+\fbox[lb]{1}%36
+\fbox[lb]{2}%37
+\fbox[lb]{2}%38
+\fbox[lb]{N}%39
+\fbox[lb]{E}%40
+\fbox[lb]{W}%31
+\fbox[lb]{ }%32
+\fbox[lb]{Y}%33
+\fbox[lb]{O}%34
+\fbox[lb]{R}%35
+\fbox[lb]{K}%36
+\fbox[lb]{ }%37
+\fbox[lb]{ }%38
+\fbox[lb]{ }%39
+\fbox[lb]{ }%40
+\fbox[lb]{ }%41
+\fbox[lb]{ }%42
+\fbox[lb]{U}%43
+\fbox[lb]{S}%44
+\fbox[lbr]{A}%45
+}}
+
+\iffalse
+\scalebox{0.7}[1]{
+\texttt{%
+\fbox[lb]{O}%01
+\fbox[lb]{L}%02
+\fbox[lb]{G}%03
+\fbox[lb]{A}%04
+\fbox[lb]{ }%05
+\fbox[lb]{ }%06
+\fbox[lb]{ }%07
+\fbox[lb]{ }%08
+\fbox[lb]{ }%09
+\fbox[lb]{ }%10
+\fbox[lb]{ }%11
+\fbox[lb]{ }%12
+\fbox[lb]{ }%13
+\fbox[lb]{ }%14
+\fbox[lb]{ }%15
+\fbox[lb]{K}%16
+\fbox[lb]{U}%17
+\fbox[lb]{R}%18
+\fbox[lb]{Y}%19
+\fbox[lb]{L}%20
+\fbox[lb]{E}%21
+\fbox[lb]{N}%22
+\fbox[lb]{K}%23
+\fbox[lb]{O}%24
+\fbox[lb]{ }%25
+\fbox[lb]{ }%26
+\fbox[lb]{ }%27
+\fbox[lb]{ }%28
+\fbox[lb]{ }%29
+\fbox[lb]{ }%30
+\fbox[lb]{1}%31
+\fbox[lb]{9}%32
+\fbox[lb]{7}%33
+\fbox[lb]{9}%34
+\fbox[lb]{1}%35
+\fbox[lb]{1}%36
+\fbox[lb]{1}%37
+\fbox[lb]{4}%38
+\fbox[lb]{B}%39
+\fbox[lb]{E}%40
+\fbox[lb]{R}%31
+\fbox[lb]{D}%32
+\fbox[lb]{J}%33
+\fbox[lb]{A}%34
+\fbox[lb]{N}%35
+\fbox[lb]{S}%36
+\fbox[lb]{'}%37
+\fbox[lb]{K}%38
+\fbox[lb]{ }%39
+\fbox[lb]{ }%40
+\fbox[lb]{ }%41
+\fbox[lb]{ }%42
+\fbox[lb]{U}%43
+\fbox[lb]{K}%44
+\fbox[lbr]{R}%45
+}}
+\fi
+
+\scalebox{0.7}[1]{
+\texttt{%
+\fbox[lb]{A}%01
+\fbox[lb]{N}%02
+\fbox[lb]{A}%03
+\fbox[lb]{ }%04
+\fbox[lb]{ }%05
+\fbox[lb]{ }%06
+\fbox[lb]{ }%07
+\fbox[lb]{ }%08
+\fbox[lb]{ }%09
+\fbox[lb]{ }%10
+\fbox[lb]{ }%11
+\fbox[lb]{ }%12
+\fbox[lb]{ }%13
+\fbox[lb]{ }%14
+\fbox[lb]{ }%15
+\fbox[lb]{D}%16
+\fbox[lb]{E}%17
+\fbox[lb]{ }%18
+\fbox[lb]{A}%19
+\fbox[lb]{R}%20
+\fbox[lb]{M}%21
+\fbox[lb]{A}%22
+\fbox[lb]{S}%23
+\fbox[lb]{ }%24
+\fbox[lb]{ }%25
+\fbox[lb]{ }%26
+\fbox[lb]{ }%27
+\fbox[lb]{ }%28
+\fbox[lb]{ }%29
+\fbox[lb]{ }%30
+\fbox[lb]{1}%31
+\fbox[lb]{9}%32
+\fbox[lb]{8}%33
+\fbox[lb]{8}%34
+\fbox[lb]{0}%35
+\fbox[lb]{4}%36
+\fbox[lb]{3}%37
+\fbox[lb]{0}%38
+\fbox[lb]{H}%39
+\fbox[lb]{A}%40
+\fbox[lb]{V}%31
+\fbox[lb]{A}%32
+\fbox[lb]{N}%33
+\fbox[lb]{A}%34
+\fbox[lb]{ }%35
+\fbox[lb]{ }%36
+\fbox[lb]{ }%37
+\fbox[lb]{ }%38
+\fbox[lb]{ }%39
+\fbox[lb]{ }%40
+\fbox[lb]{ }%41
+\fbox[lb]{ }%42
+\fbox[lb]{C}%43
+\fbox[lb]{U}%44
+\fbox[lbr]{B}%45
+}}
+
+\caption{Positional data-file example} 
+\label{fig:str.data}
+\end{figure}
+
+
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+This group of programs aims to minimize the time to create these classes. 
+In practice, the structure of the data-string is defined with a configuration 
+file, this is fed to a plugin that generates the corresponding data-class, 
+which can be used without anything else user intervention.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Programs are structured using service provider interface, see 
+fig.~\ref{fig:spi}, we have a plugin, or user program (\textsl{Service}), which 
+directly sees the classes defined in the \textsl{Service Provider Interface} and 
+retrieves them the implementation using the \textsl{ServiceLoader}, this way it 
+doesn't have a specific dependency with one of the the implementations used. 
+The \textsl{Service Provider} must implement the classes defined in the 
+\textsl{Service Provider Interface}.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}[>=latex,font={\sf}]
+\node(u1) at (0,1.5) [manual input,text width=2cm,fill=blue!10]{maven plugin};
+\node(u2) at (3,1.5) [manual input,text width=2cm,fill=blue!10]{gradle plugin};
+\node(u3) at (6,1.5) [manual input,text width=2cm,fill=blue!10]{custom service};
+\node(si) at (3,0.0) [preparation,fill=yellow!20]{addon-api};
+\node(a1) at (0,-1.5) [process,text width=1.7cm,fill=green!10]{java addon};
+\node(a2) at (3,-1.5) [process,text width=1.7cm,fill=green!10]{scala addon};
+\node(a3) at (6,-1.5) [process,text width=1.7cm,fill=green!10]{custom provider};
+
+\node at (9,1.5) {Service};
+\node at (9,0.0) {Service Provider Interface};
+\node at (9,-1.5) {Service Provider};
+
+\draw[arrow] (u1) -- (si.north);
+\draw[arrow] (u2) -- (si.north);
+\draw[arrow] (u3) -- (si.north);
+\draw[arrow] (a1) -- (si.south);
+\draw[arrow] (a2) -- (si.south);
+\draw[arrow] (a3) -- (si.south);
+
+\end{tikzpicture}
+\caption{Structure service, service-provider-interface, service-provider} 
+\label{fig:spi}
+\end{figure}
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+If the \verb!maven-plugin! finds the library with the \verb!java-addon! 
+implementation running it will generate the sources in java, but if it finds 
+the \verb!scala-addon! implementation it will generate the scala sources.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The documentation is divided into three parts. In the first, \ref{vol:spi}, a 
+detailed description of the classes is given defined in the 
+\textsl{service provider interface}, this part is useful for those wishing to 
+develop a \textit{custom service} or a \textit{custom provider}. 
+If you are only interested in how to generate code starting from config files 
+it can be skipped.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In the second part, \ref{vol:srv}, a description of two plugins used to generate 
+the code is given. In particular how to define the layouts with the 
+configuration files and how to activate the plugin.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In the third part, \ref{vol:sp}, a description of the \textsl{service provider} 
+that generates the java source showing also some additional features of 
+generated classes beyond simple setters and getters.
+
+%\input{cover.tex}
+
+\clearpage

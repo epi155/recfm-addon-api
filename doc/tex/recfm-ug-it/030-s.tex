@@ -1,0 +1,53 @@
+%  ____                  _          
+% / ___|  ___ _ ____   _(_) ___ ___ 
+% \___ \ / _ \ '__\ \ / / |/ __/ _ \
+%  ___) |  __/ |   \ V /| | (_|  __/
+% |____/ \___|_|    \_/ |_|\___\___|
+%                                  
+
+\chapter*{Service}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+La \textsl{Service Provider Interface} fissa semplicemente la struttura 
+generale, ma contiene solo interfacce e java-bean.
+Il \textsl{Service} è l'\,applicazione che permette all'\,utente di fornire
+l'\,input previsto dalla \textsl{Service Provider Interface}.
+Per produrre l'\,output, il \textsl{Service} utilizzerà il 
+\textsl{ServiceLoader} per cercare nel classpath un \textsl{Service Provider} 
+che implementi la \textsl{Service Provider Interface}, e sarà il 
+\textsl{Service Provider} a generare l'\,output dall'\,input.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Il cuore del \textsl{Service Provider Interface} \verb!recfm-addon-api! è la
+interfaccia \textsl{CodeProvider}. L'\,implementazione della interfaccia
+viene cercata col meccanismo del ServiceLoader, cod.\ref{lst:getCodeProvider}.
+
+\ifesource
+\begin{figure*}[!htb]
+\begin{lstlisting}[language=java, caption=recupero del CodeProvider, 
+label=lst:getCodeProvider]
+        ServiceLoader<CodeProvider> loader = ServiceLoader.load(CodeProvider.class);
+        (*\hyperref[lst:CodeProvider]{CodeProvider}*) codeProvider = loader.iterator().next();
+        (*\hyperref[lst:CodeFactory]{CodeFactory}*) factory = codeProvider.getInstance();
+\end{lstlisting}
+\end{figure*}
+\else
+\begin{elisting}[!htb]
+\begin{javacode}
+        ServiceLoader<CodeProvider> loader = ServiceLoader.load(CodeProvider.class);
+        |\hyperref[lst:CodeProvider]{CodeProvider}| codeProvider = loader.iterator().next();
+        |\hyperref[lst:CodeFactory]{CodeFactory}| factory = codeProvider.getInstance();
+\end{javacode}
+\caption{recupero del CodeProvider}
+\label{lst:getCodeProvider}
+\end{elisting}
+\fi
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Una volta recuperata una istanza di \textsl{CodeFactory} è possibile creare le
+definizioni delle stringhe-dati e generare i sorgenti delle classi-dati.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Sono stati sviluppati due \textsl{client}, uno sotto forma di maven plugin 
+\verb!recfm-maven-plugin!, e l'\,altro sotto forma di gradle plugin 
+\verb!recfm-gradle-plugin!. Il codice in gran parte è identico, cambia solo il 
+meccanismo di innesco.

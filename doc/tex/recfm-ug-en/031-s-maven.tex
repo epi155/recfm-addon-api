@@ -1,0 +1,121 @@
+\chapter{Maven plugin}\label{sec:maven}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \verb!recfm-maven-plugin! maven plugin allows you to create multiple classes 
+and interfaces using one or more configuration files in yaml format. 
+The external libraries used require java 8, so you need at least java 8 to run 
+this plugin.
+
+The plugin expects configuration parameters as parameters:
+\begin{elisting}[!htb]
+\begin{javacode}
+    @Parameter(defaultValue = "${project.build.directory}/generated-sources/recfm",
+        property = "maven.recfm.generateDirectory", required = true)
+    private File generateDirectory;
+
+    @Parameter(defaultValue = "${project.build.resources[0].directory}",
+        property = "maven.recfm.settingsDirectory", required = true)
+    private File settingsDirectory;
+    
+    @Parameter(required = true)
+    private String[] settings;
+
+    @Parameter(defaultValue = "true", property = "maven.recfm.addCompileSourceRoot")
+    private boolean addCompileSourceRoot = true;
+
+    @Parameter(defaultValue = "false", property = "maven.recfm.addTestCompileSourceRoot")
+    private boolean addTestCompileSourceRoot = false;
+    
+    @Parameter
+    private String codeProviderClassName;
+\end{javacode}
+\caption{settable parameters of the maven plugin}
+\label{lst:maven.conf}
+\end{elisting}
+
+\begin{itemize}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!generateDirectory}
+    The \fcolorbox{black}{yellow!75}{\texttt{generateDirectory}} field indicates 
+    the root directory to use for generating the sources, it is used to set the 
+    value of the \verb!sourceDirectory! field of the 
+    \hyperref[lst:GenerateArgs]{\texttt{GenerateArgs}} class, as can be seen 
+    from the definition, if the parameter is omitted the 
+    \verb!target/generated-sources/recfm! directory is used, normally the 
+    default value can be left. 
+    The other three parameters of \texttt{GenerateArgs} are an identifier of the 
+    \textsl{service} program and are set automatically.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!settingsDirectory}
+    The \fcolorbox{black}{yellow!75}{\texttt{settingsDirectory}} field indicates 
+    the directory containing the configuration files, if the parameter is 
+    omitted the value \verb!src/main/resources! is used, normally the default 
+    value can be left.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!settings}
+    The \fcolorbox{black}{yellow!75}{\texttt{settings}} field indicates the list 
+    of configuration files to be used to generate the classes/interfaces; the 
+    parameter must be supplied to the plugin.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!addCompileSourceRoot}
+    The \fcolorbox{black}{yellow!75}{\texttt{addCompileSourceRoot}} field is a 
+    technical field, it indicates to maven that the directory where the sources 
+    were generated must be included among those used for the main compilation, 
+    if the parameter is omitted the value \verb!true! is used; the \verb!true! 
+    value is appropriate when a code generation directory other than 
+    \verb!src/main/java! is used, otherwise it is necessary to use additional 
+    plugins to add the new path to the maven compilation path.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!addTestCompileSourceRoot}
+    The \fcolorbox{black}{yellow!75}{\texttt{addTestCompileSourceRoot}} field is 
+    similar to the previous field, but adds the generation directory to the test 
+    compilation path, if omitted the value \verb!false! is used, except in 
+    special cases the default value can be left.
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \index{plugin!codeProviderClassName}
+    The \fcolorbox{black}{yellow!75}{\texttt{codeProviderClassName}} field 
+    indicates which is the concreated class that implements the 
+    \textsl{Service Interface}, if omitted the ``first'' implementation of the 
+    \textsl{ServiceLoader} retrieved is used; if there is only one 
+    implementation in the classpath, it is not necessary to set the parameter.
+\end{itemize}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\begin{elisting}[!htb]
+\begin{xmlcode}
+<plugin>
+    <groupId>io.github.epi155</groupId>
+    <artifactId>recfm-maven-plugin</artifactId>
+    <version>0.7.0</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+            <configuration>
+                <settings>
+                    <setting>foo.yaml</setting>
+                </settings>
+            </configuration>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.epi155</groupId>
+            <artifactId>recfm-java-addon</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+    </dependencies>
+</plugin>
+\end{xmlcode}
+\caption{minimal example of plugin execution}
+\label{lst:mvn-xmpl}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+An example of plugin execution is shown in the lst.~\ref{lst:mvn-xmpl}, the 
+plugin to be executed must have as dependency a library that provides the 
+implementation of the interface, otherwise the \verb!ServiceLoader! does not 
+find anything and the plugin terminates in error.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+All other parameters are provided in the configuration files.

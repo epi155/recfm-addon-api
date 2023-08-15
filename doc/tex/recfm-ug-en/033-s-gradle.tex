@@ -1,0 +1,51 @@
+\chapter{Gradle plugin}\label{sec:gradle}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The gradle plugin \verb!recfm-gradle-plugin! allows you to create multiple 
+classes and interfaces using one or more configuration files in yaml format. 
+The external libraries used require java 8, so you need at least java 8 to run 
+this plugin.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The \verb!recfm-gradle-plugin! gradle plugin is simply an adaptation of the 
+\verb!recfm-maven-plugin! for use in a gradle project. 
+Apart from how the input parameters are passed, and how the plugin is activated, 
+the code is the copy of the maven version.
+
+\begin{elisting}[!htb]
+\begin{javacode}
+@Data
+public class RecordFormatExtension {
+    private String generateDirectory; // default: "${project.buildDir}/generated-sources/recfm"
+    private String settingsDirectory; // default: "${project.projectDir}/src/main/resources"
+    private String[] settings;
+    private boolean addCompileSourceRoot = true;
+    private boolean addTestCompileSourceRoot = false;
+    private String codeProviderClassName;
+}
+\end{javacode}
+\caption{settable parameters of the gradle plugin}
+\label{lst:gradle.conf}
+\end{elisting}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+As can be seen by comparing it with the lst.~\ref{lst:maven.conf} the parameters 
+used are the same as those of the maven-plugin, for the description of the 
+parameters refer to \S~\ref{sec:maven}.
+
+\begin{elisting}[!htb]
+\begin{minted}[frame=single,framesep=2mm,bgcolor=bg,fontsize=\footnotesize]{groovy}
+buildscript {
+    dependencies {
+        // plugin
+        classpath 'io.github.epi155:recfm-gradle-plugin:0.7.0'
+        // addon for java code generation
+        classpath 'io.github.epi155:recfm-java-addon:0.7.0'
+    }
+}
+apply plugin: 'io.github.epi155.recfm-gradle-plugin'
+recfm {
+    settings = [ 'refcm-foo.yaml', 'refcm-bar.yaml' ]
+}
+\end{minted}
+\caption{minimal example of plugin execution}
+\label{lst:grd-xmpl}
+\end{elisting}

@@ -1,0 +1,40 @@
+\chapter{Service Provider}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+In the previous chapters we have seen the \textsl{Service Provider Interface}, 
+which defines interfaces and classes that allow you to define the layouts, and 
+indicate some behaviors that must be used when using the layouts; 
+and some examples of \textsl{Service}, which simply values the objects made 
+available to the \textsl{Service Provider Interface}, but the real work of 
+generating the code is done by the \textsl{Service Provider}.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+The SPI structure allows you to have code generated differently, implemented 
+differently, or even generate source in a different language.
+
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Whatever the language generated and the detail of the implementation, the 
+\textsl{Service Provider} will have to provide some general functions.
+
+\begin{itemize}\setlength\itemsep{-0.5ex}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+\item \textbf{decode}: starting from the data-string, it must instantiate the 
+    data-class;
+\item \textbf{setter, getter}: the generated data-class must provide access 
+    methods to the individual fields;
+\item \textbf{empty constructor}: the data-class can be instantiated with the 
+    default values of the fields;
+\item \textbf{encode}: data-class can be serialized into data-string.
+\end{itemize}
+%--------1---------2---------3---------4---------5---------6---------7---------8
+Some additional features would also be welcome:
+\begin{itemize}\setlength\itemsep{-0.5ex}
+\item \textbf{validate}: validate the data-string before de-serialization, in 
+    order to signal all the areas that cannot be assigned to the relative 
+    fields, typically non-numerical characters in numeric-type fields;
+\item \textbf{cast}: if two data-strings have the same length, being able to 
+    pass from one data-class that represents them to another;
+\item \textbf{toString}: provide a method that displays all the values of the 
+    fields that make up the data-class (in a human readable way, not the encode 
+    method);
+\item (deep) \textbf{copy}: generates a copy of the data-class;.
+\end{itemize}
